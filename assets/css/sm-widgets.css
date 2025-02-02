@@ -1,0 +1,179 @@
+
+/*--------------------------------------------------------------
+# Admin input
+--------------------------------------------------------------*/
+.sm-admin-input-wrap::after {
+    clear: both;
+    content: "";
+    display: block;
+}
+.sm-admin-input-wrap {
+    margin-top: 15px;
+}
+
+.sm-admin-input-wrap:last-child {
+    margin-bottom: 15px;
+}
+
+.sm-admin-input-wrap a {
+    text-decoration: none;
+}
+
+.sm-admin-input-wrap label {
+    font-weight: bold;
+
+    display: inline-block;
+
+    width: 96px;
+
+    float: left;
+
+    margin-top: 12px;
+}
+
+.sm-admin-input-wrap input[type='text'],
+.sm-admin-input-wrap input[type='email'],
+.sm-admin-input-wrap input[type='number'],
+.sm-admin-input-wrap input[type='phone'],
+.sm-admin-input-wrap input[type='password'],
+.sm-admin-input-wrap input[type='url'],
+.sm-admin-input-wrap input[type='number'],
+.sm-admin-input-wrap select,
+.sm-admin-input-wrap textarea {
+    width: calc( 100% - 104px );
+    padding: 8px 10px;
+
+    box-shadow: none;
+}
+
+.sm-admin-input-wrap select,
+.sm-admin-input-wrap input[type='number'] {
+    height: 38px;
+}
+
+.sm-admin-input-wrap img {
+    max-width: calc( 100% - 115px );
+    height: auto;
+    margin-bottom: 15px;
+
+    border: 6px solid #fff;
+    box-shadow: 0 0 1px #ccc;
+}
+
+.sm-img-upload {
+    margin: 0 96px;
+    padding: 8px 20px;
+
+    cursor: pointer;
+    -webkit-transition: all .35s ease;
+    -moz-transition: all .35s ease;
+    -o-transition: all .35s ease;
+    transition: all .35s ease;
+
+
+    border: 2px dashed #ddd;
+    border-radius: 3px;
+    outline: none !important;
+    background: #fdfdfd;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: capitalize;
+    color: #888;
+}
+
+.sm-img-upload:hover {
+    border-color: #888;
+    color: #555;
+}
+
+.sm-admin-radio-wrap {
+    margin-top: -30px;
+    padding-left: 102px;
+}
+
+.sm-admin-slider-wrap,
+.sm-admin-logos-wrap {
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+    margin-top: 15px;
+    background: #fdfdfd;
+}
+
+.sm-admin-slider-wrap:last-child,
+.sm-admin-logos-wrap:last-child {
+    margin-bottom: 15px;
+}
+
+.sm-admin-testimonials {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.sm-admin-testimonials textarea {
+    min-height: 100px;
+}
+
+
+
+/* Repeatable widget items */
+.sm-repeatable {
+    margin: 10px 0px;
+}
+.list-filters {
+    border: 1px solid #ededed;
+    padding: 10px;
+    background: #ffffff;
+    margin: 10px 0px;
+}
+.list-item {
+    border: 1px solid #ededed;
+    padding: 10px;
+    background: #f5f5f5;
+    margin-bottom: 10px;
+    position: relative;
+}
+.list-item:last-child {
+    margin-bottom: 0px;
+}
+.list-item .list-item-title {
+    cursor: pointer;
+}
+.list-item .list-item-title:before {
+    content: "\f333";
+    font-family: dashicons;
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+    cursor: move;
+}
+
+.list-item:after {
+    clear: both;
+    content: "";
+    display: block;
+}
+
+.list-item label {
+    float: right;
+    margin-right: 30px;
+}
+.list-item .remove {
+    text-decoration: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.list-item .remove:before {
+    content: "\f335";
+    font-family: dashicons;
+}
+
+
+.ft-notice-message {
+    background: #fcf8e3;
+    border: 1px solid #faf2cc;
+    padding: 5px;
+    margin: 10px 0px;
+    font-style: italic;
+}
