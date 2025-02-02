@@ -1,7 +1,3 @@
-Here's a sample `README.md` file for your WordPress theme. It includes sections for installation, features, customization, and support. Feel free to tweak it to better match your theme's specifics.
-
----
-
 # **SmartyMagazine WordPress Theme**
 
 A clean, modern, and responsive WordPress theme designed for magazines, blogs, and content-rich websites. **SmartyMagazine** offers flexible customization options, intuitive design, and full compatibility with the latest WordPress features.
