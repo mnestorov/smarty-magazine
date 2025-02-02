@@ -107,17 +107,6 @@ smarty-magazine/
 
 ---
 
-## **Changelog**
-
-### **v1.0.0** – *Initial Release*
-- Fully responsive design
-- Custom widgets (social icons, recent posts)
-- Bootstrap 5 integration
-- WordPress Customizer support
-- SEO-optimized and translation-ready
-
----
-
 ## **Credits**
 
 - **Bootstrap 5** – [https://getbootstrap.com/](https://getbootstrap.com/)
