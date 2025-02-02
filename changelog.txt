@@ -1,9 +1,0 @@
-== 1.3.6 ==
-Improve theme and fix issues.
-
-== 1.3.5 ==
-* Add importer demo tab.
-* Add recommend easymega plugin.
-
-== 1.3.4 ==
-Improve theme and fix issues.
