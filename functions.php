@@ -112,6 +112,19 @@ if (!function_exists('__smarty_magazine_scripts')) {
     add_action('wp_enqueue_scripts', '__smarty_magazine_scripts');
 }
 
+if (!function_exists('__smarty_magazine_scripts')) {
+	function __smarty_magazine_customize_preview_js() {
+		wp_enqueue_script(
+			'__smarty_magazine_customizer',
+			get_template_directory_uri() . '/assets/js/sm-customizer.js',
+			array('customize-preview'), // Ensure 'customize-preview' is a dependency
+			'1.0',
+			true
+		);
+	}
+	add_action('customize_preview_init', '__smarty_magazine_customize_preview_js');
+}
+
 /**
  * Load additional theme functionality.
  */
@@ -119,7 +132,7 @@ require get_template_directory() . '/includes/functions/functions-sm-dashboard.p
 require get_template_directory() . '/includes/functions/functions-sm-plugins-recommended.php';
 require get_template_directory() . '/includes/functions/functions-sm-custom-header.php';
 require get_template_directory() . '/includes/functions/functions-sm-template-tags.php';
-require get_template_directory() . '/includes/functions/functions-sm-extras.php';
+require get_template_directory() . '/includes/functions/functions-sm-customizer-styles.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer.php';
 
 /**

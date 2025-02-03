@@ -40,11 +40,29 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 		$menu_color 		= get_theme_mod('__smarty_magazine_menu_color');
 		$menu_hover_bg 		= get_theme_mod('__smarty_magazine_menu_hover_bg_color', '#be3434');
 		$menu_color_hover 	= get_theme_mod('__smarty_magazine_menu_color_hover');
+		$header_bg_color    = get_theme_mod('__smarty_magazine_header_bg_color', '#ffffff');
+    	$header_text_color  = get_theme_mod('__smarty_magazine_header_text_color', '#000000');
 		$footer_bg_color 	= get_theme_mod('__smarty_magazine_footer_bg_color', '#2f363e');
 		$footer_text_color 	= get_theme_mod('__smarty_magazine_footer_text_color');
 		$footer_hover_color = get_theme_mod('__smarty_magazine_footer_text_hover_color');
 
 		$custom_css = '';
+
+		// Apply Header Background Color
+		if ($header_bg_color) {
+			$custom_css .= "
+			.sm-header {
+				background-color: {$header_bg_color};
+			}";
+		}
+	
+		// Apply Header Text Logo Color
+		if ($header_text_color) {
+			$custom_css .= "
+			.sm-logo > h1.site-title > a {
+				color: {$header_text_color};
+			}";
+		}
 
 		if ($color) {
 			$custom_css .= "
