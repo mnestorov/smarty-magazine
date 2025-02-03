@@ -38,7 +38,6 @@
 										<i class="bi bi-list"></i>
 									</div>
 								<?php endif; ?>
-
 								<?php if (!get_theme_mod('__smarty_magazine_hide_date_setting', 1)) : ?>
 									<div class="sm-date ms-3">
 										<p><?php echo date_i18n('l, j F Y', time()); ?></p>
@@ -95,23 +94,18 @@
 			</div>
 		<?php endif; ?>
 		<header class="sm-header">
-			<div class="container">
+			<div class="container py-2">
 				<div class="row">
 					<div class="col-lg-4 col-md-4">
 						<div class="sm-logo">
-							<?php
-							if (function_exists('get_custom_logo') && has_custom_logo()) :
-								the_custom_logo();
-							endif;
-							?>
-							<?php if (is_front_page() || is_home()) { ?>
+							<?php if (function_exists('get_custom_logo') && has_custom_logo()) { the_custom_logo(); } ?>
+							<?php if (is_front_page() || is_home()) : ?>
 								<h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>" rel="home"><?php bloginfo('name'); ?></a></h1>
-							<?php } else { ?>
+							<?php else: ?>
 								<p class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>" rel="home"><?php bloginfo('name'); ?></a></p>
-							<?php
-							}
-							$description = get_bloginfo('description', 'display');
-							if ($description || is_customize_preview()) : ?>
+							<?php endif; ?>
+							<?php $description = get_bloginfo('description', 'display'); ?>
+							<?php if ($description || is_customize_preview()) : ?>
 								<p class="site-description"><?php echo $description; ?></p>
 							<?php endif; ?>
 							<?php  ?>
@@ -125,15 +119,15 @@
 				</div>
 			</div>
 		</header>
-		<?php $header_image = get_header_image();
-		if (! empty($header_image)) : ?>
+		<?php $header_image = get_header_image(); ?>
+		<?php if (! empty($header_image)) : ?>
 			<div class="sm-header-image">
 				<a href="<?php echo esc_url(home_url('/')); ?>" title="<?php echo esc_attr(get_bloginfo('name', 'display')); ?>" rel="home">
 					<img src="<?php esc_url(header_image()); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt="header image" />
 				</a>
 			</div>
 		<?php endif; ?>
-		<nav class="sm-menu-bar<?php if (get_theme_mod('__smarty_magazine_sticky_menu', 0) == 1) { ?> sm-sticky<?php } ?>">
+		<nav class="sm-menu-bar<?php if (get_theme_mod('__smarty_magazine_sticky_menu', 0) == 1) { ?> sm-sticky<?php } ?>" style="<?php echo get_theme_mod('__smarty_magazine_custom_shortcode', '') ? 'margin-bottom: 0;' : 'margin-bottom: 30px;' ?>">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 col-md-12">
@@ -141,8 +135,8 @@
 							<?php
 							wp_nav_menu(array(
 								'theme_location' => 'primary',
-								'menu_id' => 'primary-menu',
-								'menu_class' => 'sm-nav-menu'
+								'menu_id' 		 => 'primary-menu',
+								'menu_class' 	 => 'sm-nav-menu'
 							));
 							?>
 						</div>
@@ -151,22 +145,18 @@
 						<div class="sm-main-menu-md">
 							<!-- Combine logo and hamburger in the same row -->
 							<div class="d-flex justify-content-between align-items-center">
-								
 								<!-- Logo Section -->
 								<div class="sm-logo-md">
 									<a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
 										<?php bloginfo('name'); ?>
 									</a>
 								</div>
-
 								<!-- Hamburger Icon -->
 								<div class="sm-nav-md-trigger">
 									<i class="bi bi-list transition35"></i>
 								</div>
-
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -177,9 +167,9 @@
 							<?php
 							wp_nav_menu(array(
 								'theme_location' => 'primary', 
-								'menu_id' => 'primary-menu',  
-								'menu_class' => 'menu',
-								'after' => '<span class="nav-toggle-subarrow"></span>'
+								'menu_id' 		 => 'primary-menu',  
+								'menu_class' 	 => 'menu',
+								'after' 		 => '<span class="nav-toggle-subarrow"></span>'
 							)); 
 							?>
 						</div>
@@ -187,7 +177,20 @@
 				</div>
 			</div>
 		</nav>
-		<?php if (!is_front_page() && ! is_home()) : ?>
+		<?php if (is_front_page()) : ?>
+			<div class="container-fluid px-0 mb-4">
+				<div class="row">
+					<div class="col-12">
+						<?php
+						$custom_shortcode = get_theme_mod('__smarty_magazine_custom_shortcode', '');
+						if (!empty($custom_shortcode)) {
+							echo do_shortcode(esc_html($custom_shortcode));
+						}
+						?>
+					</div>
+				</div>
+			</div>
+		<?php elseif (!is_front_page() && !is_home()) : ?>
 			<div class="sm-breadcrumbs">
 				<div class="container">
 					<div class="row">

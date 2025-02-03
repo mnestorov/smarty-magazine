@@ -65,16 +65,16 @@
 											<?php if ($count == 1) : ?>
 												<div class="sm-news-post-desc">
 													<?php
-														$excerpt = get_the_excerpt();
-														$limit   = "350";
-														$pad     = "...";
+													$excerpt = get_the_excerpt();
+													$limit   = "350";
+													$pad     = "...";
 
-														if (strlen($excerpt) <= $limit) {
-															echo esc_html($excerpt);
-														} else {
-															$excerpt = substr($excerpt, 0, $limit) . $pad;
-															echo esc_html($excerpt);
-														}
+													if (strlen($excerpt) <= $limit) {
+														echo esc_html($excerpt);
+													} else {
+														$excerpt = substr($excerpt, 0, $limit) . $pad;
+														echo esc_html($excerpt);
+													}
 													?>
 												</div>
 											<?php else: ?>
@@ -100,7 +100,9 @@
 									</div>
 									<?php if ($count == 1) { echo '</div>'; } ?>
 								<?php $count++; endwhile; ?>
+
 								<?php wp_reset_postdata(); ?>
+								
 							</div>
 							<div class="clearfix"></div>
 							<div class="sm-pagination-nav">

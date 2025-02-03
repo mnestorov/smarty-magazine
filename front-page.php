@@ -100,12 +100,17 @@
 									<?php the_excerpt(); ?>
 								</div>
 							</article>
+
 							<div class="clearfix"></div>
+							
 						</div>
 					<?php endwhile; ?>
 				<?php endif; ?>
+
 				<?php wp_reset_postdata(); ?>
+
 				<div class="clearfix"></div>
+
 				<div class="sm-pagination-nav">
 					<?php echo the_posts_pagination(); ?>
 				</div>

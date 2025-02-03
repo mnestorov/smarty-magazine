@@ -77,11 +77,11 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             <!-- Ads Link Field -->
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link'); ?>"><?php _e('Ads Link', 'smarty_magazine'); ?></label>
-                <input type="url"
-                       id="<?php echo $this->get_field_id('ads_link'); ?>"
-                       name="<?php echo $this->get_field_name('ads_link'); ?>"
-                       value="<?php echo esc_attr($instance['ads_link']); ?>"
-                       placeholder="<?php _e('URL', 'smarty_magazine'); ?>">
+                <input type="text"
+                    id="<?php echo esc_attr($this->get_field_id('ads_link')); ?>"
+                    name="<?php echo esc_attr($this->get_field_name('ads_link')); ?>"
+                    value="<?php echo esc_url($instance['ads_link']); ?>"
+                    placeholder="<?php esc_attr_e('Enter the ad URL', 'smarty_magazine'); ?>">
             </div>
 
             <!-- Link Type Field -->
@@ -114,7 +114,9 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
 
                 <!-- Button to trigger media uploader -->
                 <input type="button"
-                       class="sm-img-upload sm-custom-media-button"
+                       class="sm-img-upload sm-custom-media-button" 
+                       id="custom_media_button"
+                       name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
         </div>

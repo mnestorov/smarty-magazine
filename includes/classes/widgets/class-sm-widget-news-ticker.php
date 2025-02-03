@@ -55,9 +55,10 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
         if ($news_ticker_posts->have_posts()) : ?>
             <div class="bt-news-ticker">
                 <?php if (!empty($title)) : ?>
-                    <div class="bt-news-ticker-tag"><?php echo esc_html($title); ?></div>
+                    <div class="bt-news-ticker-tag d-flex align-items-center">
+                        <i class="bi bi-fire me-2"></i> <?php echo esc_html($title); ?>
+                    </div>
                 <?php endif; ?>
-                
                 <ul class="sm-newsticker">
                     <?php while ($news_ticker_posts->have_posts()) : $news_ticker_posts->the_post(); ?>
                         <li>
@@ -70,9 +71,9 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
             </div>
         <?php else : ?>
             <p><?php _e('Sorry, no posts matched your criteria.', 'smarty_magazine'); ?></p>
-        <?php endif;
+        <?php endif; ?>
 
-        wp_reset_postdata();
+        <?php wp_reset_postdata();
     }
 
     /**

@@ -87,7 +87,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                     </a>
                 </figure>
 
-                <h2>
+                <h2 class="transition5">
                     <span class="sm-featured-post-date">
                         <span class="sm-featured-post-month"><?php echo esc_html(get_the_date('M')); ?><br><?php echo esc_html(get_the_date('Y')); ?></span>
                         <span class="sm-featured-post-day"><?php echo esc_html(get_the_date('d')); ?></span>

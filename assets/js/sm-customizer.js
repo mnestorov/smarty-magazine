@@ -44,4 +44,27 @@
             $( 'h1.site-title a' ).css( 'color', newval );
         });
     });
+
+    // News Ticker Background Color
+    wp.customize('__smarty_magazine_news_ticker_bg_color', function(value) {
+        value.bind(function(newval) {
+            $('.bt-news-ticker').css('background-color', newval);
+            $('.bt-news-ticker-tag').css('background-color', newval);
+            $('.bt-news-ticker-tag:after').css('border-left-color', newval);
+        });
+    });
+
+    // News Ticker Tag Color
+    wp.customize('__smarty_magazine_news_ticker_tag_color', function(value) {
+        value.bind(function(newval) {
+            $('.bt-news-ticker-tag').css('color', newval);
+        });
+    });
+
+    // News Ticker Text Color
+    wp.customize('__smarty_magazine_news_ticker_text_color', function(value) {
+        value.bind(function(newval) {
+            $('.bt-news-ticker li a').css('color', newval);
+        });
+    });
 })(jQuery);

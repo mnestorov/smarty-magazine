@@ -112,7 +112,27 @@ if (!function_exists('__smarty_magazine_scripts')) {
     add_action('wp_enqueue_scripts', '__smarty_magazine_scripts');
 }
 
+if (!function_exists('__smarty_magazine_enqueue_media_uploader')) {
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $hook
+	 * @return void
+	 */
+	function __smarty_magazine_enqueue_media_uploader($hook) {
+		if ('widgets.php' === $hook || 'customize.php' === $hook) {
+			wp_enqueue_media();  // Enqueue the WordPress media uploader scripts
+		}
+	}
+	add_action('admin_enqueue_scripts', '__smarty_magazine_enqueue_media_uploader');
+}
+
 if (!function_exists('__smarty_magazine_scripts')) {
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
 	function __smarty_magazine_customize_preview_js() {
 		wp_enqueue_script(
 			'__smarty_magazine_customizer',
@@ -158,30 +178,30 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-hi
 require get_template_directory() . '/includes/functions/functions-sm-register-widgets.php';
 
 
-if (!function_exists('easyblog_archive_excerpt_length')) {
+if (!function_exists('__smarty_archive_excerpt_length')) {
 	/**
 	 * Filter the excerpt length.
 	 *
 	 * @param int $length Excerpt length.
 	 * @return int Modified excerpt length.
 	 */
-	function easyblog_archive_excerpt_length($length) {
+	function __smarty_archive_excerpt_length($length) {
 		return is_front_page() ? 50 : 40;
 	}
-	add_filter('excerpt_length', 'easyblog_archive_excerpt_length', 999);
+	add_filter('excerpt_length', '__smarty_archive_excerpt_length', 999);
 }
 
-if (!function_exists('easyblog_excerpt_more')) {
+if (!function_exists('__smarty_excerpt_more')) {
 	/**
 	 * Filter the excerpt "read more" string.
 	 *
 	 * @param string $more "Read more" excerpt string.
 	 * @return string Modified "read more" excerpt string.
 	 */
-	function easyblog_excerpt_more($more) {
+	function __smarty_excerpt_more($more) {
 		return '...';
 	}
-	add_filter('excerpt_more', 'easyblog_excerpt_more');
+	add_filter('excerpt_more', '__smarty_excerpt_more');
 }
 
 if (!function_exists('__smarty_magazine_breadcrumb')) {

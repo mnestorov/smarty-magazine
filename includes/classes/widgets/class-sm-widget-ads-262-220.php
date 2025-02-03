@@ -39,12 +39,17 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
 
         // Display ad only if the image path is provided
         if (!empty($ads_image_path)) : ?>
-            <a href="<?php echo esc_url($ads_link); ?>" 
-               title="<?php echo esc_attr($title); ?>" 
-               rel="<?php echo esc_attr($ads_link_type); ?>" 
-               target="_blank">
-                <img style="margin-top: 20px;" src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>">
-            </a>
+            <div class="text-center"> <!-- Bootstrap class to center the link wrapper -->
+                <a href="<?php echo esc_url($ads_link); ?>" 
+                title="<?php echo esc_attr($title); ?>" 
+                rel="<?php echo esc_attr($ads_link_type); ?>" 
+                target="_blank">
+                    <!-- d-block to make image block-level and mx-auto to center it -->
+                    <img class="d-block mx-auto mt-4" 
+                        src="<?php echo esc_url($ads_image_path); ?>" 
+                        alt="<?php echo esc_attr($title); ?>">
+                </a>
+            </div>
         <?php endif;
     }
 
@@ -78,7 +83,7 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
             <!-- Ads Link Field -->
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link'); ?>"><?php _e('Ads Link', 'smarty_magazine'); ?></label>
-                <input type="url"
+                <input type="text"
                        id="<?php echo $this->get_field_id('ads_link'); ?>"
                        name="<?php echo $this->get_field_name('ads_link'); ?>"
                        value="<?php echo esc_attr($instance['ads_link']); ?>"
@@ -115,7 +120,9 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
 
                 <!-- Button to trigger media uploader -->
                 <input type="button"
-                       class="sm-img-upload sm-custom-media-button"
+                       class="sm-img-upload sm-custom-media-button" 
+                       id="custom_media_button"
+                       name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
         </div>
