@@ -11,10 +11,9 @@ A clean, modern, and responsive WordPress theme designed for magazines, blogs, a
 3. [Theme Setup](#theme-setup)
 4. [Customization](#customization)
 5. [Folder Structure](#folder-structure)
-6. [Changelog](#changelog)
-7. [Credits](#credits)
-8. [License](#license)
-9. [Support](#support)
+6. [Credits](#credits)
+7. [License](#license)
+8. [Support](#support)
 
 ---
 
@@ -95,12 +94,25 @@ smarty-magazine/
 │   ├── js/               # JavaScript files
 │   └── images/           # Theme images
 ├── template-parts/       # Template partials for reusable sections
-├── inc/                  # Custom functions and theme hooks
+├── includes/             # Custom functions and theme hooks
+    └── classes/          # Theme classes
+         └── widgets/     # Theme widgets
+    └── functions/        # Theme functions
 ├── languages/            # Translation files
+├── 404.php               # Not found template
+├── archive.php           # Archive template
+├── front-page.php        # Front page template
+├── full-width.php        # Full width page template
 ├── functions.php         # Theme setup and core functions
 ├── style.css             # Theme metadata and main stylesheet
 ├── index.php             # Default template
 ├── header.php            # Header template
+├── home.php              # Home template
+├── page.php              # Page template
+├── single.php            # Single template
+├── comments.php          # Comments display template
+├── search.php            # Search template
+├── sidebar.php           # Sidebar template
 ├── footer.php            # Footer template
 └── README.md             # Theme documentation
 ```
@@ -127,7 +139,3 @@ This theme is licensed under the [GNU General Public License v2.0](https://www.g
 For issues, feature requests, or general inquiries:
 
 - Email: support@smartystudio.net
-
----
-
-Feel free to modify the content based on your project and needs. Let me know if you need any more sections added! 🚀
