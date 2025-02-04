@@ -67,7 +67,7 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
         foreach ($social_platforms as $platform => $icon_class) {
             if (!empty($instance[$platform])) {
                 echo '<li><a href="' . esc_url($instance[$platform]) . '" target="_blank" rel="noopener noreferrer">';
-                echo '<i class="bi ' . esc_attr($icon_class) . ' transition35"></i>';
+                echo '<i class="bi ' . esc_attr($icon_class) . '"></i>';
                 echo '</a></li>';
             }
         }

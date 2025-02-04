@@ -21,13 +21,9 @@
 
 .sm-admin-input-wrap label {
     font-weight: bold;
-
     display: inline-block;
-
     width: 96px;
-
     float: left;
-
     margin-top: 12px;
 }
 
@@ -55,7 +51,6 @@
     max-width: calc( 100% - 115px );
     height: auto;
     margin-bottom: 15px;
-
     border: 6px solid #fff;
     box-shadow: 0 0 1px #ccc;
 }
@@ -63,14 +58,11 @@
 .sm-img-upload {
     margin: 0 96px;
     padding: 8px 20px;
-
     cursor: pointer;
     -webkit-transition: all .35s ease;
     -moz-transition: all .35s ease;
     -o-transition: all .35s ease;
     transition: all .35s ease;
-
-
     border: 2px dashed #ddd;
     border-radius: 3px;
     outline: none !important;
@@ -114,18 +106,18 @@
     min-height: 100px;
 }
 
-
-
 /* Repeatable widget items */
 .sm-repeatable {
     margin: 10px 0px;
 }
+
 .list-filters {
     border: 1px solid #ededed;
     padding: 10px;
     background: #ffffff;
     margin: 10px 0px;
 }
+
 .list-item {
     border: 1px solid #ededed;
     padding: 10px;
@@ -133,12 +125,15 @@
     margin-bottom: 10px;
     position: relative;
 }
+
 .list-item:last-child {
     margin-bottom: 0px;
 }
+
 .list-item .list-item-title {
     cursor: pointer;
 }
+
 .list-item .list-item-title:before {
     content: "\f333";
     font-family: dashicons;
@@ -158,17 +153,18 @@
     float: right;
     margin-right: 30px;
 }
+
 .list-item .remove {
     text-decoration: none;
     position: absolute;
     top: 10px;
     right: 10px;
 }
+
 .list-item .remove:before {
     content: "\f335";
     font-family: dashicons;
 }
-
 
 .ft-notice-message {
     background: #fcf8e3;

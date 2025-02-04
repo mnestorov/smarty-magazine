@@ -38,7 +38,7 @@ $__smarty_magazine_related = get_posts(
 					<?php } else { ?>
 						<div class="sm-no-image"></div>
 					<?php } ?>
-					<a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span class="transition35"><i class="bi bi-search transition35"></i></span></a>
+					<a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
 				</figure>
 				<h3><a href="<?php esc_url(the_permalink()); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php the_title(); ?></a></h3>
 			</li>

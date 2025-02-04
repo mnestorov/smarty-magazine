@@ -61,8 +61,8 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
             echo '</div>'; // .swiper-wrapper
 
             // Navigation arrows
-            echo '<div class="swiper-button-next transition5"><i class="bi bi-caret-right"></i></div>';
-            echo '<div class="swiper-button-prev transition5"><i class="bi bi-caret-left"></i></div>';
+            echo '<div class="swiper-button-next"><i class="bi bi-caret-right"></i></div>';
+            echo '<div class="swiper-button-prev"><i class="bi bi-caret-left"></i></div>';
             echo '</div></div>'; // .sm-featured-post-slider, .sm-featured-post-slider-wrap
         } else {
             echo '<p>' . __('Sorry, no posts found in the selected category.', 'smarty_magazine') . '</p>';
@@ -87,7 +87,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                     </a>
                 </figure>
 
-                <h2 class="transition5">
+                <h2>
                     <span class="sm-featured-post-date">
                         <span class="sm-featured-post-month"><?php echo esc_html(get_the_date('M')); ?><br><?php echo esc_html(get_the_date('Y')); ?></span>
                         <span class="sm-featured-post-day"><?php echo esc_html(get_the_date('d')); ?></span>

@@ -227,7 +227,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
                     <?php if (has_post_thumbnail()) : the_post_thumbnail('sm-featured-post-medium');
                     endif; ?>
                     <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark">
-                        <span class="transition35"><i class="bi bi-search transition35"></i></span>
+                        <span><i class="bi bi-search"></i></span>
                     </a>
                 </figure>
                 <div class="sm-news-post-content">
@@ -277,7 +277,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
     public function layout_2( $query ) {
         global $post;
         while ( $query->have_posts() ) { $query->the_post(); ?>
-            <div class="sm-news-post transition5">
+            <div class="sm-news-post">
                 <figure class="sm-news-post-img">
                     <?php
                     if (has_post_thumbnail()) :
@@ -322,7 +322,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
                         the_post_thumbnail( 'sm-featured-post-medium' );
                     endif;
                     ?>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span class="transition35"><i class="bi bi-search transition35"></i></span></a>
+                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
                 </figure>
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
@@ -389,7 +389,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
                     endif;
                     ?>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span class="transition35"><i class="bi bi-search transition35"></i></span></a>
+                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
                 </figure>
                 <div class="sm-news-post-content">
                     <h3><a href="<?php esc_url( the_permalink() ); ?>" title="<?php the_title_attribute(); ?>"><?php esc_html( the_title() ); ?></a></h3>

@@ -108,7 +108,7 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
                     </a>
                 </span>
 
-                <h2 class="transition5">
+                <h2>
                     <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
                         <?php the_title(); ?>
                     </a>

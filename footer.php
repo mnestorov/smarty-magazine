@@ -61,7 +61,7 @@
     </div>
 </footer>
 
-<a id="back-to-top" class="transition35"><i class="bi bi-arrow-up"></i></a>
+<a id="back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 </div><!-- .sm-body-wrap -->
 

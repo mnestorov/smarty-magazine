@@ -28,24 +28,44 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			'capability' 		=> 'edit_theme_options'
 		));
 
-		// Sticky Menu
+		// Sticky Menu Section
 		$wp_customize->add_section('__smarty_magazine_sticky_menu_section', array(
-			'priority' 			=> 100,
-			'title' 			=> __('Sticky Menu', 'smarty_magazine'),
-			'panel' 			=> '__smarty_magazine_header_options'
+			'priority'  => 100,
+			'title'     => __('Sticky Menu', 'smarty_magazine'),
+			'panel'     => '__smarty_magazine_header_options'
 		));
 
+		// Sticky Desktop Menu Setting
 		$wp_customize->add_setting('__smarty_magazine_sticky_menu', array(
 			'default' 			=> 0,
 			'capability' 		=> 'edit_theme_options',
 			'sanitize_callback' => '__smarty_magazine_checkbox_sanitize'
 		));
 
+		// Sticky Desktop Menu Control
 		$wp_customize->add_control('__smarty_magazine_sticky_menu', array(
 			'type' 				=> 'checkbox',
-			'label' 			=> __('Check to enable the sticky Main menu', 'smarty_magazine'),
+			'label' 			=> __('Enable Sticky Desktop Nenu', 'smarty_magazine'),
 			'section' 			=> '__smarty_magazine_sticky_menu_section'
 		));
+
+		// Sticky Mobile Menu Setting
+		$wp_customize->add_setting('__smarty_magazine_sticky_mobile_menu', array(
+			'default'           => 0,
+			'capability'        => 'edit_theme_options',
+			'sanitize_callback' => '__smarty_magazine_checkbox_sanitize',
+		));
+
+		// Sticky Mobile Menu Control
+		$wp_customize->add_control('__smarty_magazine_sticky_mobile_menu', array(
+			'type'    => 'checkbox',
+			'label'   => __('Enable Sticky Mobile Menu', 'smarty_magazine'),
+			'section' => '__smarty_magazine_sticky_menu_section',
+		));
+
+		
+		
+		
 
 		$wp_customize->add_section('header_topbar', array(
 			'title' 			=> __('Header Topbar', 'smarty_magazine'),

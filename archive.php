@@ -54,7 +54,7 @@
 												__smarty_magazine_post_img('1');
 											}
 											?>
-											<a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark"><span class="transition35"> <i class="bi bi-search transition35"></i></span></a>
+											<a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark"><span> <i class="bi bi-search"></i></span></a>
 										</figure>
 										<div class="sm-news-post-content">
 											<div class="sm-news-post-meta">
@@ -95,7 +95,7 @@
 											<?php endif; ?>
 										</div>
 										<div class="sm-category-post-readmore">
-											<a class="transition35" href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" class="text-decoration-none"><?php _e('Read more', 'smarty_magazine'); ?></></a>
+											<a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" class="text-decoration-none"><?php _e('Read more', 'smarty_magazine'); ?></></a>
 										</div>
 									</div>
 									<?php if ($count == 1) { echo '</div>'; } ?>
