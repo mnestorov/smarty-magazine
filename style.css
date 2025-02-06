@@ -101,7 +101,6 @@ input[type="submit"] {
 	border-color: #ccc #ccc #bbb;
 	border-radius: 3px;
 	background: #e6e6e6;
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 15px 17px rgba(255, 255, 255, 0.5), inset 0 -5px 12px rgba(0, 0, 0, 0.05);
 	color: rgba(0, 0, 0, .8);
 	font-size: 12px;
 	font-size: 0.75rem;
@@ -115,7 +114,6 @@ input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
 	border-color: #ccc #bbb #aaa;
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 15px 17px rgba(255, 255, 255, 0.8), inset 0 -5px 12px rgba(0, 0, 0, 0.02);
 }
 
 button:focus,
@@ -127,7 +125,6 @@ input[type="button"]:active,
 input[type="reset"]:active,
 input[type="submit"]:active {
 	border-color: #aaa #bbb #bbb;
-	box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.5), inset 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 input[type="text"],
@@ -277,8 +274,24 @@ textarea {
 }
 
 .entry-title,
+.sub-title {
+	font-weight: normal;
+    padding-bottom: 5px; /* Space between title and border */
+	border-bottom: 3px solid #222;
+}
+
+.entry-title > a,
+.sub-title > span {
+	background: #222;
+    color: #fff;
+    padding: 5px 15px 7px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.entry-title,
 .entry-meta {
-	margin-top: 1.5rem;
+	margin-top: 2rem;
 }
 
 .byline,
@@ -853,7 +866,8 @@ ol {
 	color: #d95e68;
 }
 
-.sm-search-bar {
+.sm-search-bar,
+.sm-social-sticky-bar {
 	position: absolute;
 	z-index: 9999;
 	top: 70px;
@@ -863,6 +877,17 @@ ol {
 	width: 100%;
 	height: 0;
 	background: #cc2936;
+}
+
+.sm-social-sticky-bar {
+	display: none;
+	background: #fff;
+}
+
+.sm-social-sticky-bar-show {
+	visibility: visible;
+	height: 40px;
+	border-bottom: 1px solid #e5e5e5;
 }
 
 .sm-search-bar-show {
@@ -961,6 +986,15 @@ ol {
 .sm-menu-bar,
 .sm-main-menu li ul {
 	background: #222222;
+}
+
+.sm-menu-bar-sticky {
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	box-shadow: 2px 0 5px rgba(0,0,0,.5);
 }
 
 .sm-main-menu ul {
@@ -3097,6 +3131,10 @@ ol {
 		display: inline-block;
 	}
 
+	.sm-social-sticky-bar {
+		display: block;
+	}
+
 	.sm-logo {
 		margin-bottom: 25px;
 		text-align: center;
@@ -3320,8 +3358,28 @@ ol {
 		padding: 5px 0;
 	}
 
+	.sm-social-sticky-bar {
+		height: auto;
+	}
+
 	.sm-menu-bar {
 		margin-bottom: 15px;
+	}
+
+	.sm-social-sticky-bar-show {
+		background: transparent;
+	}
+
+	.sm-social-sticky-bar li {
+		display: block;
+		background: #fff;
+	}
+
+	.sm-social-sticky-bar li .bi {
+		display: block;
+		width: 45px;
+		border-bottom: 1px solid #e5e5e5;
+		border-left: 1px solid #e5e5e5;
 	}
 
 	.sm-featured-posts-wrap > h2 {
