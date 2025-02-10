@@ -281,6 +281,7 @@ textarea {
 }
 
 .entry-title > a,
+.entry-title > span,
 .sub-title > span {
 	background: #222;
     color: #fff;
@@ -721,8 +722,7 @@ ol {
 .sm-date {
 	display: inline-block;
 	overflow: hidden;
-	height: 40px;
-	padding: 6px 0;
+	height: auto;
 }
 
 .sm-date p {

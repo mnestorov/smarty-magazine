@@ -27,10 +27,11 @@
 								
                                 <!-- Date (Always Visible if Enabled) -->
                                 <?php if (!get_theme_mod('__smarty_magazine_hide_date_setting', 1)) : ?>
-                                    <div class="sm-date ms-3">
+                                    <div class="sm-date me-3">
                                         <p><?php echo date_i18n('l, j F Y', time()); ?></p>
                                     </div>
                                 <?php endif; ?>
+                                <?php echo do_shortcode('[smarty_wcdw_global_market_cap]'); ?></p>
                             </div>
                         </div>
 
