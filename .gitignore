@@ -1,0 +1,107 @@
+# -------------------------
+# WordPress Core Files
+# -------------------------
+/wp-admin/
+/wp-includes/
+readme.html
+license.txt
+wp-config.php
+.htaccess
+index.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+
+# -------------------------
+# Theme-specific Ignored Files
+# -------------------------
+# Ignore node modules and package files (for themes using npm/yarn)
+node_modules/
+bower_components/
+
+# Ignore composer dependencies (if you're using Composer)
+vendor/
+composer.lock
+
+# Build tools output (for themes using build tools like Gulp, Webpack)
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+gulpfile.js
+webpack.config.js
+
+# Sass/LESS cache files
+.sass-cache/
+*.css.map
+*.scssc
+
+# VSCode and IDE settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# PHPStorm and JetBrains IDE files
+*.iml
+*.iws
+*.ipr
+*.swp
+
+# Log files
+*.log
+
+# Environment configuration
+.env
+.env.local
+.env.development
+.env.production
+
+# Ignore compiled CSS/JS if using a preprocessor
+/assets/css/*.css
+/assets/js/*.js
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.temp
+*.orig
+
+# Ignore Local History files
+.history/
+
+# WordPress debug log
+wp-content/debug.log
+
+# Ignore translations if they are auto-generated
+languages/*.mo
+
+# Composer vendor directory and lock file (if applicable)
+vendor/
+composer.lock
+
+# Cache files for WordPress or Plugins
+wp-content/cache/
+wp-content/backups/
+wp-content/upgrade/
+wp-content/ai1wm-backups/
+
+# Ignore all files except specific theme files
+!.gitignore
+!functions.php
+!style.css
+!index.php
+!header.php
+!footer.php
+!screenshot.png
+!template-parts/
+!inc/
