@@ -1,13 +1,22 @@
 <?php
-
 /**
  * Register widget area.
+ * 
+ * @since 1.0.0
  *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  * @package SmartyMagazine
  */
 
 if (!function_exists('__smarty_magazine_widgets_init')) {
+    /**
+     * Register widget areas.
+     * 
+     * @since 1.0.0
+     * 
+     * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
+     * 
+     * @return void
+     */
     function __smarty_magazine_widgets_init() {
         $sidebars = [
             [
@@ -38,9 +47,9 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
                 'after_title'   => '</h2>',
             ],
             [
-                'name'        => __('Top Bar: Shortcode', 'smarty_magazine'),
-                'id'          => 'sm-top-bar-shortcode',
-                'description' => __('Top Bar Shortcode position', 'smarty_magazine'),
+                'name'          => __('Top Bar: Shortcode', 'smarty_magazine'),
+                'id'            => 'sm-top-bar-shortcode',
+                'description'   => __('Top Bar Shortcode position', 'smarty_magazine'),
                 'before_widget' => '<span id="%1$s" class="widget %2$s me-3">',
                 'after_widget'  => '</span>',
                 'before_title'  => '',
@@ -146,7 +155,15 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
 
 if (!function_exists('__smarty_magazine_media_script')) {
     /**
-     * Enqueue Admin Scripts
+     * Enqueue media script for widgets.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $hook The current admin page.
+     * 
+     * @return void
+     * 
+     * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
      */
     function __smarty_magazine_media_script($hook) {
         if ($hook !== 'widgets.php') {
@@ -166,7 +183,13 @@ if (!function_exists('__smarty_magazine_media_script')) {
 
 if (!function_exists('__smarty_magazine_register_widgets')) {
     /**
-     * Register and initialize widgets
+     * Register widgets.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     * 
+     * @link https://developer.wordpress.org/reference/functions/register_widget/
      */
     function __smarty_magazine_register_widgets() {
         $widgets = [

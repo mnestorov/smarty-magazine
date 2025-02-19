@@ -1,18 +1,20 @@
 <?php
-
 /**
  * Tabs Content Widget.
  *
  * This class serves as a base widget for displaying post content in various tabbed layouts.
  * It provides multiple layout configurations and dynamic content querying features.
+ * 
+ * @since 1.0.0
+ * 
+ * @package SmartyMagazine
  */
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class __Smarty_Magazine_Tabs_Content extends WP_Widget
-{
+class __Smarty_Magazine_Tabs_Content extends WP_Widget {
     /**
      * @var int Layout identifier to determine the current display style.
      */
@@ -25,14 +27,17 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Constructor: Initializes the widget with its ID, name, and options.
+     * 
+     * @since 1.0.0
      *
      * @param string $id_base         Base ID for the widget.
      * @param string $name            Name of the widget.
      * @param array  $widget_options  Options for the widget's appearance and behavior.
      * @param array  $control_options Options for widget controls.
+     * 
+     * @return void
      */
-    public function __construct($id_base = '', $name = '', $widget_options = array(), $control_options = array())
-    {
+    public function __construct($id_base = '', $name = '', $widget_options = array(), $control_options = array()) {
         parent::__construct($id_base, $name, $widget_options, $control_options);
     }
 
@@ -41,12 +46,14 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
      *
      * Constructs a WP_Query object based on the widget's configuration, handling categories,
      * post limits, ordering, and other criteria.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Widget settings.
+     * 
      * @return WP_Query The constructed query object.
      */
-    public function query($instance = array())
-    {
+    public function query($instance = array()) {
         $instance = wp_parse_args($instance, array());
         $viewing = isset($instance['viewing']) ? explode(',', $instance['viewing']) : array();
 
@@ -102,12 +109,16 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Prepares widget instance settings by ensuring defaults are applied.
+     * 
+     * This method ensures that all expected settings are present in the instance data.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current widget settings.
+     * 
      * @return array Prepared settings with defaults.
      */
-    public function setup_instance($instance)
-    {
+    public function setup_instance($instance) {
         $prepared_instance = [];
 
         foreach ($this->get_configs() as $config) {
@@ -132,12 +143,17 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Outputs the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args     Display arguments including 'before_widget', 'after_widget', etc.
      * @param array $instance The settings for the current widget instance.
+     * 
+     * @return void
      */
-    public function widget($args, $instance)
-    {
+    public function widget($args, $instance) {
         // Ensure default arguments exist to prevent undefined index warnings
         $args = wp_parse_args($args, array(
             'before_widget' => '<div class="widget %s">',  // Default opening div for widget
@@ -166,8 +182,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
         $classes = ['sm-news-list-' . $this->layout];
         if ($this->layout_class) {
             $classes[] = $this->layout_class;
-        }
-?>
+        } ?>
         <div class="<?php echo esc_attr(implode(' ', $classes)); ?>">
             <div class="news-layout-tabs sm-news-layout-wrap" data-ajax="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" data-instance="<?php echo esc_attr(json_encode($instance)); ?>">
                 <?php if ($title) : ?>
@@ -216,11 +231,16 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Default content layout for displaying posts.
+     * 
+     * This method is used to display posts in a default layout when no specific layout is defined.
+     * 
+     * @since 1.0.0
      *
      * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
      */
-    public function layout_content($query)
-    {
+    public function layout_content($query) {
         while ($query->have_posts()) : $query->the_post(); ?>
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
@@ -246,14 +266,23 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Displays a message when no posts are found.
+     * 
+     * This method is used to display a message when no posts are found in the selected category.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
-    public function not_found()
-    {
+    public function not_found() {
         echo '<p class="posts-not-found">' . esc_html__('Sorry, no posts found in selected category.', 'smarty_magazine') . '</p>';
     }
 
     /**
      * Retrieves the widget's configurable fields.
+     * 
+     * This method is used to define the fields that can be configured in the widget settings.
+     * 
+     * @since 1.0.0
      *
      * @return array Array of configuration fields.
      */
@@ -266,14 +295,47 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
         ];
     }
 
+    /**
+     * Ends the layout display.
+     * 
+     * This method is used to reset the post data after displaying the layout content.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
+     */
     public function end_layout($query) {
         wp_reset_postdata();
     }
 
+    /**
+     * Layout 1 for displaying posts.
+     * 
+     * This method is used to display posts in a specific layout style.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
+     */
     public function layout_1($query) {
         $this->layout_content($query);
     }
 
+    /**
+     * Layout 2 for displaying posts.
+     * 
+     * This method is used to display posts in a specific layout style.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
+     */
     public function layout_2( $query ) {
         global $post;
         while ( $query->have_posts() ) { $query->the_post(); ?>
@@ -313,6 +375,17 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
         $this->end_layout( $query );
     }
 
+    /**
+     * Layout 3 for displaying posts.
+     * 
+     * This method is used to display posts in a specific layout style.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
+     */
     public function layout_3($query) {
         while ( $query->have_posts() ) { $query->the_post(); ?>
             <div class="sm-news-post">
@@ -355,8 +428,18 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
         $this->end_layout($query);
     }
 
+    /**
+     * Layout 4 for displaying posts.
+     * 
+     * This method is used to display posts in a specific layout style.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The query object containing posts to display.
+     * 
+     * @return void
+     */
     public function layout_4($query) {
-
         $n = count( $query->posts );
         global $post;
 
@@ -402,8 +485,14 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Render the form field based on its type.
+     * 
+     * This method is used to render the form field based on the field type.
+     * 
+     * @since 1.0.0
      *
      * @param array $field Field configuration.
+     * 
+     * @return void
      */
     public function field($field) {
         $name = esc_attr($this->get_field_name($field['name']));
@@ -475,7 +564,12 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
     }
 
     /**
+     * Renders the widget settings form in the admin panel.
+     * 
+     * @since 1.0.0
+     * 
      * @param array $instance
+     * 
      * @return void
      */
     public function render_fields($instance = array()) {
@@ -503,8 +597,14 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Outputs the widget settings form in the admin panel.
+     * 
+     * This method is used to display the widget settings form in the admin panel.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current widget settings.
+     * 
+     * @return void
      */
     public function form($instance) { ?>
         <div class="sm-news-list-1">
@@ -514,9 +614,14 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget
 
     /**
      * Updates the widget settings upon save.
+     * 
+     * This method is used to update the widget settings upon saving changes.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New settings submitted via the widget form.
      * @param array $old_instance Previous settings stored in the database.
+     * 
      * @return array Sanitized and updated widget settings.
      */
     public function update($new_instance, $old_instance) {

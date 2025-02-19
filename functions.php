@@ -1,7 +1,9 @@
 <?php
 /**
  * Theme functions and definitions.
- *
+ * 
+ * @since 1.0.0
+ * 
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
  * @package SmartyMagazine
  */
@@ -9,6 +11,10 @@
 if (!function_exists('__smarty_magazine_setup')) {
     /**
      * Sets up theme defaults and registers support for various WordPress features.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
      */
     function __smarty_magazine_setup() {
         // Make theme available for translation.
@@ -79,8 +85,12 @@ if (!function_exists('__smarty_magazine_setup')) {
 if (!function_exists('__smarty_magazine_content_width')) {
 	/**
 	 * Set the content width in pixels, based on the theme's design and stylesheet.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @global int $content_width
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_content_width() {
 		$GLOBALS['content_width'] = apply_filters('__smarty_magazine_content_width', 640);
@@ -88,35 +98,37 @@ if (!function_exists('__smarty_magazine_content_width')) {
 	add_action('after_setup_theme', '__smarty_magazine_content_width', 0);
 }
 
-if (!function_exists('__smarty_magazine_scripts')) {
+if (!function_exists('__smarty_magazine_front_scripts')) {
     /**
      * Enqueue scripts and styles.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
      */
-    function __smarty_magazine_scripts() {
+    function __smarty_magazine_front_scripts() {
+		wp_enqueue_style('__sm_styles', get_stylesheet_uri());
+		wp_enqueue_style('__sm_roboto', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
         wp_enqueue_style('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', array(), '5.3.2');
         wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css', array(), '1.11.1');
-        wp_enqueue_style('swiper', get_template_directory_uri() . '/assets/css/swiper.min.css', array(), '3.2.5');
-        wp_enqueue_style('sm-roboto', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
-        wp_enqueue_style('sm-style', get_stylesheet_uri());
-		
-        wp_enqueue_script('swiper', get_template_directory_uri() . '/assets/js/swiper.jquery.min.js', array('jquery'), '3.2.5', true);
-        wp_enqueue_script('newsticker', get_template_directory_uri() . '/assets/js/jquery.newsticker.min.js', array('jquery'), '', true);
         wp_enqueue_script('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.2', true);
-        wp_enqueue_script('sm-custom', get_template_directory_uri() . '/assets/js/sm-custom.js', array('jquery'), '', true);
-
+        
         // Comment reply script for threaded comments
         if (is_singular() && comments_open() && get_option('thread_comments')) {
             wp_enqueue_script('comment-reply');
         }
     }
-    add_action('wp_enqueue_scripts', '__smarty_magazine_scripts');
+    add_action('wp_enqueue_scripts', '__smarty_magazine_front_scripts');
 }
 
 if (!function_exists('__smarty_magazine_enqueue_media_uploader')) {
 	/**
-	 * Undocumented function
+	 * Enqueue media uploader scripts.
+	 * 
+	 * @since 1.0.0
 	 *
-	 * @param [type] $hook
+	 * @param string $hook The current admin page hook.
+	 * 
 	 * @return void
 	 */
 	function __smarty_magazine_enqueue_media_uploader($hook) {
@@ -127,26 +139,27 @@ if (!function_exists('__smarty_magazine_enqueue_media_uploader')) {
 	add_action('admin_enqueue_scripts', '__smarty_magazine_enqueue_media_uploader');
 }
 
-if (!function_exists('__smarty_magazine_scripts')) {
+if (!function_exists('__smarty_magazine_customizer_preview')) {
 	/**
-	 * Undocumented function
+	 * Enqueue customizer scripts and styles.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
-	function __smarty_magazine_customize_preview_js() {
-		wp_enqueue_script(
-			'__smarty_magazine_customizer',
-			get_template_directory_uri() . '/assets/js/sm-customizer.js',
-			array('customize-preview'), // Ensure 'customize-preview' is a dependency
-			'1.0',
-			true
-		);
+	function __smarty_magazine_customizer_preview() {
+		wp_enqueue_style('__sm_customizer_css', get_template_directory_uri() . '/assets/css/sm-customizer.css');
+		wp_enqueue_script('__sm_customizer_js', get_template_directory_uri() . '/assets/js/sm-customizer.js', array('customize-preview'), null, true);
 	}
-	add_action('customize_preview_init', '__smarty_magazine_customize_preview_js');
+	add_action('customize_preview_init', '__smarty_magazine_customizer_preview');
 }
 
 /**
  * Load additional theme functionality.
+ * 
+ * @since 1.0.0
+ * 
+ * @link https://developer.wordpress.org/themes/basics/theme-functions/
  */
 require get_template_directory() . '/includes/functions/functions-sm-dashboard.php';
 require get_template_directory() . '/includes/functions/functions-sm-plugins-recommended.php';
@@ -157,6 +170,10 @@ require get_template_directory() . '/includes/functions/functions-sm-customizer.
 
 /**
  * Load widget classes.
+ * 
+ * @since 1.0.0
+ * 
+ * @link https://developer.wordpress.org/themes/functionality/widgets/
  */
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-tabs-content.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-posts-layout-1.php';
@@ -175,15 +192,21 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-hi
 
 /**
  * Register widgets (move this to the bottom after all widget classes).
+ * 
+ * @since 1.0.0
+ * 
+ * @link https://developer.wordpress.org/themes/functionality/widgets/
  */
 require get_template_directory() . '/includes/functions/functions-sm-register-widgets.php';
-
 
 if (!function_exists('__smarty_archive_excerpt_length')) {
 	/**
 	 * Filter the excerpt length.
-	 *
+	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param int $length Excerpt length.
+	 * 
 	 * @return int Modified excerpt length.
 	 */
 	function __smarty_archive_excerpt_length($length) {
@@ -195,8 +218,11 @@ if (!function_exists('__smarty_archive_excerpt_length')) {
 if (!function_exists('__smarty_excerpt_more')) {
 	/**
 	 * Filter the excerpt "read more" string.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param string $more "Read more" excerpt string.
+	 * 
 	 * @return string Modified "read more" excerpt string.
 	 */
 	function __smarty_excerpt_more($more) {
@@ -208,6 +234,10 @@ if (!function_exists('__smarty_excerpt_more')) {
 if (!function_exists('__smarty_magazine_breadcrumb')) {
 	/**
 	 * Breadcrumb Navigation.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_breadcrumb() {
 		global $post;
@@ -259,9 +289,12 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
 if (!function_exists('__smarty_magazine_hex2rgba')) {
 	/**
 	 * Convert hex color string to rgba.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param string $color Hex color code.
 	 * @param float  $opacity Opacity value.
+	 * 
 	 * @return string RGB or RGBA color string.
 	 */
 	function __smarty_magazine_hex2rgba($color, $opacity = false) {
@@ -295,8 +328,12 @@ if (!function_exists('__smarty_magazine_hex2rgba')) {
 
 	/**
 	 * Get the first image from the post content.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param int $num Image position in the content.
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_post_img($num) {
 		global $more;

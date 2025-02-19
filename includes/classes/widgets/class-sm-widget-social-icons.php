@@ -1,9 +1,10 @@
 <?php
-
 /**
  * Social Icons Widget Class.
  *
  * Displays a set of social media icons linked to the user's profiles.
+ * 
+ * @since 1.0.0
  *
  * @package SmartyMagazine
  */
@@ -12,15 +13,13 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-/**
- * Class __Smarty_Magazine_Social_Icons
- *
- * Custom Widget for displaying social media icons.
- */
 class __Smarty_Magazine_Social_Icons extends WP_Widget {
-
     /**
      * Constructor: Initializes the widget with its name and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -34,9 +33,15 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
 
     /**
      * Outputs the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Display arguments including 'before_title', 'after_title', etc.
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         $title = !empty($instance['title']) ? $instance['title'] : '';
@@ -78,8 +83,14 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
 
     /**
      * Outputs the widget settings form in the admin dashboard.
+     * 
+     * This method is used to display the widget settings form in the admin dashboard.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current widget settings.
+     * 
+     * @return void
      */
     public function form($instance) {
         $defaults = array(
@@ -110,10 +121,16 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
 
     /**
      * Helper method to generate input fields for the widget form.
+     * 
+     * This method generates input fields for the widget form.
+     * 
+     * @since 1.0.0
      *
      * @param string $field_id The field ID.
      * @param string $label The field label.
      * @param string $value The current value of the field.
+     * 
+     * @return void
      */
     private function generate_input_field($field_id, $label, $value) {
         ?>
@@ -131,9 +148,14 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
 
     /**
      * Sanitizes and saves widget settings.
+     * 
+     * This method is used to sanitize and save the widget settings.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New settings input by the user.
      * @param array $old_instance Previous settings.
+     * 
      * @return array Updated settings.
      */
     public function update($new_instance, $old_instance) {

@@ -5,15 +5,16 @@
  * Author URI: 		https://github.com/mnestorov
  * Description: 	SmartyMagazine is a professional looking WordPress News and Magazine theme. Theme is build with Bootstrap and is fully responsive for all the screen sizes. It includes theme customizer to customize and setup basic settings logo, color, and layouts. You can have 6 different news layouts, social icons and news ticker widgets to create beautiful homepage and do support different advertisement banner size.
  * Version: 		1.0.0
- * License: 		GNU General Public License v2 or later
- * License URI: 	http://www.gnu.org/licenses/gpl-2.0.html
+ * License: 		GPL-2.0+
+ * License URI: 	http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: 	smarty_magazine
  * Tags: 			one-column, two-columns, three-columns, right-sidebar, custom-header, custom-background, custom-menu, custom-colors, threaded-comments, featured-images, theme-options, post-formats
- * Tested up to: 	5.8
- * Requires PHP: 	5.6
+ * Tested up to: 	6.0
+ * Requires PHP: 	8.0
  *
  * This theme, like WordPress, is licensed under the GPL.
- * EasyMag is based on Underscores http://underscores.me/, (C) 2012-2015 Automattic, Inc.
+ * SmartyMagazine is based on Underscores http://underscores.me/, (C) 2012-2025 Automattic, Inc. 
+ * with Bootstrap 5 integration.
  */
 
 

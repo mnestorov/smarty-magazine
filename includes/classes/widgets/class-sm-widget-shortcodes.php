@@ -1,9 +1,10 @@
 <?php
-
 /**
- * SHortcodes Widget Class.
+ * Shortcodes Widget Class.
  *
  * Displays a shortcode data in website top bar.
+ * 
+ * @since 1.0.0
  *
  * @package SmartyMagazine
  */
@@ -12,15 +13,13 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-/**
- * Class __Smarty_Magazine_Shortcodes
- *
- * Custom Widget for displaying shortcodes.
- */
 class __Smarty_Magazine_Shortcodes extends WP_Widget {
-
     /**
      * Constructor: Initializes the widget with its name and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -34,9 +33,15 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
 
     /**
      * Outputs the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Display arguments including 'before_title', 'after_title', etc.
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         echo $args['before_widget'];
@@ -51,8 +56,14 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
 
     /**
      * Outputs the widget settings form in the admin dashboard.
+     * 
+     * This method is used to display the widget settings form in the admin dashboard.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function form($instance) {
         $shortcode = !empty($instance['shortcode']) ? esc_textarea($instance['shortcode']) : '';
@@ -71,9 +82,14 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
 
     /**
      * Handles widget settings updates.
+     * 
+     * This method is used to handle the widget settings updates.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New widget settings.
      * @param array $old_instance Previous widget settings.
+     * 
      * @return array Updated settings.
      */
     public function update($new_instance, $old_instance) {

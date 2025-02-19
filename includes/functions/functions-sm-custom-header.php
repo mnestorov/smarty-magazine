@@ -1,29 +1,37 @@
 <?php
 /**
- * Sample implementation of the Custom Header feature.
+ * Implementation of the Custom Header feature.
  *
  * You can add an optional custom header image to header.php like so:
  * 
- * 			if ( get_header_image() ) : 
- * 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
- * 					<img src="<?php header_image(); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" alt="">
- * 				</a>
- * 			endif; // End header image check.
+ * 	if (get_header_image()) : 
+ * 		<a href="<?php echo esc_url(home_url( '/' )); ?>" rel="home">
+ * 			<img src="<?php header_image(); ?>" width="<?php echo esc_attr(get_custom_header()->width); ?>" height="<?php echo esc_attr(get_custom_header()->height); ?>">
+ * 		</a>
+ * 	endif; // End header image check.
+ * 
+ * @since 1.0.0
  *
  * @link http://codex.wordpress.org/Custom_Headers
+ * 
  * @package SmartyMagazine
  */
 
 if (!function_exists('__smarty_magazine_header_style')) {
 	/**
 	 * Set up the WordPress core custom header feature.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @uses __smarty_magazine_header_style()
 	 * @uses __smarty_magazine_admin_header_style()
 	 * @uses __smarty_magazine_admin_header_image()
+	 * 
+	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/themes/functionality/custom-headers/
 	 */
-	function __smarty_magazine_custom_header_setup()
-	{
+	function __smarty_magazine_custom_header_setup() {
 		add_theme_support('custom-header', apply_filters('__smarty_magazine_custom_header_args', array(
 			'default-image'          => '',
 			'default-text-color'     => '000000',
@@ -41,8 +49,14 @@ if (!function_exists('__smarty_magazine_header_style')) {
 if (!function_exists('__smarty_magazine_header_style')) {
 	/**
 	 * Styles the header image and text displayed on the blog
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @see __smarty_magazine_custom_header_setup().
+	 * 
+	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/themes/functionality/custom-headers/
 	 */
 	function __smarty_magazine_header_style() {
 		$header_text_color = get_header_textcolor();
@@ -74,8 +88,14 @@ if (!function_exists('__smarty_magazine_header_style')) {
 if (!function_exists('__smarty_magazine_admin_header_style')) {
 	/**
 	 * Styles the header image displayed on the Appearance > Header admin panel.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @see __smarty_magazine_custom_header_setup().
+	 * 
+	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/themes/functionality/custom-headers/
 	 */
 	function __smarty_magazine_admin_header_style() { ?>
 		<style type="text/css">
@@ -94,8 +114,14 @@ if (!function_exists('__smarty_magazine_admin_header_style')) {
 if (!function_exists('__smarty_magazine_admin_header_image')) {
 	/**
 	 * Custom header image markup displayed on the Appearance > Header admin panel.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @see __smarty_magazine_custom_header_setup().
+	 * 
+	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/themes/functionality/custom-headers/
 	 */
 	function __smarty_magazine_admin_header_image() { ?>
 		<div id="headimg">

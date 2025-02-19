@@ -5,6 +5,10 @@
  *
  * This widget displays posts in layout style 2, providing options for randomization,
  * ordering, and category filtering for recently published posts.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -19,6 +23,10 @@ class __Smarty_Magazine_Post_Layout_2 extends __Smarty_Magazine_Tabs_Content {
 
     /**
      * Constructor: Initializes the widget with a unique ID, name, and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -35,6 +43,8 @@ class __Smarty_Magazine_Post_Layout_2 extends __Smarty_Magazine_Tabs_Content {
      *
      * This method returns an array of configurable options displayed in the widget admin panel.
      * It allows setting the title, category, number of posts, randomization, and ordering options.
+     * 
+     * @since 1.0.0
      *
      * @return array Configuration fields for widget customization.
      */

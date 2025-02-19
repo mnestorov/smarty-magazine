@@ -1,11 +1,14 @@
 <?php
-
 /**
  * News List Layout 3 Widget.
  *
  * This widget displays posts in a dual-column layout. Each column can have its own title, 
  * category, and configuration options, allowing for flexible presentation of recently 
  * published posts.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -20,6 +23,10 @@ class __Smarty_Magazine_Post_Layout_3 extends __Smarty_Magazine_Tabs_Content {
 
     /**
      * Constructor: Initializes the widget with a unique ID, name, and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -36,6 +43,8 @@ class __Smarty_Magazine_Post_Layout_3 extends __Smarty_Magazine_Tabs_Content {
      *
      * This method returns an array of configurable options displayed in the widget admin panel.
      * It allows setting titles, categories, number of posts, and ordering for two different columns.
+     * 
+     * @since 1.0.0
      *
      * @return array Configuration fields for widget customization.
      */
@@ -87,9 +96,13 @@ class __Smarty_Magazine_Post_Layout_3 extends __Smarty_Magazine_Tabs_Content {
      * This method outputs two columns, each displaying posts based on the provided settings 
      * (title, category, number of posts, order, and order by). It uses the parent widget 
      * rendering logic for consistency.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Widget arguments.
      * @param array $instance The widget settings instance.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         // Prepare the instance with default values.

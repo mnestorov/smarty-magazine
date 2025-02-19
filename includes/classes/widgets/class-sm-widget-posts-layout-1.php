@@ -4,6 +4,10 @@
  * News List Layout 1 Widget.
  *
  * This widget displays posts in layout style 1, focusing on recently published posts.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -18,6 +22,10 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
 
     /**
      * Constructor: Initializes the widget with name and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -34,8 +42,12 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
      *
      * This method returns an array of configuration options that will be displayed
      * in the widget admin settings.
-     *
+     * 
+     * @since 1.0.0
+     * 
      * @return array Configuration fields for widget settings.
+     * 
+     * @return array
      */
     public function get_configs() {
         $fields = array(

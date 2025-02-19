@@ -1,9 +1,6 @@
 <?php
-
 /**
  * Theme Customizer.
- * 
- * @package SmartyMagazine
  * 
  * @since 1.0.0
  * 

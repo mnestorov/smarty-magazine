@@ -1,10 +1,13 @@
 <?php
-
 /**
  * News List Layout 4 Widget.
  *
  * This widget displays posts in a sidebar-friendly layout, ideal for highlighting 
  * recently published content in a compact format.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -24,6 +27,10 @@ class __Smarty_Magazine_Post_Layout_4 extends __Smarty_Magazine_Tabs_Content {
 
     /**
      * Constructor: Initializes the widget with its ID, name, and description.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -40,8 +47,10 @@ class __Smarty_Magazine_Post_Layout_4 extends __Smarty_Magazine_Tabs_Content {
      *
      * This method returns an array of fields that appear in the widget admin panel,
      * allowing customization of the title, categories, number of posts, and order settings.
-     *
-     * @return array Configuration fields for the widget.
+     * 
+     * @since 1.0.0
+     * 
+     * @return array Configuration fields for widget customization.
      */
     public function get_configs() {
         $fields = array(

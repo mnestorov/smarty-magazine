@@ -1,9 +1,10 @@
 <?php
-
 /**
  * Custom template tags for this theme.
- *
+ * 
  * Eventually, some of the functionality here could be replaced by core features.
+ * 
+ * @since 1.0.0
  *
  * @package SmartyMagazine
  */
@@ -11,6 +12,8 @@
 if (!function_exists('__smarty_magazine_posted_on')) {
 	/**
 	 * Prints HTML with meta information for the current post-date/time and author.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
@@ -45,6 +48,8 @@ if (!function_exists('__smarty_magazine_posted_on')) {
 if (!function_exists('__smarty_magazine_entry_footer')) {
     /**
      * Prints HTML with meta information for the categories, tags and comments.
+	 * 
+	 * @since 1.0.0
      *
      * @return void
      */
@@ -84,6 +89,8 @@ if (!function_exists('__smarty_magazine_entry_footer')) {
 if (!function_exists('__smarty_magazine_categorized_blog')) {
 	/**
 	 * Returns true if a blog has more than 1 category.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -109,6 +116,8 @@ if (!function_exists('__smarty_magazine_categorized_blog')) {
 if (!function_exists('__smarty_magazine_category_transient_flusher')) {
 	/**
 	 * Flush out the transients used in __smarty_magazine_categorized_blog.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @return void
 	 */

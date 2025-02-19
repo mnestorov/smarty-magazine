@@ -1,9 +1,12 @@
 <?php
-
 /**
  * Featured Post Slider Widget Class.
  *
  * Displays a featured news image slider with titles and published dates.
+ * 
+ * @since 1.0.0
+ * 
+ * @package SmartyMagazine
  */
 
 if (!defined('ABSPATH')) {
@@ -11,9 +14,12 @@ if (!defined('ABSPATH')) {
 }
 
 class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
-
     /**
      * Constructor: Initializes the widget.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -27,9 +33,15 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
 
     /**
      * Outputs the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Display arguments including 'before_title', 'after_title', etc.
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         $show_posts_from = isset($instance['show_posts_from']) ? $instance['show_posts_from'] : 'recent';
@@ -73,6 +85,10 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
 
     /**
      * Renders a single post slide.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     private function render_post_slide() {
         ?>
@@ -101,8 +117,14 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
 
     /**
      * Outputs the widget settings form in the admin dashboard.
+     * 
+     * This method is used to display the widget settings form in the admin dashboard.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current settings.
+     * 
+     * @return void
      */
     public function form($instance) {
         $defaults = array(
@@ -177,9 +199,14 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
 
     /**
      * Sanitizes and saves widget settings.
+     * 
+     * This method is used to sanitize and save the widget settings.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New settings for this instance as input by the user.
      * @param array $old_instance Old settings for this instance.
+     * 
      * @return array Updated settings.
      */
     public function update($new_instance, $old_instance) {

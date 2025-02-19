@@ -1,6 +1,13 @@
 <?php
 
-// Include the TGM Plugin Activation library.
+/**
+ * Register the required plugins for this theme.
+ * 
+ * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action at priority 10.
+ * It defines an array of required and recommended plugins and passes them to the TGMPA library for installation.
+ * 
+ * @since 1.0.0
+ */
 require_once get_template_directory() . '/includes/classes/class-tgm-plugin-activation.php';
 
 if (!function_exists('__smarty_register_required_plugins')) {
@@ -9,6 +16,12 @@ if (!function_exists('__smarty_register_required_plugins')) {
      *
      * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action at priority 10.
      * It defines an array of required and recommended plugins and passes them to the TGMPA library for installation.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     * 
+     * @see tgmpa()
      */
     function __smarty_register_required_plugins() {
         // Array of plugins to be registered. Each plugin array must have 'name' and 'slug'. 'source' is required if not from the .org repo.

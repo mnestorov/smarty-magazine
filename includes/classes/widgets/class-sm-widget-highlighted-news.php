@@ -4,6 +4,10 @@
  * Highlighted News Grid Widget Class.
  * 
  * Displays highlighted grid news posts from 4 different categories.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -11,9 +15,12 @@ if (!defined('ABSPATH')) {
 }
 
 class __Smarty_Magazine_Highlighted_News extends WP_Widget {
-
     /**
      * Constructor: Initialize the widget.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -27,9 +34,15 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
 
     /**
      * Output the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Display arguments including 'before_title', 'after_title', etc.
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         global $post;
@@ -58,9 +71,15 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
 
     /**
      * Display highlighted news for a given category.
+     * 
+     * This method is used to display the highlighted news for a given category.
+     * 
+     * @since 1.0.0
      *
      * @param int $category_id The category ID.
      * @param string $rgba The background color in RGBA format.
+     * 
+     * @return void
      */
     private function display_highlighted_news($category_id, $rgba) {
         $query = new WP_Query(array(
@@ -82,9 +101,15 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
 
     /**
      * Render the post HTML structure.
+     * 
+     * This method is used to render the post HTML structure.
+     * 
+     * @since 1.0.0
      *
      * @param int $category_id The category ID.
      * @param string $rgba The background color in RGBA format.
+     * 
+     * @return void
      */
     private function render_post($category_id, $rgba) {
         global $post;
@@ -120,8 +145,14 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
 
     /**
      * Render the widget form in the admin dashboard.
+     * 
+     * This method is used to display the widget form in the admin dashboard.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current settings.
+     * 
+     * @return void
      */
     public function form($instance) {
         $defaults = array(
@@ -133,7 +164,6 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
-
         ?>
         <div class="sm-highlighted-news-grid">
             <div class="sm-admin-input-wrap">
@@ -143,7 +173,6 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
                     value="<?php echo esc_attr($instance['title']); ?>" 
                     placeholder="<?php _e('Title for Highlighted News', 'smarty_magazine'); ?>">
             </div>
-
             <?php for ($i = 1; $i <= 4; $i++) : ?>
                 <div class="sm-admin-input-wrap">
                     <label for="<?php echo $this->get_field_id('category' . $i); ?>">
@@ -172,9 +201,14 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
 
     /**
      * Sanitize and save widget settings.
+     * 
+     * This method is used to sanitize and save the widget settings.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New settings for this instance as input by the user.
      * @param array $old_instance Old settings for this instance.
+     * 
      * @return array Updated settings.
      */
     public function update($new_instance, $old_instance) {

@@ -5,10 +5,11 @@
  * This class extends WP_Customize_Control to create custom group heading sections 
  * in the WordPress Customizer. It supports different heading types such as 
  * standard headings, messages, and horizontal rules (hr).
+ * 
+ * @since 1.0.0
  *
  * @package SmartyMagazine
  */
-
 class __Smarty_Magazine_Group_Settings_Heading_Control extends WP_Customize_Control {
     /**
      * Default setting for the control.
@@ -51,8 +52,14 @@ class __Smarty_Magazine_Group_Settings_Heading_Control extends WP_Customize_Cont
      *
      * Based on the 'type' property, this method renders different heading styles 
      * or a horizontal rule. It outputs sanitized HTML to ensure security.
+     * 
+     * @since 1.0.0
+     * 
+     * @access public
      *
      * @return void
+     * 
+     * @see WP_Customize_Control::render_content()
      */
     public function render_content() {
         switch ($this->type) {

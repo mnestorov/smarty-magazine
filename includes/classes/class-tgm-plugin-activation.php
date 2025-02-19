@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin installation and activation for WordPress themes.
  *
@@ -48,8 +47,7 @@ if (! class_exists('TGM_Plugin_Activation')) {
 	 * @author  Thomas Griffin
 	 * @author  Gary Jones
 	 */
-	class TGM_Plugin_Activation
-	{
+	class TGM_Plugin_Activation {
 		/**
 		 * TGMPA version number.
 		 *

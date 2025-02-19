@@ -4,6 +4,10 @@
  * News Ticker Widget Class.
  *
  * Displays a news ticker with headlines from recent posts or a specific category.
+ * 
+ * @since 1.0.0
+ * 
+ * @package Smarty_Magazine
  */
 
 if (!defined('ABSPATH')) {
@@ -11,9 +15,12 @@ if (!defined('ABSPATH')) {
 }
 
 class __Smarty_Magazine_News_Ticker extends WP_Widget {
-
     /**
      * Constructor: Initializes the widget.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
      */
     public function __construct() {
         parent::__construct(
@@ -27,9 +34,15 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
     /**
      * Outputs the widget content on the front-end.
+     * 
+     * This method is used to display the widget content on the front-end.
+     * 
+     * @since 1.0.0
      *
      * @param array $args Display arguments including 'before_title', 'after_title', etc.
      * @param array $instance The widget settings.
+     * 
+     * @return void
      */
     public function widget($args, $instance) {
         $title           = !empty($instance['title']) ? $instance['title'] : __('Headlines', 'smarty_magazine');
@@ -78,8 +91,14 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
     /**
      * Outputs the widget settings form in the admin dashboard.
+     * 
+     * This method is used to display the widget settings form in the admin dashboard.
+     * 
+     * @since 1.0.0
      *
      * @param array $instance Current settings.
+     * 
+     * @return void
      */
     public function form($instance) {
         $defaults = array(
@@ -158,9 +177,14 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
     /**
      * Sanitizes and saves widget settings.
+     * 
+     * This method is used to sanitize and save the widget settings.
+     * 
+     * @since 1.0.0
      *
      * @param array $new_instance New settings for this instance as input by the user.
      * @param array $old_instance Old settings for this instance.
+     * 
      * @return array Updated settings.
      */
     public function update($new_instance, $old_instance) {
