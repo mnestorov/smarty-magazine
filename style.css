@@ -1459,7 +1459,6 @@ ol {
 	font-family: 'Roboto', sans-serif;
 	font-size: 12px;
 	font-weight: 500;
-	display: inline-block;
 	float: right;
 	margin-top: 0px;
 	opacity: .6;
@@ -2576,7 +2575,6 @@ ol {
 
 .sm-sidebar .sm-social-icons li {
 	font-size: 22px;
-	display: inline-block;
 	float: left;
 	width: 48px;
 	height: 48px;
