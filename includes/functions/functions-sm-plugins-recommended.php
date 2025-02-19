@@ -10,10 +10,19 @@ if (!function_exists('__smarty_register_required_plugins')) {
      * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action at priority 10.
      * It defines an array of required and recommended plugins and passes them to the TGMPA library for installation.
      */
-    function __smarty_register_required_plugins()
-    {
+    function __smarty_register_required_plugins() {
         // Array of plugins to be registered. Each plugin array must have 'name' and 'slug'. 'source' is required if not from the .org repo.
         $plugins = array(
+            array(
+                'name'     => 'Mega Menu plugin for WordPress',  // The name displayed in the plugins list.
+                'slug'     => 'easymega',                        // The slug as used in the WordPress.org repository or a custom source.
+                'required' => false,                             // Set to true if the plugin is required, false if recommended.
+            ),
+            array(
+                'name'     => 'Mega Menu plugin for WordPress',  // The name displayed in the plugins list.
+                'slug'     => 'easymega',                        // The slug as used in the WordPress.org repository or a custom source.
+                'required' => false,                             // Set to true if the plugin is required, false if recommended.
+            ),
             array(
                 'name'     => 'Mega Menu plugin for WordPress',  // The name displayed in the plugins list.
                 'slug'     => 'easymega',                        // The slug as used in the WordPress.org repository or a custom source.

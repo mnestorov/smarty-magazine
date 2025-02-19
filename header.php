@@ -163,9 +163,9 @@
                 <div class="row">
                     <div class="col-12">
                         <?php
-                        $custom_shortcode = get_theme_mod('__smarty_magazine_custom_shortcode', '');
-                        if (!empty($custom_shortcode)) {
-                            echo do_shortcode(esc_html($custom_shortcode));
+                        $header_shortcode = get_theme_mod('__smarty_magazine_header_shortcode', '');
+                        if (!empty($header_shortcode)) {
+                            echo do_shortcode(esc_html($header_shortcode));
                         }
                         ?>
                     </div>

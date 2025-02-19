@@ -1,4 +1,18 @@
-<footer class="sm-footer">
+<?php if (is_front_page()) : ?>
+    <div class="container-fluid px-0">
+        <div class="row">
+            <div class="col-12">
+                <?php
+                $footer_shortcode = get_theme_mod('__smarty_magazine_footer_shortcode', '');
+                if (!empty($footer_shortcode)) {
+                    echo do_shortcode(esc_html($footer_shortcode));
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<footer class="sm-footer mt-0">
     <?php if (is_active_sidebar('sm-footer1') || is_active_sidebar('sm-footer2') || is_active_sidebar('sm-footer3') || is_active_sidebar('sm-footer4')) : ?>
         <div class="container">
             <div class="sm-footer-cont">

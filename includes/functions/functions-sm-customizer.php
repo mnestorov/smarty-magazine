@@ -2,15 +2,26 @@
 
 /**
  * Theme Customizer.
- *
+ * 
+ * @package SmartyMagazine
+ * 
+ * @since 1.0.0
+ * 
+ * @link https://codex.wordpress.org/Theme_Customization_API
+ * @link https://developer.wordpress.org/themes/customize-api/
+ * 
  * @package SmartyMagazine
  */
 
 if (!function_exists('__smarty_magazine_customize_register')) {
 	/**
 	 * Add postMessage support for site title and description for the Theme Customizer.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_customize_register($wp_customize) {
 		$wp_customize->get_setting('blogname')->transport         = 'postMessage';
@@ -21,18 +32,18 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		require get_template_directory() . '/includes/classes/class-sm-customizer-controls.php';
 
 		// Header Settings
-		$wp_customize->add_panel('__smarty_magazine_header_options',	array(
-			'priority' 			=> 60,
-			'title' 			=> __('Header', 'smarty_magazine'),
-			'description' 		=> __('Header Settings', 'smarty_magazine'),
-			'capability' 		=> 'edit_theme_options'
+		$wp_customize->add_panel('__smarty_magazine_header_options', array(
+			'priority' 	  => 60,
+			'title' 	  => __('Header', 'smarty_magazine'),
+			'description' => __('Header Settings', 'smarty_magazine'),
+			'capability'  => 'edit_theme_options'
 		));
 
 		// Sticky Menu Section
 		$wp_customize->add_section('__smarty_magazine_sticky_menu_section', array(
-			'priority'  => 100,
-			'title'     => __('Sticky Menu', 'smarty_magazine'),
-			'panel'     => '__smarty_magazine_header_options'
+			'priority' => 100,
+			'title'    => __('Sticky Menu', 'smarty_magazine'),
+			'panel'    => '__smarty_magazine_header_options'
 		));
 
 		// Sticky Desktop Menu Setting
@@ -44,15 +55,15 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 
 		// Sticky Desktop Menu Control
 		$wp_customize->add_control('__smarty_magazine_sticky_menu', array(
-			'type' 				=> 'checkbox',
-			'label' 			=> __('Enable Sticky Desktop Nenu', 'smarty_magazine'),
-			'section' 			=> '__smarty_magazine_sticky_menu_section'
+			'type'    => 'checkbox',
+			'label'   => __('Enable Sticky Desktop Nenu', 'smarty_magazine'),
+			'section' => '__smarty_magazine_sticky_menu_section'
 		));
 
 		// Sticky Mobile Menu Setting
 		$wp_customize->add_setting('__smarty_magazine_sticky_mobile_menu', array(
-			'default'           => 0,
-			'capability'        => 'edit_theme_options',
+			'default'    		=> 0,
+			'capability' 		=> 'edit_theme_options',
 			'sanitize_callback' => '__smarty_magazine_checkbox_sanitize',
 		));
 
@@ -63,36 +74,32 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			'section' => '__smarty_magazine_sticky_menu_section',
 		));
 
-		
-		
-		
-
 		$wp_customize->add_section('header_topbar', array(
-			'title' 			=> __('Header Top Bar', 'smarty_magazine'),
-			'panel' 			=> '__smarty_magazine_header_options'
+			'priority'    => 110,
+			'title' => __('Header Top Bar', 'smarty_magazine'),
+			'panel' => '__smarty_magazine_header_options'
 		));
 
 		// Custom Shortcode Section
-		$wp_customize->add_section('__smarty_magazine_custom_shortcode_section', array(
-			'priority'    => 110,
-			'title'       => __('Shortcode', 'smarty_magazine'),
-			'description' => __('Insert a custom shortcode to display under the header area.', 'smarty_magazine'),
+		$wp_customize->add_section('__smarty_magazine_header_shortcode_section', array(
+			'title'       => __('Header Bottom Bar', 'smarty_magazine'),
+			'description' => __('Insert a header shortcode to display under the header area.', 'smarty_magazine'),
 			'panel'       => '__smarty_magazine_header_options'
 		));
 
 		// Custom Shortcode Setting
-		$wp_customize->add_setting('__smarty_magazine_custom_shortcode', array(
+		$wp_customize->add_setting('__smarty_magazine_header_shortcode', array(
 			'default'           => '',
 			'capability'        => 'edit_theme_options',
 			'sanitize_callback' => 'sanitize_text_field'
 		));
 
 		// Custom Shortcode Control
-		$wp_customize->add_control('__smarty_magazine_custom_shortcode', array(
+		$wp_customize->add_control('__smarty_magazine_header_shortcode', array(
 			'type'        => 'text',
 			'label'       => __('Shortcode', 'smarty_magazine'),
 			'description' => __('Enter the shortcode you want to display under the header (e.g., [my_shortcode]).', 'smarty_magazine'),
-			'section'     => '__smarty_magazine_custom_shortcode_section',
+			'section'     => '__smarty_magazine_header_shortcode_section',
 		));
 
 		$wp_customize->add_setting('__smarty_magazine_hide_date_setting', array(
@@ -102,10 +109,10 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		));
 
 		$wp_customize->add_control('__smarty_magazine_hide_date', array(
-			'type' 				=> 'checkbox',
-			'label' 			=> __('Hide Header Date', 'smarty_magazine'),
-			'section' 			=> 'header_topbar',
-			'settings' 			=> '__smarty_magazine_hide_date_setting'
+			'type' 	   => 'checkbox',
+			'label'    => __('Hide Header Date', 'smarty_magazine'),
+			'section'  => 'header_topbar',
+			'settings' => '__smarty_magazine_hide_date_setting'
 		));
 
 		// Header Background Color Setting
@@ -142,32 +149,32 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 
 		// Main Menu Color
 		$wp_customize->add_section('__smarty_magazine_menu_color_section', array(
-			'priority' 			=> 3,
-			'title' 			=> __('Menu Color', 'smarty_magazine'),
-			'panel'				=> 'colors'
+			'priority' => 3,
+			'title'    => __('Menu Color', 'smarty_magazine'),
+			'panel'	   => 'colors'
 		));
 
 		$wp_customize->add_setting('__smarty_magazine_menu_color', array(
-			'priority' 			     => 6,
-			'default' 			     => '#ffffff',
-			'capability' 			 => 'edit_theme_options',
-			'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
+			'priority' 			   => 6,
+			'default' 			   => '#ffffff',
+			'capability' 		   => 'edit_theme_options',
+			'sanitize_callback'	   => '__smarty_magazine_color_sanitize',
+			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize'
 		));
 
 		// Menu Text Color
 		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_menu_color_picker', array(
-			'label' 		=> __('Menu Text Color', 'smarty_magazine'),
-			'section' 		=> 'colors',
-			'settings' 		=> '__smarty_magazine_menu_color'
+			'label'    => __('Menu Text Color', 'smarty_magazine'),
+			'section'  => 'colors',
+			'settings' => '__smarty_magazine_menu_color'
 		)));
 
 		$wp_customize->add_setting('__smarty_magazine_menu_bg_color', array(
-			'priority' 				 => 7,
-			'default' 				 => '#cf4141',
-			'capability' 			 => 'edit_theme_options',
-			'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
+			'priority' 			   => 7,
+			'default' 			   => '#cf4141',
+			'capability' 		   => 'edit_theme_options',
+			'sanitize_callback'	   => '__smarty_magazine_color_sanitize',
+			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize'
 		));
 
 		$wp_customize->add_control(
@@ -175,9 +182,9 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				$wp_customize,
 				'__smarty_magazine_menu_bg_color_picker',
 				array(
-					'label' 			=> __('Menu Background', 'smarty_magazine'),
-					'section' 			=> 'colors',
-					'settings' 			=> '__smarty_magazine_menu_bg_color'
+					'label' 	=> __('Menu Background', 'smarty_magazine'),
+					'section' 	=> 'colors',
+					'settings' 	=> '__smarty_magazine_menu_bg_color'
 				)
 			)
 		);
@@ -185,11 +192,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		$wp_customize->add_setting(
 			'__smarty_magazine_menu_color_hover',
 			array(
-				'priority' 			     => 8,
-				'default' 			     => '#ffffff',
-				'capability' 			 => 'edit_theme_options',
-				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
+				'priority' 			    => 8,
+				'default' 			    => '#ffffff',
+				'capability' 			=> 'edit_theme_options',
+				'sanitize_callback'		=> '__smarty_magazine_color_sanitize',
+				'sanitize_js_callback'  => '__smarty_magazine_color_escaping_sanitize'
 			)
 		);
 
@@ -198,9 +205,9 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				$wp_customize,
 				'__smarty_magazine_menu_hover_color_picker',
 				array(
-					'label' 			=> __('Menu Text Hover Color', 'smarty_magazine'),
-					'section' 			=> 'colors',
-					'settings' 			=> '__smarty_magazine_menu_color_hover'
+					'label' 	=> __('Menu Text Hover Color', 'smarty_magazine'),
+					'section' 	=> 'colors',
+					'settings' 	=> '__smarty_magazine_menu_color_hover'
 				)
 			)
 		);
@@ -208,11 +215,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		$wp_customize->add_setting(
 			'__smarty_magazine_menu_hover_bg_color',
 			array(
-				'priority' 				 => 9,
-				'default' 				 => '#be3434',
-				'capability' 			 => 'edit_theme_options',
-				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
+				'priority' 				=> 9,
+				'default' 				=> '#be3434',
+				'capability' 			=> 'edit_theme_options',
+				'sanitize_callback'		=> '__smarty_magazine_color_sanitize',
+				'sanitize_js_callback'  => '__smarty_magazine_color_escaping_sanitize'
 			)
 		);
 
@@ -221,9 +228,9 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				$wp_customize,
 				'__smarty_magazine_menu_hover_bg_color_picker',
 				array(
-					'label' 			=> __('Menu Hover Background', 'smarty_magazine'),
-					'section' 			=> 'colors',
-					'settings' 			=> '__smarty_magazine_menu_hover_bg_color'
+					'label' 	=> __('Menu Hover Background', 'smarty_magazine'),
+					'section' 	=> 'colors',
+					'settings' 	=> '__smarty_magazine_menu_hover_bg_color'
 				)
 			)
 		);
@@ -513,7 +520,6 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			)
 		);
 		
-
 		// Primary Color
 		$wp_customize->add_setting(
 			'__smarty_magazine_primary_color',
@@ -561,19 +567,46 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		);
 
 		// Footer Settings
-		$wp_customize->add_section(
-			'__smarty_magazine_footer_options',
-			array(
+		$wp_customize->add_panel('__smarty_magazine_footer_options', array(
 				'title'       => esc_html__('Footer', 'smarty_magazine'),
 				'priority'    => 210,
 				'description' => esc_html__('Customize the footer settings including background color, text color, and copyright text.', 'smarty_magazine'),
 			)
 		);
 
+		// Custom Shortcode Section
+		$wp_customize->add_section('__smarty_magazine_footer_shortcode_section', array(
+			'priority'    => 110,
+			'title'       => __('Footer Top Bar', 'smarty_magazine'),
+			'description' => __('Insert a footer shortcode to display above the footer area.', 'smarty_magazine'),
+			'panel'       => '__smarty_magazine_footer_options'
+		));
+
+		// Custom Shortcode Setting
+		$wp_customize->add_setting('__smarty_magazine_footer_shortcode', array(
+			'default'           => '',
+			'capability'        => 'edit_theme_options',
+			'sanitize_callback' => 'sanitize_text_field'
+		));
+
+		// Custom Shortcode Control
+		$wp_customize->add_control('__smarty_magazine_footer_shortcode', array(
+			'type'        => 'text',
+			'label'       => __('Shortcode', 'smarty_magazine'),
+			'description' => __('Enter the shortcode you want to display above the footer (e.g., [my_shortcode]).', 'smarty_magazine'),
+			'section'     => '__smarty_magazine_footer_shortcode_section',
+		));
+
+		// Footer Copyright Text Section
+		$wp_customize->add_section('__smarty_magazine_footer_copyright_section', array(
+			'priority'    => 110,
+			'title'       => __('Footer Copyright', 'smarty_magazine'),
+			'description' => __('Insert a copyright text to display in to the footer area.', 'smarty_magazine'),
+			'panel'       => '__smarty_magazine_footer_options'
+		));
+
 		// Footer Copyright Text Setting
-		$wp_customize->add_setting(
-			'__smarty_magazine_footer_copyright',
-			array(
+		$wp_customize->add_setting('__smarty_magazine_footer_copyright', array(
 				'default'           => esc_html__('© 2025 Smarty Magazine. All rights reserved.', 'smarty_magazine'),
 				'sanitize_callback' => 'sanitize_text_field',
 				'capability'        => 'edit_theme_options',
@@ -581,12 +614,10 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		);
 
 		// Footer Copyright Control
-		$wp_customize->add_control(
-			'__smarty_magazine_footer_copyright',
-			array(
+		$wp_customize->add_control('__smarty_magazine_footer_copyright', array(
 				'label'       => esc_html__('Footer Copyright Text', 'smarty_magazine'),
 				'description' => esc_html__('Enter the text you want to display in the footer. HTML is allowed.', 'smarty_magazine'),
-				'section'     => '__smarty_magazine_footer_options',
+				'section'     => '__smarty_magazine_footer_copyright_section',
 				'type'        => 'text',
 			)
 		);
@@ -596,8 +627,13 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 if (!function_exists('__smarty_magazine_checkbox_sanitize')) {
 	/**
 	 * Sanitize checkbox inputs.
+	 * 
+	 * Ensures the input is either 1 or an empty string.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param mixed $input The input value.
+	 * 
 	 * @return int|string Returns 1 if checked, otherwise an empty string.
 	 */
 	function __smarty_magazine_checkbox_sanitize($input) {
@@ -608,8 +644,11 @@ if (!function_exists('__smarty_magazine_checkbox_sanitize')) {
 if (!function_exists('__smarty_magazine_color_sanitize')) {
 	/**
 	 * Sanitize color input by ensuring it's a valid hex code.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param string $color The color input.
+	 * 
 	 * @return string The sanitized color with hash or original input.
 	 */
 	function __smarty_magazine_color_sanitize($color) {
@@ -623,8 +662,11 @@ if (!function_exists('__smarty_magazine_color_sanitize')) {
 if (!function_exists('__smarty_magazine_color_escaping_sanitize')) {
 	/**
 	 * Escape color input for safe output in JavaScript.
-	 *
+	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param string $input The color input.
+	 * 
 	 * @return string The escaped color string.
 	 */
 	function __smarty_magazine_color_escaping_sanitize($input) {
@@ -635,8 +677,13 @@ if (!function_exists('__smarty_magazine_color_escaping_sanitize')) {
 if (!function_exists('__smarty_magazine_site_layout_sanitize')) {
 	/**
 	 * Sanitize site layout input.
+	 * 
+	 * Ensures the input is a valid layout option.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param string $input The layout input.
+	 * 
 	 * @return string The validated layout option or an empty string if invalid.
 	 */
 	function __smarty_magazine_site_layout_sanitize($input) {
@@ -652,8 +699,13 @@ if (!function_exists('__smarty_magazine_site_layout_sanitize')) {
 if (!function_exists('__smarty_magazine_page_layout_sanitize')) {
 	/**
 	 * Sanitize page layout input.
+	 * 
+	 * Ensures the input is a valid layout option.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param string $input The layout input.
+	 * 
 	 * @return string The validated layout option or an empty string if invalid.
 	 */
 	function __smarty_magazine_page_layout_sanitize($input) {
@@ -670,8 +722,13 @@ if (!function_exists('__smarty_magazine_page_layout_sanitize')) {
 if (!function_exists('__smarty_magazine_sanitize_integer')) {
 	/**
 	 * Sanitize integer input.
+	 * 
+	 * Ensures the input is an absolute integer.
+	 * 
+	 * @since 1.0.0
 	 *
 	 * @param mixed $input The input value.
+	 * 
 	 * @return int The sanitized integer.
 	 */
 	function __smarty_magazine_sanitize_integer($input) {
@@ -683,15 +740,13 @@ if (!function_exists('__smarty_magazine_sanitize_integer')) {
 if (!function_exists('__smarty_magazine_customize_preview_js')) {
 	/**
 	 * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_customize_preview_js() {
-		wp_enqueue_script(
-			'__smarty_magazine_customizer',
-			get_template_directory_uri() . '/assets/js/sm-customizer.js',
-			array('customize-preview'),
-			'20130508',
-			true
-		);
+		wp_enqueue_script( '__smarty_magazine_customizer', get_template_directory_uri() . '/assets/js/sm-customizer.js', array('customize-preview'), null, true);
 	}
 	add_action('customize_preview_init', '__smarty_magazine_customize_preview_js');
 }
@@ -699,12 +754,13 @@ if (!function_exists('__smarty_magazine_customize_preview_js')) {
 if (!function_exists('__smarty_magazine_customize_js_settings')) {
 	/**
 	 * Enqueue styles for Theme Customizer controls.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
 	 */
 	function __smarty_magazine_customize_js_settings() {
-		wp_register_style(
-			'sm-customizer-controls',
-			get_template_directory_uri() . '/assets/css/sm-customizer.css'
-		);
+		wp_register_style('sm-customizer-controls', get_template_directory_uri() . '/assets/css/sm-customizer.css');
 		wp_enqueue_style('sm-customizer-controls');
 	}
 	add_action('customize_controls_enqueue_scripts', '__smarty_magazine_customize_js_settings');
