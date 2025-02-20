@@ -89,7 +89,7 @@
                         wp_nav_menu(array(
                             'theme_location' => 'top-bar-menu', 
                             'menu_id'        => 'desktop-top-bar-menu',
-                            'menu_class'     => 'navbar-nav'
+                            'menu_class'     => 'navbar-nav me-auto mb-2 mb-lg-0'
                         )); 
                         ?>
                     </nav>
@@ -140,7 +140,7 @@
         </header>
 
         <!-- Main Navigation -->
-        <nav class="sm-menu-bar<?php if (get_theme_mod('__smarty_magazine_sticky_menu', 0) == 1) { ?> sm-sticky<?php } ?>" style="<?php echo get_theme_mod('__smarty_magazine_custom_shortcode', '') ? 'margin-bottom: 0;' : 'margin-bottom: 30px;' ?>">
+        <nav class="sm-menu-bar<?php if (get_theme_mod('__smarty_magazine_sticky_menu', 0) == 1) { ?> sm-sticky<?php } ?>" style="<?php if (get_theme_mod('__smarty_magazine_custom_shortcode', 0) != 1) { echo 'margin-bottom: 0;'; } else { echo 'margin-bottom: 30px;'; } ?>">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
