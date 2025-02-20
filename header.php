@@ -44,7 +44,7 @@
                             <div class="sm-top-social d-flex justify-content-end align-items-center">
                                 <?php if (is_active_sidebar('sm-top-bar-search')) : ?>
                                     <span class="sm-search-icon">
-                                        <a><i class="bi bi-search"></i></a>
+                                        <a data-bs-toggle="offcanvas" href="#offcanvasSearch" role="button" aria-controls="offcanvasSearch"><i class="bi bi-search"></i></a>
                                     </span>
                                 <?php endif; ?>
                                 <?php if (is_active_sidebar('sm-top-bar-social')) : ?>
@@ -59,19 +59,20 @@
             </div>
         <?php endif; ?>
 
-		<?php if (is_active_sidebar('sm-top-bar-search')) : ?>
-			<div class="sm-search-bar transition35">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12">
-							<div class="sm-search-wrap">
-								<?php dynamic_sidebar('sm-top-bar-search'); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php endif; ?>
+		<!-- Offcanvas Search Bar -->
+        <div class="offcanvas offcanvas-top sm-height-offcanvas" data-bs-backdrop="true" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasSearchLabel"><?php _e('Search', 'smarty_magazine'); ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <?php if (is_active_sidebar('sm-top-bar-search')) : ?>
+                    <div class="sm-search-wrap">
+                        <?php dynamic_sidebar('sm-top-bar-search'); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <!-- Offcanvas Menu (Visible on Desktop and Mobile) -->
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="responsiveOffcanvasMenu" aria-labelledby="responsiveOffcanvasMenuLabel">
