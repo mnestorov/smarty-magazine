@@ -196,9 +196,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                        value="<?php echo esc_attr($instance['no_of_posts']); ?>" 
                        min="1" step="1">
             </div>
-        </div>
-
-        <?php
+        </div><?php
     }
 
     /**

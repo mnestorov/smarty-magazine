@@ -99,14 +99,14 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 				background-color: {$news_ticker_bg};
 				border: 1px solid {$news_ticker_border};
 			}
-			.bt-news-ticker-tag {
+			.bt-news-ticker .bt-news-ticker-tag {
 				background: {$news_ticker_tag_bg};
 				color: {$news_ticker_tag_text};
 			}
-			.bt-news-ticker-tag .bi.bi-fire {
+			.bt-news-ticker .bt-news-ticker-tag .bi.bi-fire {
 				color: {$news_ticker_icon};
 			}
-			.bt-news-ticker-tag:after {
+			.bt-news-ticker .bt-news-ticker-tag:after {
 				border-left-color: {$news_ticker_arrow};
 			}
 			.bt-news-ticker li a {

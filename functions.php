@@ -147,11 +147,14 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
 	 * @link https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
      */
     function __smarty_magazine_front_scripts() {
-		wp_enqueue_style('sm-front-style', get_stylesheet_uri(), array(), null, 'all');
+		wp_enqueue_style('sm-style', get_stylesheet_uri(), array(), null, 'all');
 		wp_enqueue_style('sm-front-fonts', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
-		wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css', array(), '1.11.1', 'all');
-		wp_enqueue_style('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', array(), '5.3.2', 'all');
-		wp_enqueue_script('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.2', true);
+		wp_enqueue_style('bootstrap-icons', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
+		wp_enqueue_style('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css', array(), '5.3.3', 'all');
+		wp_enqueue_script('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js', array('jquery'), '5.3.3', true);
+		wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js', array('jquery'), '11.0.5', true);
+		wp_enqueue_style('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css', array(), '11.0.5', 'all');
+		wp_enqueue_script('news-ticker', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-advanced-news-ticker/1.0.1/js/newsTicker.min.js', array('jquery'), '1.0.1', true);
 		wp_enqueue_style('sm-front-css', get_template_directory_uri() . '/assets/css/sm-front.css', array(), null, 'all');
 		wp_enqueue_script('sm-front-js', get_template_directory_uri() . '/assets/js/sm-front.js', array('jquery'), null, true);
 

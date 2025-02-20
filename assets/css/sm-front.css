@@ -955,7 +955,6 @@ button.sm-sec-nav:hover {
 	opacity: 0;
 }
 
-
 .sm-main-menu li li ul.sub-menu {
 	top: 50%;
 	left: 100%;
@@ -1060,6 +1059,7 @@ button.sm-sec-nav:hover {
 .sm-nav-md .nav-toggle-subarrow {
 	display: none;
 }
+
 .sm-nav-md .menu-item-has-children > .nav-toggle-subarrow {
 	display: block;
 	position: absolute;
