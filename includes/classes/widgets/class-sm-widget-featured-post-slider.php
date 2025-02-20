@@ -139,7 +139,9 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
 
         <div class="sm-featured-post-slider">
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('title'); ?>"><strong><?php _e('Title', 'smarty_magazine'); ?></strong></label>
+                <label for="<?php echo $this->get_field_id('title'); ?>">
+                    <?php _e('Title', 'smarty_magazine'); ?>
+                </label>
                 <input type="text" 
                        id="<?php echo $this->get_field_id('title'); ?>" 
                        name="<?php echo $this->get_field_name('title'); ?>" 
@@ -148,7 +150,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
             </div>
 
             <div class="sm-admin-input-wrap">
-                <label><strong><?php _e('Choose Type', 'smarty_magazine'); ?></strong></label><br>
+                <label><?php _e('Choose Type', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
                            name="<?php echo $this->get_field_name('show_posts_from'); ?>" 
@@ -166,9 +168,10 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
             </div>
 
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('category'); ?>"><strong><?php _e('Category', 'smarty_magazine'); ?></strong></label>
-                <select id="<?php echo $this->get_field_id('category'); ?>" 
-                        name="<?php echo $this->get_field_name('category'); ?>">
+                <label for="<?php echo $this->get_field_id('category'); ?>">
+                    <?php _e('Category', 'smarty_magazine'); ?>
+                </label>
+                <select id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>">
                     <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
                     <?php
                     $categories = get_terms(array('taxonomy' => 'category', 'hide_empty' => false));
@@ -183,9 +186,10 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                     ?>
                 </select>
             </div>
-
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('no_of_posts'); ?>"><strong><?php _e('Number of Posts', 'smarty_magazine'); ?></strong></label>
+                <label for="<?php echo $this->get_field_id('no_of_posts'); ?>">
+                    <?php _e('Number of Posts', 'smarty_magazine'); ?>
+                </label>
                 <input type="number" 
                        id="<?php echo $this->get_field_id('no_of_posts'); ?>" 
                        name="<?php echo $this->get_field_name('no_of_posts'); ?>" 

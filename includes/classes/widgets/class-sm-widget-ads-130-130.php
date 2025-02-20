@@ -117,28 +117,34 @@ class __Smarty_Magazine_Ads_130_130 extends WP_Widget {
                 </select>
             </div>
 
-            <!-- Image Upload Section -->
+            <!-- Ads Image Upload Field -->
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_image'); ?>"><?php _e('Ads Image', 'smarty_magazine'); ?></label>
-                <?php if (!empty($instance['ads_image'])): ?>
-                    <img src="<?php echo esc_url($instance['ads_image']); ?>" style="width:130px;height:130px;" />
-                <?php else: ?>
-                    <img src="" style="width:130px;height:130px;display:none;" />
+
+                <!-- Display uploaded image if available -->
+                <?php if (!empty($instance['ads_image'])) : ?>
+                    <img src="<?php echo esc_url($instance['ads_image']); ?>" style="max-width: 100%; height: auto;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" />
+                <?php else : ?>
+                    <img src="" style="display: none;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" style="display: none;" />
                 <?php endif; ?>
+
+                <!-- Hidden input to store image URL -->
                 <input type="hidden"
                        class="sm-custom-media-image"
                        id="<?php echo $this->get_field_id('ads_image'); ?>"
                        name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php echo esc_attr($instance['ads_image']); ?>" />
+
+                <!-- Button to trigger media uploader -->
                 <input type="button"
-                       class="sm-img-upload sm-custom-media-button"
+                       class="button-primary sm-img-upload sm-custom-media-button" 
                        id="custom_media_button"
                        name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
-        </div>
-
-        <?php
+        </div><?php
     }
 
     /**

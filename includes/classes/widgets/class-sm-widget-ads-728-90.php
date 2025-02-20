@@ -44,7 +44,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        $title          = !empty($instance['title']) ? $instance['title'] : __('Header Banner Advertisement', 'smarty_magazine');
+        $title          = !empty($instance['title']) ? $instance['title'] : __('728x90 Ads', 'smarty_magazine');
         $ads_image_path = !empty($instance['ads_image']) ? esc_url($instance['ads_image']) : '';
         $ads_link       = !empty($instance['ads_link']) ? esc_url($instance['ads_link']) : esc_url(home_url('/'));
         $ads_link_type  = ($instance['ads_link_type'] === 'nofollow') ? 'nofollow' : 'dofollow';
@@ -119,8 +119,10 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
                 <!-- Display uploaded image if available -->
                 <?php if (!empty($instance['ads_image'])) : ?>
                     <img src="<?php echo esc_url($instance['ads_image']); ?>" style="max-width: 100%; height: auto;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" />
                 <?php else : ?>
                     <img src="" style="display: none;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" style="display: none;" />
                 <?php endif; ?>
 
                 <!-- Hidden input to store image URL -->
@@ -132,14 +134,12 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
 
                 <!-- Button to trigger media uploader -->
                 <input type="button"
-                       class="sm-img-upload sm-custom-media-button" 
+                       class="button-primary sm-img-upload sm-custom-media-button" 
                        id="custom_media_button"
                        name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
-        </div>
-
-        <?php
+        </div><?php
     }
 
     /**

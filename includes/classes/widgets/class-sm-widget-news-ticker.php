@@ -1,5 +1,4 @@
 <?php
-
 /**
  * News Ticker Widget Class.
  *
@@ -114,7 +113,9 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
         <div class="sm-news-ticker-settings">
             <!-- Title Field -->
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('title'); ?>"><strong><?php _e('Title', 'smarty_magazine'); ?></strong></label>
+                <label for="<?php echo $this->get_field_id('title'); ?>">
+                    <?php _e('Title', 'smarty_magazine'); ?>
+                </label>
                 <input type="text" 
                        id="<?php echo $this->get_field_id('title'); ?>" 
                        name="<?php echo $this->get_field_name('title'); ?>" 
@@ -124,7 +125,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
             <!-- Post Source Selection -->
             <div class="sm-admin-input-wrap">
-                <label><strong><?php _e('Choose Post Source', 'smarty_magazine'); ?></strong></label><br>
+                <label><?php _e('Choose Post Source', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
                            name="<?php echo $this->get_field_name('show_posts_from'); ?>" 
@@ -143,7 +144,9 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
             <!-- Category Selection -->
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('category'); ?>"><strong><?php _e('Category', 'smarty_magazine'); ?></strong></label>
+                <label for="<?php echo $this->get_field_id('category'); ?>">
+                    <?php _e('Category', 'smarty_magazine'); ?>
+                </label>
                 <select id="<?php echo $this->get_field_id('category'); ?>" 
                         name="<?php echo $this->get_field_name('category'); ?>">
                     <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
@@ -163,7 +166,9 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
             <!-- Number of Posts Field -->
             <div class="sm-admin-input-wrap">
-                <label for="<?php echo $this->get_field_id('no_of_posts'); ?>"><strong><?php _e('Number of Posts', 'smarty_magazine'); ?></strong></label>
+                <label for="<?php echo $this->get_field_id('no_of_posts'); ?>">
+                    <?php _e('Number of Posts', 'smarty_magazine'); ?>
+                </label>
                 <input type="number" 
                        id="<?php echo $this->get_field_id('no_of_posts'); ?>" 
                        name="<?php echo $this->get_field_name('no_of_posts'); ?>" 

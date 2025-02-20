@@ -31,7 +31,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Top Bar: Search', 'smarty_magazine'),
                 'id'            => 'sm-top-bar-search',
-                'description'   => __('Top Bar Search Position', 'smarty_magazine'),
+                'description'   => __('Top Bar search icon', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -40,7 +40,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Top Bar: Social', 'smarty_magazine'),
                 'id'            => 'sm-top-bar-social',
-                'description'   => __('Top Bar Search social icons', 'smarty_magazine'),
+                'description'   => __('Top Bar social icons', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -49,7 +49,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Top Bar: Shortcode', 'smarty_magazine'),
                 'id'            => 'sm-top-bar-shortcode',
-                'description'   => __('Top Bar Shortcode position', 'smarty_magazine'),
+                'description'   => __('Top Bar shortcode position', 'smarty_magazine'),
                 'before_widget' => '<span id="%1$s" class="widget %2$s me-3">',
                 'after_widget'  => '</span>',
                 'before_title'  => '',
@@ -58,7 +58,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Header: Ads 728x90', 'smarty_magazine'),
                 'id'            => 'sm-header-ads728x90',
-                'description'   => __('Shows Advertisement at the header position beside the logo', 'smarty_magazine'),
+                'description'   => __('Shows advertisement at the header position beside the logo', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -67,7 +67,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Homepage: News Ticker', 'smarty_magazine'),
                 'id'            => 'sm-news-ticker',
-                'description'   => __('Shows News Ticker', 'smarty_magazine'),
+                'description'   => __('Shows news ticker', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -85,7 +85,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Homepage: Highlighted News', 'smarty_magazine'),
                 'id'            => 'sm-highlighted-news',
-                'description'   => __('Add widgets to show at Frontpage Highlighted News beside the featured News slider', 'smarty_magazine'),
+                'description'   => __('Add widgets to show at front page highlighted news beside the featured news slider', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -94,7 +94,7 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
             [
                 'name'          => __('Homepage: News Section', 'smarty_magazine'),
                 'id'            => 'sm-front-top-section-news',
-                'description'   => __('Add widgets to show a list of news from a category at Front page Section', 'smarty_magazine'),
+                'description'   => __('Add widgets to show a list of news from a category at front page section', 'smarty_magazine'),
                 'before_widget' => '<aside id="%1$s" class="widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h2 class="widget-title">',
@@ -151,34 +151,6 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
         }
     }
     add_action('widgets_init', '__smarty_magazine_widgets_init');
-}
-
-if (!function_exists('__smarty_magazine_media_script')) {
-    /**
-     * Enqueue media script for widgets.
-     * 
-     * @since 1.0.0
-     * 
-     * @param string $hook The current admin page.
-     * 
-     * @return void
-     * 
-     * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
-     */
-    function __smarty_magazine_media_script($hook) {
-        if ($hook !== 'widgets.php') {
-            return;
-        }
-
-        wp_enqueue_style('wp-color-picker');
-        wp_enqueue_style('sm-widgets-css', get_template_directory_uri() . '/assets/css/sm-widgets.css');
-        
-        wp_enqueue_media();
-
-        wp_enqueue_script('wp-color-picker');
-        wp_enqueue_script('sm-widgets-js', get_template_directory_uri() . '/assets/js/sm-widgets.js', ['jquery'], '', true);
-    }
-    add_action('admin_enqueue_scripts', '__smarty_magazine_media_script');
 }
 
 if (!function_exists('__smarty_magazine_register_widgets')) {

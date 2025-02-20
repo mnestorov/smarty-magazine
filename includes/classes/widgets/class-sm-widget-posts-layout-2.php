@@ -84,4 +84,124 @@ class __Smarty_Magazine_Post_Layout_2 extends __Smarty_Magazine_Tabs_Content {
 
         return $fields;
     }
+
+    /**
+     * Outputs the widget settings form in the admin dashboard.
+     * 
+     * This method is used to display the widget settings form in the admin dashboard.
+     * 
+     * @since 1.0.0
+     *
+     * @param array $instance Current settings.
+     * 
+     * @return void
+     */
+    public function form($instance) {
+        $fields = $this->get_configs();
+
+        foreach ($fields as $field) {
+            $value = !empty($instance[$field['name']]) ? $instance[$field['name']] : '';
+            $this->generate_input_field($field, $value);
+        }
+    }
+
+    /**
+     * Helper method to generate input fields for the widget form.
+     * 
+     * This method generates input fields for the widget form.
+     * 
+     * @since 1.0.0
+     *
+     * @param array $field The field configuration.
+     * @param string $value The current value of the field.
+     * 
+     * @return void
+     */
+    private function generate_input_field($field, $value) {
+        ?>
+        <div class="sm-admin-input-wrap">
+            <label for="<?php echo esc_attr($this->get_field_id($field['name'])); ?>"><?php echo esc_html($field['label']); ?></label>
+            <?php if ($field['type'] === 'text') : ?>
+                <input 
+                    type="text" 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
+                    value="<?php echo esc_attr($value); ?>">
+            <?php elseif ($field['type'] === 'number') : ?>
+                <input 
+                    type="number" 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
+                    value="<?php echo esc_attr($value); ?>" 
+                    min="1" step="1">
+            <?php elseif ($field['type'] === 'list_cat') : ?>
+                <select 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>">
+                    <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
+                    <?php
+                    $categories = get_terms(array('taxonomy' => 'category', 'hide_empty' => false));
+                    foreach ($categories as $term) {
+                        printf(
+                            '<option value="%s" %s>%s</option>',
+                            esc_attr($term->term_id),
+                            selected($value, $term->term_id, false),
+                            esc_html($term->name)
+                        );
+                    }
+                    ?>
+                </select>
+            <?php elseif ($field['type'] === 'orderby') : ?>
+                <select 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>">
+                    <option value="date" <?php selected($value, 'date'); ?>><?php _e('Date', 'smarty_magazine'); ?></option>
+                    <option value="title" <?php selected($value, 'title'); ?>><?php _e('Title', 'smarty_magazine'); ?></option>
+                    <option value="rand" <?php selected($value, 'rand'); ?>><?php _e('Random', 'smarty_magazine'); ?></option>
+                </select>
+            <?php elseif ($field['type'] === 'order') : ?>
+                <select 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>">
+                    <option value="ASC" <?php selected($value, 'ASC'); ?>><?php _e('Ascending', 'smarty_magazine'); ?></option>
+                    <option value="DESC" <?php selected($value, 'DESC'); ?>><?php _e('Descending', 'smarty_magazine'); ?></option>
+                </select>
+            <?php elseif ($field['type'] === 'checkbox') : ?>
+                <input 
+                    type="checkbox" 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
+                    value="1" <?php checked($value, '1'); ?>>
+            <?php endif; ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Sanitizes and saves widget settings.
+     * 
+     * This method is used to sanitize and save the widget settings.
+     * 
+     * @since 1.0.0
+     *
+     * @param array $new_instance New settings for this instance as input by the user.
+     * @param array $old_instance Old settings for this instance.
+     * 
+     * @return array Updated settings.
+     */
+    public function update($new_instance, $old_instance) {
+        $instance = $old_instance;
+
+        $fields = $this->get_configs();
+
+        foreach ($fields as $field) {
+            if ($field['type'] === 'checkbox') {
+                $instance[$field['name']] = !empty($new_instance[$field['name']]) ? '1' : '0';
+            } else {
+                $instance[$field['name']] = sanitize_text_field($new_instance[$field['name']]);
+            }
+        }
+
+        return $instance;
+    }
 }

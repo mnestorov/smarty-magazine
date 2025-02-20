@@ -15,6 +15,8 @@ if (!function_exists('__smarty_magazine_setup')) {
 	 * @since 1.0.0
 	 * 
 	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/reference/hooks/after_setup_theme/
      */
     function __smarty_magazine_setup() {
         // Make theme available for translation.
@@ -70,14 +72,8 @@ if (!function_exists('__smarty_magazine_setup')) {
             'default-image' => '',
         )));
 
-        // Support EasyMega menu.
-        add_theme_support('megamenu-wp', array(
-            'mobile_mod' => 992,
-            'margin_top' => 1,
-        ));
-
         // Add custom editor style.
-        add_editor_style('assets/css/sm-custom-editor-style.css');
+        add_editor_style('assets/css/sm-custom-editor.css'); // This is the path to the editor-style.css file.
     }
 	add_action('after_setup_theme', '__smarty_magazine_setup');
 }
@@ -98,30 +94,7 @@ if (!function_exists('__smarty_magazine_content_width')) {
 	add_action('after_setup_theme', '__smarty_magazine_content_width', 0);
 }
 
-if (!function_exists('__smarty_magazine_front_scripts')) {
-    /**
-     * Enqueue scripts and styles.
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @return void
-     */
-    function __smarty_magazine_front_scripts() {
-		wp_enqueue_style('__sm_styles', get_stylesheet_uri());
-		wp_enqueue_style('__sm_roboto', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
-        wp_enqueue_style('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', array(), '5.3.2');
-        wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css', array(), '1.11.1');
-        wp_enqueue_script('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.2', true);
-        
-        // Comment reply script for threaded comments
-        if (is_singular() && comments_open() && get_option('thread_comments')) {
-            wp_enqueue_script('comment-reply');
-        }
-    }
-    add_action('wp_enqueue_scripts', '__smarty_magazine_front_scripts');
-}
-
-if (!function_exists('__smarty_magazine_enqueue_media_uploader')) {
+if (!function_exists('__smarty_magazine_enqueue_admin_scripts')) {
 	/**
 	 * Enqueue media uploader scripts.
 	 * 
@@ -130,13 +103,20 @@ if (!function_exists('__smarty_magazine_enqueue_media_uploader')) {
 	 * @param string $hook The current admin page hook.
 	 * 
 	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
 	 */
-	function __smarty_magazine_enqueue_media_uploader($hook) {
+	function __smarty_magazine_admin_scripts($hook) {
+		wp_enqueue_style('sm-admin-css', get_template_directory_uri() . '/assets/css/sm-admin.css', array(), null, 'all');
+		
 		if ('widgets.php' === $hook || 'customize.php' === $hook) {
-			wp_enqueue_media();  // Enqueue the WordPress media uploader scripts
+			wp_enqueue_style('wp-color-picker');
+			wp_enqueue_script('wp-color-picker');
+			wp_enqueue_media();
+			wp_enqueue_script('sm-admin-js', get_template_directory_uri() . '/assets/js/sm-admin.js', array('jquery'), null, true);
 		}
 	}
-	add_action('admin_enqueue_scripts', '__smarty_magazine_enqueue_media_uploader');
+	add_action('admin_enqueue_scripts', '__smarty_magazine_admin_scripts');
 }
 
 if (!function_exists('__smarty_magazine_customizer_preview')) {
@@ -146,12 +126,41 @@ if (!function_exists('__smarty_magazine_customizer_preview')) {
 	 * @since 1.0.0
 	 *
 	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/reference/hooks/customize_preview_init/
 	 */
 	function __smarty_magazine_customizer_preview() {
-		wp_enqueue_style('__sm_customizer_css', get_template_directory_uri() . '/assets/css/sm-customizer.css');
-		wp_enqueue_script('__sm_customizer_js', get_template_directory_uri() . '/assets/js/sm-customizer.js', array('customize-preview'), null, true);
+		wp_enqueue_style('sm-customizer-css', get_template_directory_uri() . '/assets/css/sm-customizer.css');
+		wp_enqueue_script('sm-customizer-js', get_template_directory_uri() . '/assets/js/sm-customizer.js', array('customize-preview'), null, true);
 	}
 	add_action('customize_preview_init', '__smarty_magazine_customizer_preview');
+}
+
+if (!function_exists('__smarty_magazine_front_scripts')) {
+    /**
+     * Enqueue scripts and styles.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @return void
+	 * 
+	 * @link https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
+     */
+    function __smarty_magazine_front_scripts() {
+		wp_enqueue_style('sm-front-style', get_stylesheet_uri(), array(), null, 'all');
+		wp_enqueue_style('sm-front-fonts', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
+		wp_enqueue_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css', array(), '1.11.1', 'all');
+		wp_enqueue_style('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', array(), '5.3.2', 'all');
+		wp_enqueue_script('bootstrap-5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.2', true);
+		wp_enqueue_style('sm-front-css', get_template_directory_uri() . '/assets/css/sm-front.css', array(), null, 'all');
+		wp_enqueue_script('sm-front-js', get_template_directory_uri() . '/assets/js/sm-front.js', array('jquery'), null, true);
+
+        // Comment reply script for threaded comments
+        if (is_singular() && comments_open() && get_option('thread_comments')) {
+            wp_enqueue_script('comment-reply');
+        }
+    }
+    add_action('wp_enqueue_scripts', '__smarty_magazine_front_scripts');
 }
 
 /**

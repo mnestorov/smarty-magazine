@@ -44,28 +44,16 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        $title = !empty($instance['title']) ? $instance['title'] : '';
-
         // List of social platforms and their respective Font Awesome classes.
         $social_platforms = array(
             'facebook'   => 'bi-facebook',
             'twitter'    => 'bi-twitter-x',
-            'g-plus'     => 'bi-google',
             'instagram'  => 'bi-instagram',
-            'github'     => 'bi-github',
-            'flickr'     => 'bi-flickr',
-            'pinterest'  => 'bi-pinterest',
-            'wordpress'  => 'bi-wordpress',
             'youtube'    => 'bi-youtube',
+            'github'     => 'bi-github',
         );
 
         echo '<div class="sm-social-icons">';
-
-        // Display the widget title if it exists.
-        if (!empty($title)) {
-            echo '<h2 class="widget-title">' . esc_html($title) . '</h2>';
-        }
-
         echo '<ul>';
 
         // Loop through each social platform and display icons if URLs are set.
@@ -94,28 +82,18 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
      */
     public function form($instance) {
         $defaults = array(
-            'title'     => '',
             'facebook'  => '',
             'twitter'   => '',
-            'g-plus'    => '',
             'instagram' => '',
-            'github'    => '',
-            'flickr'    => '',
-            'pinterest' => '',
-            'wordpress' => '',
             'youtube'   => '',
+            'github'    => '',
         );
 
         $instance = wp_parse_args((array)$instance, $defaults);
 
-        // Display Title input field.
-        $this->generate_input_field('title', __('Title', 'smarty_magazine'), $instance['title']);
-
         // Loop through each social platform to generate input fields.
         foreach ($defaults as $key => $value) {
-            if ($key !== 'title') {
-                $this->generate_input_field($key, ucfirst($key), $instance[$key]);
-            }
+            $this->generate_input_field($key, ucfirst($key), $instance[$key]);
         }
     }
 
@@ -134,7 +112,7 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
      */
     private function generate_input_field($field_id, $label, $value) {
         ?>
-        <div class="sm-admin-input-wrap">
+        <div class="sm-widget-field">
             <label for="<?php echo esc_attr($this->get_field_id($field_id)); ?>"><?php echo esc_html($label); ?></label>
             <input 
                 type="text" 
@@ -161,13 +139,17 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = $old_instance;
 
-        // Sanitize title.
-        $instance['title'] = sanitize_text_field($new_instance['title']);
-
         // List of social media keys.
         $social_keys = array(
-            'facebook', 'twitter', 'g-plus', 'instagram', 'github', 'flickr',
-            'pinterest', 'wordpress', 'youtube',
+            'facebook', 
+            'twitter', 
+            'g-plus', 
+            'instagram', 
+            'github', 
+            'flickr',
+            'pinterest', 
+            'wordpress', 
+            'youtube',
         );
 
         // Sanitize each social media URL.

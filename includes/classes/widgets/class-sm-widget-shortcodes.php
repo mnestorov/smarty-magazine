@@ -68,7 +68,7 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
     public function form($instance) {
         $shortcode = !empty($instance['shortcode']) ? esc_textarea($instance['shortcode']) : '';
         ?>
-        <p>
+        <div class="sm-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id('shortcode')); ?>">
                 <?php esc_html_e('Enter Shortcode:', 'smarty_magazine'); ?>
             </label>
@@ -76,7 +76,7 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
                       id="<?php echo esc_attr($this->get_field_id('shortcode')); ?>" 
                       name="<?php echo esc_attr($this->get_field_name('shortcode')); ?>"><?php echo esc_textarea($shortcode); ?></textarea>
             <small><?php esc_html_e('Example: [my_shortcode]', 'smarty_magazine'); ?></small>
-        </p>
+        </div>
         <?php
     }
 

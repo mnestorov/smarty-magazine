@@ -72,10 +72,10 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
      */
     public function form($instance) {
         $defaults = array(
-            'title'        => '',
-            'ads_link'     => '',
-            'ads_image'    => '',
-            'ads_link_type'=> 'dofollow'
+            'title'         => '',
+            'ads_link'      => '',
+            'ads_image'     => '',
+            'ads_link_type' => 'dofollow'
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
@@ -95,11 +95,11 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
             <!-- Ads Link Field -->
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link'); ?>"><?php _e('Ads Link', 'smarty_magazine'); ?></label>
-                <input type="url"
-                       id="<?php echo $this->get_field_id('ads_link'); ?>"
-                       name="<?php echo $this->get_field_name('ads_link'); ?>"
-                       value="<?php echo esc_attr($instance['ads_link']); ?>"
-                       placeholder="<?php _e('URL', 'smarty_magazine'); ?>">
+                <input type="text"
+                    id="<?php echo esc_attr($this->get_field_id('ads_link')); ?>"
+                    name="<?php echo esc_attr($this->get_field_name('ads_link')); ?>"
+                    value="<?php echo esc_url($instance['ads_link']); ?>"
+                    placeholder="<?php esc_attr_e('Enter the ad URL', 'smarty_magazine'); ?>">
             </div>
 
             <!-- Link Type Field -->
@@ -119,8 +119,10 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
                 <!-- Display uploaded image if available -->
                 <?php if (!empty($instance['ads_image'])) : ?>
                     <img src="<?php echo esc_url($instance['ads_image']); ?>" style="max-width: 100%; height: auto;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" />
                 <?php else : ?>
                     <img src="" style="display: none;" />
+                    <input type="button" class="button-secondary sm-remove-img" value="<?php _e('Remove Image', 'smarty_magazine'); ?>" style="display: none;" />
                 <?php endif; ?>
 
                 <!-- Hidden input to store image URL -->
@@ -132,12 +134,12 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
 
                 <!-- Button to trigger media uploader -->
                 <input type="button"
-                       class="sm-img-upload sm-custom-media-button"
+                       class="button-primary sm-img-upload sm-custom-media-button" 
+                       id="custom_media_button"
+                       name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
-        </div>
-
-        <?php
+        </div><?php
     }
 
     /**
