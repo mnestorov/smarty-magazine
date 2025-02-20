@@ -66,10 +66,6 @@ Desktop.ini
 .env.development
 .env.production
 
-# Ignore compiled CSS/JS if using a preprocessor
-/assets/css/*.css
-/assets/js/*.js
-
 # Backup and temporary files
 *.bak
 *.tmp
