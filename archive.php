@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying archive pages.
+ * The template for displaying archive pages with first post highlighted and subsequent posts in two columns.
  *
  * @since 1.0.0
  * 
@@ -10,115 +10,157 @@
 
 <?php get_header(); ?>
 
-<div class="container">
-	<div class="row">
-		<div class="col-lg-9 col-md-9">
-			<div class="sm-category-wrap">
-				<div id="primary" class="content-area">
-					<main id="main" class="site-main" role="main">
-						<?php if (have_posts()) : ?>
-							<header class="page-header">
-								<?php the_archive_title('<h1 class="page-title">', '</h1>'); ?>
-								<?php the_archive_description('<div class="taxonomy-description">', '</div>'); ?>
-							</header>
-							<div class="sm-category-posts">
-								<?php $count = 1; ?>
-								<?php while (have_posts()) : the_post(); ?>
-									<?php 
-									if ($count == 1) {
-										$img_size = 'sm-featured-post-medium';
-									} else {
-										$img_size = 'sm-featured-post-small';
-									} ?>
-									<?php if ($count == 1) {
-										echo '<div class="sm-news-post-highlighted">';
-									} elseif ($count == 2) {
-										echo '<div class="sm-news-post-list">';
-									} 
-									?>
-									<div class="sm-news-post">
-										<figure class="sm-news-post-img">
-											<?php 
-											if (has_post_thumbnail()) { 
-												$image = '';
-												$title_attribute = get_the_title($post->ID);
-												$image .= '<a href="' . esc_url(get_permalink()) . '" title="' . the_title('', '', false) . '">';
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-9 col-md-9">
+            <div class="sm-post-archive">
+                <div id="primary" class="content-area">
+                    <main id="main" class="site-main" role="main">
+                        <?php if (have_posts()) : ?>
+                            <header class="page-header mb-4">
+                                <?php the_archive_title('<h1 class="page-title">', '</h1>'); ?>
+                                <?php the_archive_description('<div class="taxonomy-description lead">', '</div>'); ?>
+                            </header>
+                            
+                            <?php $count = 1; ?>
+                            <?php while (have_posts()) : the_post(); ?>
+                                <?php if ($count == 1) : ?>
+                                    <!-- First Post (Highlighted, Full Width) -->
+                                    <div class=" mb-4">
+                                        <article id="post-<?php the_ID(); ?>" <?php post_class("card h-100 p-0 sm-news-post border-0"); ?> itemscope itemtype="https://schema.org/BlogPosting">
+                                            <?php if (has_post_thumbnail()) : ?>
+                                                <a href="<?php the_permalink(); ?>" class="card-img-top">
+                                                    <?php the_post_thumbnail('sm-featured-post-large', array('class' => 'card-img-top img-fluid rounded-0', 'itemprop' => 'image')); ?>
+                                                </a>
+                                            <?php else : ?>
+                                                <div class="card-img-top">
+                                                    <?php __smarty_magazine_post_img('1'); ?>
+                                                </div>
+                                            <?php endif; ?>
 
-												if ($count == 1) {
-													$image .= get_the_post_thumbnail($post->ID, 'sm-featured-post-large', array('title' => esc_attr($title_attribute), 'alt' => esc_attr($title_attribute))) . '</a>';
-												} else {
-													$image .= get_the_post_thumbnail($post->ID, 'sm-featured-post-medium', array('title' => esc_attr($title_attribute), 'alt' => esc_attr($title_attribute))) . '</a>';
-												}
-												echo $image;
-											} else {
-												__smarty_magazine_post_img('1');
-											}
-											?>
-											<a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark"><span> <i class="bi bi-search"></i></span></a>
-										</figure>
-										<div class="sm-news-post-content">
-											<div class="sm-news-post-meta">
-												<span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time(get_option('date_format')); ?></span>
-												<span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number('No Responses', 'one Response', '% Responses'); ?></span>
-											</div>
-											<h3><a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" class="text-decoration-none"><?php the_title(); ?></a></h3>
-											<?php if ($count == 1) : ?>
-												<div class="sm-news-post-desc">
-													<?php
-													$excerpt = get_the_excerpt();
-													$limit   = "350";
-													$pad     = "...";
+											<div class="text-center text-muted small">
+                                                <?php __smarty_magazine_posted_on(); ?>
+                                            </div>
 
-													if (strlen($excerpt) <= $limit) {
-														echo esc_html($excerpt);
-													} else {
-														$excerpt = substr($excerpt, 0, $limit) . $pad;
-														echo esc_html($excerpt);
-													}
-													?>
+                                            <div class="card-body py-0 px-2">
+                                                <h3 class="card-title" itemprop="headline">
+                                                    <a href="<?php the_permalink(); ?>" class="text-decoration-none"><?php the_title(); ?></a>
+                                                </h3>
+                                                <div class="card-text mb-4" itemprop="description">
+                                                    <?php
+                                                    $excerpt = get_the_excerpt();
+                                                    $limit = 350;
+                                                    $pad = "...";
+                                                    if (strlen($excerpt) <= $limit) {
+                                                        echo esc_html($excerpt);
+                                                    } else {
+                                                        $excerpt = substr($excerpt, 0, $limit) . $pad;
+                                                        echo esc_html($excerpt);
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer bg-transparent border-0 p-0">
+												<div class="d-grid gap-2">
+													<a href="<?php the_permalink(); ?>" class="btn btn-primary rounded-0">
+														<?php _e('Read More', 'smarty_magazine'); ?>
+													</a>
 												</div>
-											<?php else: ?>
-												<div class="sm-news-post-desc">
-													<?php
-													$excerpt = get_the_excerpt();
-													$limit   = "260";
-													$pad     = "...";
+                                                <span class="search-icon position-absolute top-0 end-0 m-2">
+                                                    <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark" class="btn btn-sm btn-dark">
+                                                        <i class="bi bi-search"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
 
-													if (strlen($excerpt) <= $limit) {
-														echo esc_html($excerpt);
-													} else {
-														$excerpt = substr($excerpt, 0, $limit) . $pad;
-														echo esc_html($excerpt);
-													}
-													?>
+                                            <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink()); ?>">
+                                            <?php if (has_post_thumbnail()) : ?>
+                                                <meta itemprop="image" content="<?php echo esc_url(wp_get_attachment_url(get_post_thumbnail_id())); ?>">
+                                            <?php endif; ?>
+                                        </article>
+                                    </div>
+                                <?php else : ?>
+                                    <!-- Subsequent Posts (Two Columns) -->
+                                    <?php if ($count == 2) : ?>
+                                        <div class="row row-cols-1 row-cols-md-2 g-3">
+                                    <?php endif; ?>
+                                    <div class="col">
+                                        <article id="post-<?php the_ID(); ?>" <?php post_class("card h-100 p-0 sm-news-post border-0"); ?> itemscope itemtype="https://schema.org/BlogPosting">
+                                            <?php if (has_post_thumbnail()) : ?>
+                                                <a href="<?php the_permalink(); ?>" class="card-img-top">
+                                                    <?php the_post_thumbnail('sm-featured-post-medium', array('class' => 'card-img-top img-fluid rounded-0', 'itemprop' => 'image')); ?>
+                                                </a>
+                                            <?php else : ?>
+                                                <div class="card-img-top">
+                                                    <?php __smarty_magazine_post_img('1'); ?>
+                                                </div>
+                                            <?php endif; ?>
+
+											<div class="text-center text-muted small">
+                                                <?php __smarty_magazine_posted_on(); ?>
+                                            </div>
+
+											<div class="card-body py-0 px-2">
+                                                <h3 class="card-title" itemprop="headline">
+                                                    <a href="<?php the_permalink(); ?>" class="text-decoration-none"><?php the_title(); ?></a>
+                                                </h3>
+                                                <div class="card-text mb-4" itemprop="description">
+                                                    <?php
+                                                    $excerpt = get_the_excerpt();
+                                                    $limit = 260;
+                                                    $pad = "...";
+                                                    if (strlen($excerpt) <= $limit) {
+                                                        echo esc_html($excerpt);
+                                                    } else {
+                                                        $excerpt = substr($excerpt, 0, $limit) . $pad;
+                                                        echo esc_html($excerpt);
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer bg-transparent border-0 p-0">
+												<div class="d-grid gap-2">
+													<a href="<?php the_permalink(); ?>" class="btn btn-primary rounded-0">
+														<?php _e('Read More', 'smarty_magazine'); ?>
+													</a>
 												</div>
-											<?php endif; ?>
-										</div>
-										<div class="sm-category-post-readmore">
-											<a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>" class="text-decoration-none"><?php _e('Read more', 'smarty_magazine'); ?></></a>
-										</div>
-									</div>
-									<?php if ($count == 1) { echo '</div>'; } ?>
-								<?php $count++; endwhile; ?>
+                                                <span class="search-icon position-absolute top-0 end-0 m-2">
+                                                    <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark" class="btn btn-sm btn-dark">
+                                                        <i class="bi bi-search"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
 
-								<?php wp_reset_postdata(); ?>
-								
-							</div>
+                                            <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink()); ?>">
+                                            <?php if (has_post_thumbnail()) : ?>
+                                                <meta itemprop="image" content="<?php echo esc_url(wp_get_attachment_url(get_post_thumbnail_id())); ?>">
+                                            <?php endif; ?>
+                                        </article>
+                                    </div>
+                                <?php endif; ?>
+                                <?php $count++; ?>
+                            <?php endwhile; ?>
+                            <?php if ($count > 2) : ?>
+                                </div><!-- Close sm-news-post-list -->
+                            <?php endif; ?>
+                            <?php wp_reset_postdata(); ?>
 							<div class="clearfix"></div>
-							<div class="sm-pagination-nav">
+                            <div class="sm-pagination-nav">
 								<?php echo paginate_links(); ?>
 							</div>
-						<?php else: ?>
-							<p><?php _e('Sorry, no posts matched your criteria.', 'smarty_magazine'); ?></p>
-						<?php endif; ?>
-					</main>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-3 col-md-3">
-			<?php get_sidebar(); ?>
-		</div>
-	</div>
+                        <?php else : ?>
+                            <p><?php _e('Sorry, no posts matched your criteria.', 'smarty_magazine'); ?></p>
+                        <?php endif; ?>
+                    </main>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <?php get_sidebar(); ?>
+        </div>
+    </div>
 </div>
 
 <?php get_footer(); ?>

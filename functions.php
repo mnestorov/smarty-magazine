@@ -203,12 +203,15 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-fe
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-highlighted-news.php';
 
 /**
- * Register widgets (move this to the bottom after all widget classes).
+ * Load additional theme functionality.
  * 
  * @since 1.0.0
  * 
+ * 
+ * @link https://developer.wordpress.org/themes/functionality/custom-post-types/
  * @link https://developer.wordpress.org/themes/functionality/widgets/
  */
+require get_template_directory() . '/includes/functions/functions-sm-register-cpt.php';
 require get_template_directory() . '/includes/functions/functions-sm-register-widgets.php';
 
 if (!function_exists('__smarty_archive_excerpt_length')) {

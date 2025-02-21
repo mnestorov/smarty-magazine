@@ -561,7 +561,7 @@ figure.sm-news-post-img {
 .sm-news-layout2 .sm-news-post:hover,
 .sm-pagination-nav .current,
 .sm-pagination-nav a:hover {
-border-color: rgba(204,41,54,1);
+	border-color: rgba(204,41,54,1);
 }
 
 .sm-main-menu li a,
@@ -1423,6 +1423,12 @@ button.sm-sec-nav:hover {
 	font-size: 15px;
 	margin-right: 5px;
 }
+   
+/* Highlighted Post */
+.sm-news-post-highlighted .sm-news-post {
+   	position: relative;
+	margin-bottom: 2rem;
+}
 
 /*--------------------------------------------------------------
 ## Filter
@@ -2240,7 +2246,7 @@ button.sm-sec-nav:hover {
 /*--------------------------------------------------------------
 # Category Page
 --------------------------------------------------------------*/
-.sm-category-wrap .page-header {
+.page-header {
     margin: 30px 0;
 }
 
@@ -3443,4 +3449,161 @@ button.sm-sec-nav:hover {
 /* If you want the offcanvas to be bigger than the screen, you could do e.g. 120vh */
 .sm-height-offcanvas-big {
 	--bs-offcanvas-height: 120vh;
+}
+
+/*--------------------------------------------------------------
+# Post Archive
+--------------------------------------------------------------*/
+/* Card Styling */
+.sm-post-archive .card {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	position: relative; /* For absolute positioning of search icon */
+}
+.sm-post-archive .card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.sm-post-archive .card-img-top {
+	width: 100%;
+	border-radius: 0; /* Full-width image */
+}
+.sm-post-archive .card {
+	overflow: hidden; /* Prevent image overflow */
+}
+
+/* Highlighted Post */
+.sm-post-highlighted {
+	margin-bottom: 2rem;
+}
+.sm-post-highlighted .card-title {
+	font-size: 1.5rem;
+}
+
+/* Search Icon */
+.sm-post-archive .search-icon {
+	z-index: 10;
+}
+
+/*--------------------------------------------------------------
+# News Post Type Archive
+--------------------------------------------------------------*/
+.sm-news-archive .news-section {
+	padding: 2rem;
+	border-radius: 10px;
+	transition: all 0.3s ease;
+}
+
+.sm-news-archive .news-breaking {
+	background-color: rgba(220, 53, 69, 0.1);
+	border-left: 5px solid #dc3545;
+	border-right: 1px solid #dc3545;
+}
+
+.sm-news-archive .news-featured {
+	background: linear-gradient(135deg, #ffc10733, #ffeb3b33);
+	border-left: 5px solid #ffc107;
+	border-right: 1px solid #ffc107;
+}
+
+.sm-news-archive .news-archived {
+	background-color: rgba(108, 117, 125, 0.1);
+	opacity: 0.85;
+	border-left: 5px solid #6c757d;
+	border-right: 1px solid #6c757d;
+}
+
+.sm-news-archive .news-sponsored {
+	background-color: rgba(173, 181, 189, 0.1);
+	border: 2px dashed #adb5bd;
+}
+
+.sm-news-archive .news-normal {
+	padding: 0; /* No section styling for normal news */
+}
+
+/* Card Styling */
+.sm-news-archive .card {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	overflow: hidden; /* Ensure image doesn't overflow */
+}
+
+.sm-news-archive .card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sm-news-archive .news-breaking .card { 
+	border-top: 3px solid #dc3545;
+	border-bottom: 1px solid #dc3545;
+}
+
+.sm-news-archive .news-featured .card { 
+	border-top: 3px solid #ffc107;
+	border-bottom: 1px solid #ffc107;
+}
+
+.sm-news-archive .news-archived .card { 
+	border-top: 3px solid #6c757d; 
+	border-bottom: 1px solid #6c757d; 
+}
+
+.sm-news-archive .news-sponsored .card { 
+	border-top: 3px dashed #adb5bd; 
+	border-bottom: 1px dashed #adb5bd;
+}
+/* No special border for normal news cards */
+
+/* Full-width image in card */
+.sm-news-archive .card-img-top {
+	width: 100%;
+	border-radius: 0; /* Remove rounded corners if desired */
+}
+
+.sm-news-archive .card-body {
+	padding: 1rem; /* Restore padding for content */
+}
+
+/* Section Titles */
+.sm-news-archive .section-title {
+	font-size: 1.75rem;
+	font-weight: bold;
+	padding-bottom: 0.5rem;
+	border-bottom: 2px solid;
+}
+
+.sm-news-archive .text-breaking { color: #dc3545; border-color: #dc3545; }
+.sm-news-archive .text-featured { color: #ffc107; border-color: #ffc107; }
+.sm-news-archive .text-archived { color: #6c757d; border-color: #6c757d; }
+.sm-news-archive .text-sponsored { color: #adb5bd; border-color: #adb5bd; }
+
+/*--------------------------------------------------------------
+## Status Badges
+--------------------------------------------------------------*/
+.bg-breaking { background-color: #dc3545 !important; }
+.bg-featured { background-color: #ffc107 !important; }
+.bg-archived { background-color: #6c757d !important; }
+.bg-sponsored { background-color: #adb5bd !important; }
+
+/* Cool Status Effects */
+.status-breaking {
+	animation: pulse 2s infinite;
+	color: white;
+}
+
+.status-featured {
+	background: linear-gradient(45deg, #ffc107, #ffeb3b);
+	color: #333;
+	font-weight: bold;
+}
+
+.status-archived {
+	opacity: 0.8;
+	text-decoration: line-through;
+}
+
+.status-sponsored {
+	border: 2px dashed #6c757d;
+	background-color: rgba(173, 181, 189, 0.2);
 }

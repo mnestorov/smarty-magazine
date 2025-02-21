@@ -8,42 +8,65 @@
  *
  * @package SmartyMagazine
  */
-
-if (!function_exists('__smarty_magazine_posted_on')) {
-	/**
-	 * Prints HTML with meta information for the current post-date/time and author.
-	 * 
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function __smarty_magazine_posted_on() {
-		$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
-		if (get_the_time('U') !== get_the_modified_time('U') ) {
-			$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
-		}
-
-		$time_string = sprintf(
-			$time_string,
-			esc_attr(get_the_date('c')),
-			esc_html(get_the_date()),
-			esc_attr(get_the_modified_date('c')),
-			esc_html(get_the_modified_date())
-		);
-
-		$posted_on = sprintf(
-			esc_html_x('Posted on %s', 'post date', 'smarty_magazine'),
-			'<a href="' . esc_url(get_permalink()) . '" rel="bookmark">' . $time_string . '</a>'
-		);
-
-		$byline = sprintf(
-			esc_html_x('by %s', 'post author', 'smarty_magazine'),
-			'<span class="author vcard"><a class="url fn n" href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '">' . esc_html(get_the_author() ) . '</a></span>'
-		);
-
-		echo '<span class="posted-on">' . $posted_on . '</span><span class="byline"> ' . $byline . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-}
+ if (!function_exists('__smarty_magazine_posted_on')) {
+	 /**
+	  * Prints HTML with meta information for the current post-date/time and author with Schema.org markup.
+	  * 
+	  * @since 1.0.0
+	  *
+	  * @return void
+	  */
+	 function __smarty_magazine_posted_on() {
+		 // Prepare the time string with published and modified dates
+		 $time_string = '<time class="entry-date published" datetime="%1$s" itemprop="datePublished">%2$s</time>';
+		 if (get_the_time('U') !== get_the_modified_time('U')) {
+			 $time_string .= '<time class="updated d-none" datetime="%3$s" itemprop="dateModified">%4$s</time>';
+		 }
+ 
+		 $time_string = sprintf(
+			 $time_string,
+			 esc_attr(get_the_date('c')), // ISO 8601 format for Schema.org
+			 esc_html(get_the_date()),
+			 esc_attr(get_the_modified_date('c')),
+			 esc_html(get_the_modified_date())
+		 );
+ 
+		 // Posted on markup with Bootstrap styling
+		 $posted_on = sprintf(
+			 esc_html_x('Posted on %s', 'post date', 'smarty_magazine'),
+			 '<a href="' . esc_url(get_permalink()) . '" rel="bookmark" class="text-decoration-none">' . $time_string . '</a>'
+		 );
+ 
+		 // Author markup with Schema.org Person
+		 $byline = sprintf(
+			 esc_html_x('by %s', 'post author', 'smarty_magazine'),
+			 '<span class="author vcard" itemprop="author" itemscope itemtype="https://schema.org/Person">' .
+				 '<a class="url fn n text-decoration-none" href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '" itemprop="url">' .
+					 '<span itemprop="name">' . esc_html(get_the_author()) . '</span>' .
+				 '</a>' .
+			 '</span>'
+		 );
+ 
+		 // Output with Bootstrap icons and styling
+		 ?>
+		 <div class="sm-post-meta text-muted my-3" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+			 <span class="posted-on me-3">
+				 <i class="bi bi-calendar me-1"></i><?php echo $posted_on; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			 </span>
+			 <span class="byline me-3">
+				 <i class="bi bi-person me-1"></i><?php echo $byline; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			 </span>
+			 <?php if (comments_open() || get_comments_number()) : ?>
+				 <span class="comments-link">
+					 <i class="bi bi-chat me-1"></i>
+					 <?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?>
+				 </span>
+			 <?php endif; ?>
+			 <meta itemprop="name" content="<?php bloginfo('name'); ?>">
+		 </div>
+		 <?php
+	 }
+ }
 
 if (!function_exists('__smarty_magazine_entry_footer')) {
     /**
