@@ -26,7 +26,16 @@
                             get_template_part('template-parts/content', 'single');
                         }
                         ?>
-                        <?php the_post_navigation(); ?>
+                        <?php
+                        // Post navigation for 'news' post type
+                        if ('news' === get_post_type()) {
+                            smarty_magazine_news_post_navigation();
+                        } else {
+                            the_post_navigation(array(
+                                'screen_reader_text' => __('Post navigation', 'smarty-magazine'),
+                            ));
+                        }
+                        ?>
                         <?php if (comments_open() || get_comments_number()) : ?>
                             <?php comments_template(); ?>
                         <?php endif; ?>

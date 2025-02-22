@@ -296,15 +296,22 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         } elseif (is_post_type_archive('news')) {
             // News archive
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('News', 'smarty_magazine') . '</li>';
+        } elseif (is_tax('news_category')) {
+            // News category archive
+            echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
+            $term = get_queried_object();
+            if ($term->parent != 0) {
+                $parent_term = get_term($term->parent, 'news_category');
+                echo '<li class="breadcrumb-item"><a href="' . esc_url(get_term_link($parent_term)) . '">' . esc_html($parent_term->name) . '</a></li>';
+            }
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html($term->name) . '</li>';
         } elseif (is_singular('news')) {
             // Single news post
             echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
-            if (has_category()) {
-                $categories = get_the_category();
-                $primary_cat = !empty($categories) ? $categories[0] : null;
-                if ($primary_cat) {
-                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($primary_cat->term_id)) . '">' . esc_html($primary_cat->name) . '</a></li>';
-                }
+            $categories = get_the_terms($post->ID, 'news_category');
+            if ($categories && !is_wp_error($categories)) {
+                $primary_cat = $categories[0];
+                echo '<li class="breadcrumb-item"><a href="' . esc_url(get_term_link($primary_cat)) . '">' . esc_html($primary_cat->name) . '</a></li>';
             }
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
         } elseif (is_single() && 'post' === get_post_type()) {
@@ -333,6 +340,61 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
 
         echo '</ol>';
         echo '</nav>';
+    }
+}
+
+if (!function_exists('smarty_magazine_news_post_navigation')) {
+    function smarty_magazine_news_post_navigation() {
+        global $post;
+        $terms = get_the_terms($post->ID, 'news_category');
+        if (!$terms || is_wp_error($terms)) {
+            return; // No categories assigned, no navigation
+        }
+        $term_ids = wp_list_pluck($terms, 'term_id');
+
+        $args = array(
+            'post_type' => 'news',
+            'posts_per_page' => -1,
+            'post_status' => 'publish',
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'news_category',
+                    'field' => 'term_id',
+                    'terms' => $term_ids,
+                ),
+            ),
+            'orderby' => 'date',
+            'order' => 'DESC',
+        );
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            $post_ids = wp_list_pluck($query->posts, 'ID');
+            $current_index = array_search($post->ID, $post_ids);
+            
+            $prev_id = ($current_index > 0) ? $post_ids[$current_index - 1] : null;
+            $next_id = ($current_index < count($post_ids) - 1) ? $post_ids[$current_index + 1] : null;
+
+            if ($prev_id || $next_id) {
+                echo '<nav class="navigation post-navigation" role="navigation">';
+                echo '<div class="nav-links">';
+                
+                if ($prev_id) {
+                    echo '<div class="nav-previous">';
+                    echo '<a href="' . esc_url(get_permalink($prev_id)) . '"></span> <span class="nav-title">' . esc_html(get_the_title($prev_id)) . '</span></a>';
+                    echo '</div>';
+                }
+                if ($next_id) {
+                    echo '<div class="nav-next">';
+                    echo '<a href="' . esc_url(get_permalink($next_id)) . '"><span class="nav-title">' . esc_html(get_the_title($next_id)) . '</span></a>';
+                    echo '</div>';
+                }
+                
+                echo '</div>';
+                echo '</nav>';
+            }
+        }
+        wp_reset_postdata();
     }
 }
 
