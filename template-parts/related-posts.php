@@ -6,16 +6,16 @@
  * 
  * @package SmartyMagazine
  */
-?>
-<?php
-$sm_post_per_page = 3;
+
+$sm_post_per_page = 4;
 $__smarty_magazine_related = get_posts(
 	array(
 		'category__in' 			=> wp_get_post_categories($post->ID),
 		'post__not_in' 			=> array($post->ID),
 		'orderby'           	=> 'rand',
 		'posts_per_page'		=> $sm_post_per_page,
-		'ignore_sticky_posts'	=> 1
+		'ignore_sticky_posts'	=> 1,
+		'post_type'             => array('post'), // Exclude 'news' post type
 	)
 );
 ?>
@@ -27,16 +27,16 @@ $__smarty_magazine_related = get_posts(
 			<?php setup_postdata($post); ?>
 			<li class="sm-news-post">
 				<figure class="sm-news-post-img">
-					<?php if (has_post_thumbnail()) {
+					<?php if (has_post_thumbnail()) :
 						$image = '';
 						$title_attribute = get_the_title($post->ID);
 						$image .= '<a href="' . esc_url(get_permalink()) . '" title="' . the_title('', '', false) . '">';
 						$image .= get_the_post_thumbnail($post->ID, 'sm-featured-post-medium', array('title' => esc_attr($title_attribute), 'alt' => esc_attr($title_attribute))) . '</a>';
 						echo $image;
 					?>
-					<?php } else { ?>
-						<div class="sm-no-image"></div>
-					<?php } ?>
+					<?php else : ?>
+						<?php __smarty_magazine_post_img('1'); ?>                                         
+					<?php endif; ?>
 					<a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
 				</figure>
 				<h3><a href="<?php esc_url(the_permalink()); ?>" rel="bookmark" title="<?php the_title(); ?>"><?php the_title(); ?></a></h3>

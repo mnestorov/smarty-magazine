@@ -5,6 +5,7 @@
  * @since 1.0.0
  * 
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
+ * 
  * @package SmartyMagazine
  */
 
@@ -176,6 +177,7 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
 require get_template_directory() . '/includes/functions/functions-sm-dashboard.php';
 require get_template_directory() . '/includes/functions/functions-sm-plugins-recommended.php';
 require get_template_directory() . '/includes/functions/functions-sm-custom-header.php';
+require get_template_directory() . '/includes/functions/functions-sm-template-helpers.php';
 require get_template_directory() . '/includes/functions/functions-sm-template-tags.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer-styles.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer.php';
@@ -247,58 +249,90 @@ if (!function_exists('__smarty_excerpt_more')) {
 }
 
 if (!function_exists('__smarty_magazine_breadcrumb')) {
-	/**
-	 * Breadcrumb Navigation.
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @return void
-	 */
-	function __smarty_magazine_breadcrumb() {
-		global $post;
-		echo '<ul id="sm_breadcrumbs">';
+    /**
+     * Breadcrumb Navigation with Bootstrap 5 styling, supporting all post types including 'news'.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_breadcrumb() {
+        global $post;
 
-		if (!is_home()) {
-			echo '<li><a href="' . esc_url(home_url()) . '">' . __('Home', 'smarty_magazine') . '</a></li><li class="separator"> / </li>';
+        // Don't show breadcrumbs on home or front page
+        if (is_home() && is_front_page()) {
+            return;
+        }
 
-			if (is_category() || is_single()) {
-				echo '<li>';
-				the_category(' </li><li class="separator"> / </li><li> ');
+        echo '<nav aria-label="' . esc_attr__('Breadcrumb', 'smarty_magazine') . '">';
+        echo '<ol class="breadcrumb">';
 
-				if (is_single()) {
-					echo '</li><li class="separator"> / </li><li>';
-					the_title();
-					echo '</li>';
-				}
-			} elseif (is_page()) {
-				if ($post->post_parent) {
-					$ancestors = get_post_ancestors($post->ID);
-					foreach ($ancestors as $ancestor) {
-						echo '<li><a href="' . esc_url(get_permalink($ancestor)) . '">' . esc_html(get_the_title($ancestor)) . '</a></li><li class="separator"> / </li>';
-					}
-					echo '<li>' . esc_html(get_the_title()) . '</li>';
-				} else {
-					echo '<li>' . esc_html(get_the_title()) . '</li>';
-				}
-			}
-		} elseif (is_tag()) {
-			single_tag_title();
-		} elseif (is_day()) {
-			echo "<li>" . __('Archive for', 'smarty_magazine') . ' ' . get_the_date() . '</li>';
-		} elseif (is_month()) {
-			echo "<li>" . __('Archive for', 'smarty_magazine') . ' ' . get_the_date('F, Y') . '</li>';
-		} elseif (is_year()) {
-			echo "<li>" . __('Archive for', 'smarty_magazine') . ' ' . get_the_date('Y') . '</li>';
-		} elseif (is_author()) {
-			echo "<li>" . __('Author Archive', 'smarty_magazine') . '</li>';
-		} elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {
-			echo "<li>" . __('Blog Archive', 'smarty_magazine') . '</li>';
-		} elseif (is_search()) {
-			echo "<li>" . __('Search Results', 'smarty_magazine') . '</li>';
-		}
+        // Home link
+        echo '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Home', 'smarty_magazine') . '</a></li>';
 
-		echo '</ul>';
-	}
+        if (is_category()) {
+            // Category archive
+            $category = get_queried_object();
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html($category->name) . '</li>';
+        } elseif (is_tag()) {
+            // Tag archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(single_tag_title('', false)) . '</li>';
+        } elseif (is_day()) {
+            // Daily archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date() . '</li>';
+        } elseif (is_month()) {
+            // Monthly archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date('F, Y') . '</li>';
+        } elseif (is_year()) {
+            // Yearly archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date('Y') . '</li>';
+        } elseif (is_author()) {
+            // Author archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Author Archive', 'smarty_magazine') . '</li>';
+        } elseif (is_search()) {
+            // Search results
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Search Results', 'smarty_magazine') . '</li>';
+        } elseif (is_post_type_archive('news')) {
+            // News archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('News', 'smarty_magazine') . '</li>';
+        } elseif (is_singular('news')) {
+            // Single news post
+            echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
+            if (has_category()) {
+                $categories = get_the_category();
+                $primary_cat = !empty($categories) ? $categories[0] : null;
+                if ($primary_cat) {
+                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($primary_cat->term_id)) . '">' . esc_html($primary_cat->name) . '</a></li>';
+                }
+            }
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
+        } elseif (is_single() && 'post' === get_post_type()) {
+            // Single standard post
+            if (has_category()) {
+                $categories = get_the_category();
+                $primary_cat = !empty($categories) ? $categories[0] : null;
+                if ($primary_cat) {
+                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($primary_cat->term_id)) . '">' . esc_html($primary_cat->name) . '</a></li>';
+                }
+            }
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
+        } elseif (is_page()) {
+            // Pages with hierarchy
+            if ($post->post_parent) {
+                $ancestors = array_reverse(get_post_ancestors($post->ID));
+                foreach ($ancestors as $ancestor) {
+                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_permalink($ancestor)) . '">' . esc_html(get_the_title($ancestor)) . '</a></li>';
+                }
+            }
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
+        } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {
+            // Paged blog archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Blog Archive', 'smarty_magazine') . '</li>';
+        }
+
+        echo '</ol>';
+        echo '</nav>';
+    }
 }
 
 if (!function_exists('__smarty_magazine_hex2rgba')) {

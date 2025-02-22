@@ -41,7 +41,8 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
             'labels'              => $labels,
             'supports'            => array('title', 'editor', 'thumbnail', 'revisions', 'author', 'excerpt'),
             'taxonomies'          => array('category', 'post_tag'),
-            'hierarchical'        => false,
+            'hierarchical'        => true,
+            'show_in_nav_menus'   => true,
             'public'              => true,
             'show_ui'             => true,
             'show_in_menu'        => true,
@@ -51,6 +52,7 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
             'show_in_nav_menus'   => true,
             'can_export'          => true,
             'has_archive'         => true,
+            'rewrite'             => array('slug' => 'news'),
             'exclude_from_search' => false,
             'publicly_queryable'  => true,
             'capability_type'     => 'post',
@@ -141,10 +143,9 @@ if (!function_exists('__smarty_magazine_news_details_callback')) {
         $news_status = get_post_meta($post->ID, '_news_status', true);
 
         $statuses = array(
-            'sponsored' => __('Sponsored', 'smarty_magazine'),
             'breaking'  => __('Breaking', 'smarty_magazine'),
             'featured'  => __('Featured', 'smarty_magazine'),
-            'archived'  => __('Archived', 'smarty_magazine')
+            'sponsored' => __('Sponsored', 'smarty_magazine')
         );
         
         $details = get_post_meta($post->ID, '_news_details', true);
@@ -277,7 +278,7 @@ if (!function_exists('__smarty_magazine_get_news_image_source')) {
      * @return mixed
      */
     function __smarty_magazine_get_news_image_source($post_id) {
-        return get_post_meta($post_id, '_news_image_source', true);
+        return get_post_meta($post_id, '_news_image_source', true, array('class' => 'img-fluid', 'itemprop' => 'image'));
     }
 }
 
@@ -339,6 +340,12 @@ if (!function_exists('__smarty_magazine_get_related_news')) {
     function __smarty_magazine_get_related_news($post_id) {
         $related_ids = __smarty_magazine_get_news_related($post_id);
         $related_news = array();
+
+        // Shuffle the related IDs to randomize the order
+        shuffle($related_ids);
+
+        // Get only the first 4 related news items
+        $related_ids = array_slice($related_ids, 0, 4);
 
         foreach ($related_ids as $related_id) {
             $related_news[] = get_post($related_id);

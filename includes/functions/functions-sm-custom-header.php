@@ -76,9 +76,7 @@ if (!function_exists('__smarty_magazine_header_style')) {
 				}
 			<?php else: ?>
 				.site-title a,
-				.site-description {
-					color: #<?php echo esc_attr($header_text_color); ?>;
-				}
+				.site-description { color: #<?php echo esc_attr($header_text_color); ?>; }
 			<?php endif; ?>
 		</style>
 	<?php
@@ -102,7 +100,7 @@ if (!function_exists('__smarty_magazine_admin_header_style')) {
 			.appearance_page_custom-header #headimg {
 				border: none;
 			}
-			#headimg h1, #desc {}
+			#headimg h1 {}
 			#headimg h1 {}
 			#headimg h1 a {}
 			#desc {}

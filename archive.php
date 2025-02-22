@@ -23,10 +23,11 @@
                             </header>
                             
                             <?php $count = 1; ?>
+                            
                             <?php while (have_posts()) : the_post(); ?>
                                 <?php if ($count == 1) : ?>
                                     <!-- First Post (Highlighted, Full Width) -->
-                                    <div class=" mb-4">
+                                    <div class="mb-5">
                                         <article id="post-<?php the_ID(); ?>" <?php post_class("card h-100 p-0 sm-news-post border-0"); ?> itemscope itemtype="https://schema.org/BlogPosting">
                                             <?php if (has_post_thumbnail()) : ?>
                                                 <a href="<?php the_permalink(); ?>" class="card-img-top">

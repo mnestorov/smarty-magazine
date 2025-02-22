@@ -22,13 +22,13 @@ $word_count = str_word_count(strip_tags(get_the_content()));
 
 <article id="post-<?php the_ID(); ?>" <?php post_class("sm-single-news $status_class"); ?> itemscope itemtype="https://schema.org/NewsArticle">
     <header class="entry-header">
-        <?php the_title('<h1 class="entry-title" itemprop="headline">', '</h1>'); ?>
+        <?php the_title('<h1 class="entry-title mb-0" itemprop="headline">', '</h1>'); ?>
         <?php if ($news_status) : ?>
-            <span class="badge <?php echo esc_attr("bg-$news_status status-$news_status"); ?> d-inline-block">
+            <span class="badge <?php echo esc_attr("bg-$news_status status-$news_status"); ?> d-inline-block w-100 p-2 text-uppercase rounded-top-0">
                 <?php echo esc_html(ucfirst($news_status)); ?>
             </span>
         <?php endif; ?>
-        <div class="entry-meta">
+        <div class="entry-meta mt-4">
             <?php __smarty_magazine_posted_on(); ?>
         </div>
         <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink()); ?>">
@@ -39,7 +39,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
         <?php endif; ?>
     </header>
     
-    <div class="sm-single-news-content">
+    <div class="entry-content">
         <?php if (has_post_thumbnail()) : ?>
             <figure class="sm-single-news-img mb-4 position-relative" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
                 <?php the_post_thumbnail('sm-featured-post-large', array('class' => 'img-fluid')); ?>
@@ -53,28 +53,32 @@ $word_count = str_word_count(strip_tags(get_the_content()));
                     <figcaption class="text-muted small mt-2"><?php printf(__('Image source: %s', 'smarty_magazine'), esc_html($image_source)); ?></figcaption>
                 <?php endif; ?>
             </figure>
+        <?php else : ?>
+            <?php __smarty_magazine_post_img('1'); ?>                                        
         <?php endif; ?>
 
-        <div class="entry-content" itemprop="articleBody">
+        <div class="content entry-content mt-4" itemprop="articleBody">
             <?php the_content(); ?>
         </div>
 
-        <?php if ($disclaimer) : ?>
-            <div class="alert alert-warning" role="alert">
-                <h4 class="alert-heading"><?php _e('Disclaimer', 'smarty_magazine'); ?></h4>
-                <p class="mb-0" itemprop="disclaimer"><?php echo esc_html($disclaimer); ?></p>
+        <?php if ($details) : ?>
+            <div class="alert alert-info mt-4" role="alert">
+                <h4 class="alert-heading"><?php _e('Additional Information', 'smarty_magazine'); ?></h4>
+                <hr>
+                <p class="mb-0"><?php echo esc_html($details); ?></p>
             </div>
         <?php endif; ?>
 
-        <?php if ($details) : ?>
-            <div class="card mt-4">
-                <div class="card-header"><?php _e('Additional Details', 'smarty_magazine'); ?></div>
-                <div class="card-body"><?php echo esc_html($details); ?></div>
+        <?php if ($disclaimer) : ?>
+            <div class="alert alert-warning mt-4" role="alert">
+                <h4 class="alert-heading"><?php _e('Disclaimer', 'smarty_magazine'); ?></h4>
+                <hr>
+                <p class="mb-0" itemprop="disclaimer"><?php echo esc_html($disclaimer); ?></p>
             </div>
         <?php endif; ?>
     </div>
 
-    <footer class="entry-footer">
+    <footer class="entry-footer text-center fw-bold my-4">
         <?php __smarty_magazine_entry_footer(); ?>
     </footer>
 

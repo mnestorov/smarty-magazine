@@ -16,7 +16,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> itemscope itemtype="https://schema.org/Article">
     <header class="entry-header">
         <?php the_title('<h1 class="entry-title" itemprop="headline">', '</h1>'); ?>
-        <div class="entry-meta">
+        <div class="entry-meta mt-4">
             <?php __smarty_magazine_posted_on(); ?>
         </div>
         <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink()); ?>">
@@ -35,9 +35,11 @@ $word_count = str_word_count(strip_tags(get_the_content()));
                     <meta itemprop="description" content="<?php echo esc_attr($thumbnail_alt); ?>">
                 <?php endif; ?>
             </figure>
+        <?php else : ?>
+            <?php __smarty_magazine_post_img('1'); ?>                                         
         <?php endif; ?>
 
-        <div class="content" itemprop="articleBody">
+        <div class="content entry-content mt-4" itemprop="articleBody">
             <?php the_content(); ?>
             <?php
             wp_link_pages(array(
@@ -48,7 +50,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
         </div>
     </div>
 
-    <footer class="entry-footer">
+    <footer class="entry-footer text-center fw-bold my-4">
         <?php __smarty_magazine_entry_footer(); ?>
     </footer>
 

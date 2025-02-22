@@ -23,7 +23,7 @@
                         if ('news' === get_post_type()) {
                             get_template_part('template-parts/content', 'news');
                         } else {
-                            get_template_part('template-parts/content-single', 'page');
+                            get_template_part('template-parts/content', 'single');
                         }
                         ?>
                         <?php the_post_navigation(); ?>

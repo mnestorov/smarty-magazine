@@ -3506,16 +3506,10 @@ button.sm-sec-nav:hover {
 	border-right: 1px solid #ffc107;
 }
 
-.sm-news-archive .news-archived {
-	background-color: rgba(108, 117, 125, 0.1);
-	opacity: 0.85;
-	border-left: 5px solid #6c757d;
-	border-right: 1px solid #6c757d;
-}
-
 .sm-news-archive .news-sponsored {
-	background-color: rgba(173, 181, 189, 0.1);
-	border: 2px dashed #adb5bd;
+	background: linear-gradient(135deg, #3586ff2d, #7db0fc36);
+	border-left: 5px solid #0d6efd;
+	border-right: 1px solid #0d6efd;
 }
 
 .sm-news-archive .news-normal {
@@ -3544,16 +3538,33 @@ button.sm-sec-nav:hover {
 	border-bottom: 1px solid #ffc107;
 }
 
-.sm-news-archive .news-archived .card { 
-	border-top: 3px solid #6c757d; 
-	border-bottom: 1px solid #6c757d; 
-}
-
 .sm-news-archive .news-sponsored .card { 
-	border-top: 3px dashed #adb5bd; 
-	border-bottom: 1px dashed #adb5bd;
+	border-top: 3px solid #0d6efd; 
+	border-bottom: 1px solid #0d6efd;
 }
 /* No special border for normal news cards */
+
+/* Carousel Styling for Priority Sections */
+.news-section .carousel-inner .row {
+	margin: 0; /* Remove default row margins to match original layout */
+	
+}
+.news-section .carousel-control-prev,
+.news-section .carousel-control-next {
+	position: relative;
+    width: auto;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.25rem;
+    transition: background 0.3s ease;
+}
+.news-section .carousel-control-prev:hover,
+.news-section .carousel-control-next:hover {
+	background: rgba(0, 0, 0, 0.4);
+}
+.news-section .carousel-control-prev-icon,
+.news-section .carousel-control-next-icon {
+	filter: invert(1); /* White icons */
+}
 
 /* Full-width image in card */
 .sm-news-archive .card-img-top {
@@ -3575,35 +3586,30 @@ button.sm-sec-nav:hover {
 
 .sm-news-archive .text-breaking { color: #dc3545; border-color: #dc3545; }
 .sm-news-archive .text-featured { color: #ffc107; border-color: #ffc107; }
-.sm-news-archive .text-archived { color: #6c757d; border-color: #6c757d; }
-.sm-news-archive .text-sponsored { color: #adb5bd; border-color: #adb5bd; }
+.sm-news-archive .text-sponsored { color: #0d6efd; border-color: #0d6efd; }
 
 /*--------------------------------------------------------------
 ## Status Badges
 --------------------------------------------------------------*/
 .bg-breaking { background-color: #dc3545 !important; }
 .bg-featured { background-color: #ffc107 !important; }
-.bg-archived { background-color: #6c757d !important; }
-.bg-sponsored { background-color: #adb5bd !important; }
+.bg-sponsored { background-color: #0d6efd !important; }
 
 /* Cool Status Effects */
 .status-breaking {
-	animation: pulse 2s infinite;
-	color: white;
+	background: linear-gradient(45deg, #dc3545, #fa727d);
+	color: #fff;
+	font-weight: bold;
 }
 
 .status-featured {
 	background: linear-gradient(45deg, #ffc107, #ffeb3b);
-	color: #333;
+	color: #222;
 	font-weight: bold;
 }
 
-.status-archived {
-	opacity: 0.8;
-	text-decoration: line-through;
-}
-
 .status-sponsored {
-	border: 2px dashed #6c757d;
-	background-color: rgba(173, 181, 189, 0.2);
+	background: linear-gradient(45deg, #0d6efd, #4b92fc);
+	color: #fff;
+	font-weight: bold;
 }
