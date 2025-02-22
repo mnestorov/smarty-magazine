@@ -33,7 +33,7 @@ get_header(); ?>
                             <?php
                             $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                             $is_first_page = $paged === 1;
-                            $statuses_priority = ['breaking', 'featured', 'sponsored'];     // TODO: Change the priority statuses dynamically 
+                            $statuses_priority = ['breaking', 'featured', 'sponsored']; // Priority statuses
                             $main_statuses = ['breaking', 'featured']; // Only breaking and featured for main content
                             $posts_by_status = [];
                             $items_per_slide = wp_is_mobile() ? 1 : 2; // TODO: Change the number of items per slide dynamically
@@ -73,7 +73,7 @@ get_header(); ?>
                                         endforeach;
                                         ?>
                                     </div>
-                                    <div class="col-lg-3 col-md-3">
+                                    <div class="col-lg-3 col-md-3 mb-5">
                                         <?php 
                                         // Sponsored Section in Sidebar
                                         if (!empty($posts_by_status['sponsored'])) { ?>
@@ -90,9 +90,10 @@ get_header(); ?>
 
                             <!-- Normal Posts Section -->
                             <?php
+                            $posts_per_page = get_theme_mod('__smarty_magazine_posts_per_page', 6); // Get posts per page from customizer
                             $normal_args = array(
                                 'post_type'      => 'news',
-                                'posts_per_page' => 6,               // TODO: Change the number of posts per page dynamically
+                                'posts_per_page' => $posts_per_page,
                                 'paged'          => $paged,
                                 'meta_query'     => array(
                                     'relation'   => 'OR',

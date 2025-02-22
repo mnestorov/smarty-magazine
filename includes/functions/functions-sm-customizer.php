@@ -28,7 +28,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		// Load custom controls
 		require get_template_directory() . '/includes/classes/class-sm-customizer-controls.php';
 
-		// Header Settings
+		/**
+		 ****************************************************************
+		 * Header Panel and Sections
+		 ****************************************************************
+		 */
 		$wp_customize->add_panel('__smarty_magazine_header_options', array(
 			'priority' 	  => 60,
 			'title' 	  => __('Header', 'smarty_magazine'),
@@ -385,7 +389,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			)
 		);
 
-		// Layout and Content
+		/**
+		 ****************************************************************
+		 * Layout Panel and Sections
+		 ****************************************************************
+		 */
 		$wp_customize->add_panel(
 			'__smarty_magazine_layout_options',
 			array(
@@ -459,11 +467,33 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			)
 		);
 
+		// Add News Section
+        $wp_customize->add_section('__smarty_magazine_news_section', array(
+			'priority' 	  			=> 2,
+            'title'       			=> __('News Settings', 'smarty_magazine'),
+            'description' 			=> __('Settings for the News post type.', 'smarty_magazine'),
+			'panel' 	  			=> '__smarty_magazine_layout_options',
+        ));
+
+        // Add Posts Per Page Setting
+        $wp_customize->add_setting('__smarty_magazine_posts_per_page', array(
+            'default'           	=> 6,
+            'sanitize_callback' 	=> 'absint',
+        ));
+
+        // Add Posts Per Page Control
+        $wp_customize->add_control('__smarty_magazine_posts_per_page', array(
+            'label'    				=> __('Posts Per Page', 'smarty_magazine'),
+            'section'  				=> '__smarty_magazine_news_section',
+            'settings' 				=> '__smarty_magazine_posts_per_page',
+            'type'     				=> 'number',
+        ));
+
 		// Related Posts
 		$wp_customize->add_section(
 			'__smarty_magazine_related_posts_section',
 			array(
-				'priority' 			=> 4,
+				'priority' 			=> 3,
 				'title' 			=> __('Related Posts', 'smarty_magazine'),
 				'panel' 			=> '__smarty_magazine_layout_options',
 			)
@@ -492,7 +522,7 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 		$wp_customize->add_section(
 			'__smarty_magazine_font_size_section',
 			array(
-				'priority' 			=> 5,
+				'priority' 			=> 4,
 				'title' 			=> __('Default Font Size', 'smarty_magazine'),
 				'panel'				=> '__smarty_magazine_layout_options'
 			)
@@ -563,7 +593,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			)
 		);
 
-		// Footer Settings
+		/**
+		 ****************************************************************
+		 * Footer Panel and Sections
+		 ****************************************************************
+		 */
 		$wp_customize->add_panel('__smarty_magazine_footer_options', array(
 				'title'       => esc_html__('Footer', 'smarty_magazine'),
 				'priority'    => 210,
