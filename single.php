@@ -29,7 +29,7 @@
                         <?php
                         // Post navigation for 'news' post type
                         if ('news' === get_post_type()) {
-                            smarty_magazine_news_post_navigation();
+                            __smarty_magazine_news_post_navigation();
                         } else {
                             the_post_navigation(array(
                                 'screen_reader_text' => __('Post navigation', 'smarty-magazine'),

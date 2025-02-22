@@ -343,7 +343,7 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
     }
 }
 
-if (!function_exists('smarty_magazine_news_post_navigation')) {
+if (!function_exists('__smarty_magazine_news_post_navigation')) {
 	/**
 	 * Display post navigation for 'news' post type.
 	 * 
@@ -353,7 +353,7 @@ if (!function_exists('smarty_magazine_news_post_navigation')) {
 	 * 
 	 * @return void
 	 */
-    function smarty_magazine_news_post_navigation() {
+    function __smarty_magazine_news_post_navigation() {
         global $post;
         $terms = get_the_terms($post->ID, 'news_category');
         if (!$terms || is_wp_error($terms)) {
@@ -446,7 +446,9 @@ if (!function_exists('__smarty_magazine_hex2rgba')) {
 			return 'rgb(' . implode(",", $rgb) . ')';
 		}
 	}
+}
 
+if (!function_exists('__smarty_magazine_post_img')) {
 	/**
 	 * Get the first image from the post content.
 	 * 
@@ -470,4 +472,116 @@ if (!function_exists('__smarty_magazine_hex2rgba')) {
 
 		$more = 0;
 	}
+}
+
+if (!function_exists('__smarty_magazine_save_custom_slug')) {
+    /**
+     * Save custom slug with slashes for a page
+     *
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID
+     * 
+     * @return void
+     */
+    function __smarty_magazine_save_custom_slug($post_id) {
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+        if (get_post_type($post_id) !== 'page') return;
+        if (!current_user_can('edit_page', $post_id)) return;
+
+        if (isset($_POST['smarty_magazine_custom_slug']) && wp_verify_nonce($_POST['smarty_magazine_custom_slug_nonce'], 'smarty_magazine_custom_slug_nonce')) {
+            $custom_slug = sanitize_text_field($_POST['smarty_magazine_custom_slug']); // Keep slashes
+            update_post_meta($post_id, '_sm_custom_slug', $custom_slug);
+        }
+    }
+    add_action('save_post', '__smarty_magazine_save_custom_slug');
+}
+
+if (!function_exists('__smarty_magazine_add_custom_slug_metabox')) {
+    /**
+     * Add metabox for custom slug input
+     *
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_add_custom_slug_metabox() {
+        add_meta_box(
+            'smarty_magazine_custom_slug_metabox',
+            __('Custom Slug', 'smarty_magazine'),
+            '__smarty_magazine_render_custom_slug_metabox',
+            'page',
+            'side',
+            'high'
+        );
+    }
+    add_action('add_meta_boxes', '__smarty_magazine_add_custom_slug_metabox');
+}
+
+if (!function_exists('__smarty_magazine_render_custom_slug_metabox')) {
+    /**
+     * Render the custom slug metabox
+     *
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object
+     * 
+     * @return void
+     */
+    function __smarty_magazine_render_custom_slug_metabox($post) {
+        $custom_slug = get_post_meta($post->ID, '_sm_custom_slug', true);
+        wp_nonce_field('smarty_magazine_custom_slug_nonce', 'smarty_magazine_custom_slug_nonce');
+        ?>
+        <label for="smarty_magazine_custom_slug"><?php _e('Enter custom slug (e.g., text/another-text):', 'smarty_magazine'); ?></label>
+        <input type="text" name="smarty_magazine_custom_slug" id="smarty_magazine_custom_slug" value="<?php echo esc_attr($custom_slug); ?>" class="widefat" />
+        <p><?php _e('This will override the default slug with slashes.', 'smarty_magazine'); ?></p>
+        <?php
+    }
+}
+
+if (!function_exists('__smarty_magazine_custom_page_permalink')) {
+    /**
+     * Filter the page permalink to use custom slug with slashes
+     *
+     * @since 1.0.0
+     * 
+     * @param string $link The default permalink
+     * @param int $post_id The post ID
+     * 
+     * @return string The modified permalink
+     */
+    function __smarty_magazine_custom_page_permalink($link, $post_id) {
+        $post = get_post($post_id);
+        if ($post->post_type === 'page') {
+            $custom_slug = get_post_meta($post_id, '_sm_custom_slug', true);
+            if ($custom_slug) {
+                $link = home_url("/$custom_slug");
+            }
+        }
+        return $link;
+    }
+    add_filter('page_link', '__smarty_magazine_custom_page_permalink', 10, 2);
+}
+
+if (!function_exists('__smarty_magazine_custom_page_link')) {
+    /**
+     * Filter the page link to reflect custom slug in admin
+     *
+     * @since 1.0.0
+     * 
+     * @param string $link The default link
+     * @param WP_Post $post The post object
+     * 
+     * @return string The modified link
+     */
+    function __smarty_magazine_custom_page_link($link, $post) {
+        if ($post->post_type === 'page') {
+            $custom_slug = get_post_meta($post->ID, '_sm_custom_slug', true);
+            if ($custom_slug) {
+                $link = home_url("/$custom_slug");
+            }
+        }
+        return $link;
+    }
+    add_filter('post_type_link', '__smarty_magazine_custom_page_link', 10, 2);
 }

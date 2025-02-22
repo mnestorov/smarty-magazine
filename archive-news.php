@@ -1,7 +1,5 @@
 <?php
 /**
- * Template Name: News Archive
- * 
  * The template for displaying the news archive with carousel for priority sections and normal posts.
  * 
  * @since 1.0.0
