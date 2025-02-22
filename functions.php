@@ -344,6 +344,15 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
 }
 
 if (!function_exists('smarty_magazine_news_post_navigation')) {
+	/**
+	 * Display post navigation for 'news' post type.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @global WP_Post $post
+	 * 
+	 * @return void
+	 */
     function smarty_magazine_news_post_navigation() {
         global $post;
         $terms = get_the_terms($post->ID, 'news_category');
