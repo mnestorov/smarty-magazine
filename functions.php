@@ -203,6 +203,7 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ad
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-news-ticker.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-featured-post-slider.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-highlighted-news.php';
+require get_template_directory() . '/includes/classes/widgets/class-sm-widget-news-categories.php';
 
 /**
  * Load additional theme functionality.

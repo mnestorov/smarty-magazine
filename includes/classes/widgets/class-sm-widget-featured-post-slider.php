@@ -26,7 +26,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
             '__Smarty_Magazine_Featured_Post_Slider',
             __('SM Featured Slider', 'smarty_magazine'),
             array(
-                'description' => __('Featured News Image Slider with title and published date', 'smarty_magazine')
+                'description' => __('Featured News Image Slider with title and published date.', 'smarty_magazine')
             )
         );
     }

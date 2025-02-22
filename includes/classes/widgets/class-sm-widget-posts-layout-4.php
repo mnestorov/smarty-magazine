@@ -37,7 +37,7 @@ class __Smarty_Magazine_Post_Layout_4 extends __Smarty_Magazine_Tabs_Content {
             '__Smarty_Magazine_Post_Layout_4',
             __('SM News Layout 4', 'smarty_magazine'),
             array(
-                'description' => __('Posts display layout 4 for recently published posts', 'smarty_magazine')
+                'description' => __('Posts display layout 4 for recently published posts.', 'smarty_magazine')
             )
         );
     }

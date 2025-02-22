@@ -2335,9 +2335,8 @@ button.sm-sec-nav:hover {
 --------------------------------------------------------------*/
 .sm-breadcrumbs {
 	font-size: 14px;
-	padding: 12px 15px;
-	/*border-top: 1px solid rgba(39,48,57,.06);*/
-	/*box-shadow: 0 1px 2px rgba(39,48,57,.025);*/
+	padding: 12px 15px 0;
+	box-shadow: 0 1px 5px rgba(39,48,57,.3);
 	background: rgba(39,48,57,.05);
 	color: #7d8388;
 }
@@ -2419,6 +2418,11 @@ button.sm-sec-nav:hover {
 	border-radius: 5px;
 }
 
+.sm-news-sidebar .widget {
+	border: 1px solid var(--color-border);
+	border-radius: 5px;
+}
+
 .sm-sidebar .widget_archive h2,
 .sm-sidebar .widget_calendar h2,
 .sm-sidebar .widget_meta h2,
@@ -2429,7 +2433,8 @@ button.sm-sec-nav:hover {
 .sm-sidebar .widget_search h2,
 .sm-sidebar .widget_tag_cloud h2,
 .sm-sidebar .widget_text h2,
-.sm-sidebar .sm-social-icons h2 {
+.sm-sidebar .sm-social-icons h2,
+.sm-news-sidebar .widget h2 {
 	font-size: 16px;
 	margin: 0;
 	padding: 15px;
@@ -2481,6 +2486,11 @@ button.sm-sec-nav:hover {
 
 .sm-sidebar .widget_categories li {
 	padding: 0;
+}
+
+.sm-news-sidebar .widget li.list-group-item {
+	border: none;
+	padding: 10px 15px;
 }
 
 .sm-sidebar .tagcloud {
@@ -3489,7 +3499,7 @@ button.sm-sec-nav:hover {
 # News Post Type Archive
 --------------------------------------------------------------*/
 .sm-news-archive .news-section {
-	padding: 2rem;
+	padding: 1rem;
 	border-radius: 10px;
 	transition: all 0.3s ease;
 }

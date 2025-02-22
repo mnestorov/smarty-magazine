@@ -68,88 +68,102 @@
 	 }
  }
 
-if (!function_exists('__smarty_magazine_entry_footer')) {
-    /**
-     * Prints HTML with meta information for the categories, tags and comments.
-	 * 
-	 * @since 1.0.0
-     *
-     * @return void
-     */
-    function __smarty_magazine_entry_footer() {
-		$post_type = get_post_type();
-		
-		// =======================================================
-		// 1. Categories for 'post' and 'news'
-		// =======================================================
-		if (in_array($post_type, ['post', 'news'], true)) {
-			if (is_object_in_taxonomy($post_type, 'category')) {
-				// Here we create a list of category links separated by </span><span class="badge text-bg-light ms-1">
-				// That means each category link is wrapped in its own <span class="badge text-bg-light">.
-				$categories_list = get_the_category_list('</span><span class="badge text-bg-light ms-1">');
-	
-				// Check if we have categories and if the blog has more than one category
-				if ($categories_list && __smarty_magazine_categorized_blog()) {
-					echo '<div class="cat-links mb-2 d-flex align-items-center">';
-	
-					// Optional icon using Bootstrap Icons or Font Awesome (example uses Bootstrap Icons)
-					// Replace <i class="bi bi-folder me-2"></i> with your preferred icon if you like.
-					echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i>' 
-						 . esc_html__('Posted in:', 'smarty_magazine') . '</span>';
-	
-					// Print the categories as badges
-					// The first category link is wrapped in <span class="badge text-bg-light"> 
-					// subsequent categories are appended by the separator with a new <span> as well.
-					printf(
-						'<span class="badge text-bg-light">%s</span>',
-						$categories_list // Already escaped by get_the_category_list()
-					);
-	
-					echo '</div>';
-				}
-			}
-	
-			// =======================================================
-			// 2. Tags for 'post' and 'news'
-			// =======================================================
-			if (is_object_in_taxonomy($post_type, 'post_tag')) {
-				// Similar approach for tags, but let's use a different color, e.g. "bg-primary"
-				$tags_list = get_the_tag_list('', '</span><span class="badge text-bg-light ms-1">');
-	
-				if ($tags_list) {
-					echo '<div class="tags-links mb-2 d-flex align-items-center">';
-	
-					// Optional icon for tags
-					echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i>' 
-						 . esc_html__('Tagged:', 'smarty_magazine') . '</span>';
-	
-					// Print the tags as badges
-					printf(
-						'<span class="badge text-bg-light">%s</span>',
-						$tags_list // Already escaped by get_the_tag_list()
-					);
-	
-					echo '</div>';
-				}
-			}
-		}
-	
-		// =======================================================
-		// 3. Edit Post Link
-		// =======================================================
-		// Wrap the edit link in a container for styling
-		echo '<div class="edit-post-wrapper mt-2">';
-		edit_post_link(
-			sprintf(
-				esc_html__('[ EDIT POST ]', 'smarty_magazine'),
-				get_the_title() // Use get_the_title() to avoid direct output from the_title()
-			),
-			'<span class="edit-link">',
-			'</span>'
-		);
-		echo '</div>';
-	}
-}	
+ if (!function_exists('__smarty_magazine_entry_footer')) {
+	 /**
+	  * Prints HTML with meta information for the categories, tags and comments.
+	  * 
+	  * @since 1.0.0
+	  *
+	  * @return void
+	  */
+	 function __smarty_magazine_entry_footer() {
+		 $post_type = get_post_type();
+ 
+		 // =======================================================
+		 // 1. Categories for 'post' and 'news'
+		 // =======================================================
+		 if ($post_type === 'post') {
+			 if (is_object_in_taxonomy($post_type, 'category')) {
+				 $categories_list = get_the_category_list('</span><span class="badge text-bg-light ms-1">');
+ 
+				 if ($categories_list && __smarty_magazine_categorized_blog()) {
+					 echo '<div class="cat-links mb-2 d-flex align-items-center">';
+					 echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i>' 
+						  . esc_html__('Posted in:', 'smarty_magazine') . '</span>';
+					 printf(
+						 '<span class="badge text-bg-light">%s</span>',
+						 $categories_list // Already escaped by get_the_category_list()
+					 );
+					 echo '</div>';
+				 }
+			 }
+		 } elseif ($post_type === 'news') {
+			 if (is_object_in_taxonomy($post_type, 'news_category')) {
+				 $categories_list = get_the_term_list(get_the_ID(), 'news_category', '', '</span><span class="badge text-bg-light ms-1">', '');
+ 
+				 if ($categories_list) {
+					 echo '<div class="cat-links mb-2 d-flex align-items-center">';
+					 echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i>' 
+						  . esc_html__('Posted in:', 'smarty_magazine') . '</span>';
+					 printf(
+						 '<span class="badge text-bg-light">%s</span>',
+						 $categories_list // Already escaped by get_the_term_list()
+					 );
+					 echo '</div>';
+				 }
+			 }
+		 }
+ 
+		 // =======================================================
+		 // 2. Tags for 'post' and 'news'
+		 // =======================================================
+		 if ($post_type === 'post') {
+			 if (is_object_in_taxonomy($post_type, 'post_tag')) {
+				 $tags_list = get_the_tag_list('', '</span><span class="badge text-bg-light ms-1">');
+ 
+				 if ($tags_list) {
+					 echo '<div class="tags-links mb-2 d-flex align-items-center">';
+					 echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i>' 
+						  . esc_html__('Tagged:', 'smarty_magazine') . '</span>';
+					 printf(
+						 '<span class="badge text-bg-light">%s</span>',
+						 $tags_list // Already escaped by get_the_tag_list()
+					 );
+					 echo '</div>';
+				 }
+			 }
+		 } elseif ($post_type === 'news') {
+			 if (is_object_in_taxonomy($post_type, 'news_tag')) {
+				 $tags_list = get_the_term_list(get_the_ID(), 'news_tag', '', '</span><span class="badge text-bg-light ms-1">', '');
+ 
+				 if ($tags_list) {
+					 echo '<div class="tags-links mb-2 d-flex align-items-center">';
+					 echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i>' 
+						  . esc_html__('Tagged:', 'smarty_magazine') . '</span>';
+					 printf(
+						 '<span class="badge text-bg-light">%s</span>',
+						 $tags_list // Already escaped by get_the_term_list()
+					 );
+					 echo '</div>';
+				 }
+			 }
+		 }
+ 
+		 // =======================================================
+		 // 3. Edit Post Link
+		 // =======================================================
+		 echo '<div class="edit-post-wrapper mt-2">';
+		 edit_post_link(
+			 sprintf(
+				 esc_html__('[ EDIT POST ]', 'smarty_magazine'),
+				 get_the_title() // Use get_the_title() to avoid direct output from the_title()
+			 ),
+			 '<span class="edit-link">',
+			 '</span>'
+		 );
+		 echo '</div>';
+	 }
+ }
 
 if (!function_exists('__smarty_magazine_categorized_blog')) {
 	/**

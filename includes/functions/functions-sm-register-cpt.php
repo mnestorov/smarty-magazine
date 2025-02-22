@@ -37,10 +37,8 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
 
         $args = array(
             'label'               => __('News', 'smarty_magazine'),
-            'description'         => __('Latest and In-Depth News', 'smarty_magazine'),
             'labels'              => $labels,
             'supports'            => array('title', 'editor', 'thumbnail', 'revisions', 'author', 'excerpt'),
-            'taxonomies'          => array('category', 'post_tag'),
             'hierarchical'        => true,
             'show_in_nav_menus'   => true,
             'public'              => true,
@@ -61,6 +59,74 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
         register_post_type('news', $args);
     }
     add_action('init', '__smarty_magazine_register_news_post_type');
+}
+
+if (!function_exists('__smarty_magazine_register_news_taxonomies')) {
+    /**
+     * Register custom taxonomies for the news post type.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_register_news_taxonomies() {
+        // Register custom category taxonomy for news
+        $labels = array(
+            'name'              => _x('News Categories', 'taxonomy general name', 'smarty_magazine'),
+            'singular_name'     => _x('News Category', 'taxonomy singular name', 'smarty_magazine'),
+            'search_items'      => __('Search News Categories', 'smarty_magazine'),
+            'all_items'         => __('All News Categories', 'smarty_magazine'),
+            'parent_item'       => __('Parent News Category', 'smarty_magazine'),
+            'parent_item_colon' => __('Parent News Category:', 'smarty_magazine'),
+            'edit_item'         => __('Edit News Category', 'smarty_magazine'),
+            'update_item'       => __('Update News Category', 'smarty_magazine'),
+            'add_new_item'      => __('Add New News Category', 'smarty_magazine'),
+            'new_item_name'     => __('New News Category Name', 'smarty_magazine'),
+            'menu_name'         => __('News Categories', 'smarty_magazine'),
+        );
+
+        $args = array(
+            'hierarchical'      => true,
+            'labels'            => $labels,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array('slug' => 'news-category'),
+        );
+
+        register_taxonomy('news_category', array('news'), $args);
+
+        // Register custom tag taxonomy for news
+        $labels = array(
+            'name'                       => _x('News Tags', 'taxonomy general name', 'smarty_magazine'),
+            'singular_name'              => _x('News Tag', 'taxonomy singular name', 'smarty_magazine'),
+            'search_items'               => __('Search News Tags', 'smarty_magazine'),
+            'popular_items'              => __('Popular News Tags', 'smarty_magazine'),
+            'all_items'                  => __('All News Tags', 'smarty_magazine'),
+            'edit_item'                  => __('Edit News Tag', 'smarty_magazine'),
+            'update_item'                => __('Update News Tag', 'smarty_magazine'),
+            'add_new_item'               => __('Add New News Tag', 'smarty_magazine'),
+            'new_item_name'              => __('New News Tag Name', 'smarty_magazine'),
+            'separate_items_with_commas' => __('Separate news tags with commas', 'smarty_magazine'),
+            'add_or_remove_items'        => __('Add or remove news tags', 'smarty_magazine'),
+            'choose_from_most_used'      => __('Choose from the most used news tags', 'smarty_magazine'),
+            'not_found'                  => __('No news tags found.', 'smarty_magazine'),
+            'menu_name'                  => __('News Tags', 'smarty_magazine'),
+        );
+
+        $args = array(
+            'hierarchical'          => false,
+            'labels'                => $labels,
+            'show_ui'               => true,
+            'show_admin_column'     => true,
+            'update_count_callback' => '_update_post_term_count',
+            'query_var'             => true,
+            'rewrite'               => array('slug' => 'news-tag'),
+        );
+
+        register_taxonomy('news_tag', array('news'), $args);
+    }
+    add_action('init', '__smarty_magazine_register_news_taxonomies');
 }
 
 if (!function_exists('__smarty_magazine_add_news_meta_boxes')) {

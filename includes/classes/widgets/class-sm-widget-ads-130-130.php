@@ -26,7 +26,7 @@ class __Smarty_Magazine_Ads_130_130 extends WP_Widget {
             '__smarty_magazine_ads_130_130',
             __('SM Ads 130x130', 'smarty_magazine'),
             array(
-                'description' => __('Advertisement with size of 130x130 for sidebar position', 'smarty_magazine')
+                'description' => __('Advertisement with size of 130x130 for sidebar position.', 'smarty_magazine')
             )
         );
     }

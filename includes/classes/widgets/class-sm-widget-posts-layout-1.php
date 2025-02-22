@@ -31,7 +31,7 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
             '__Smarty_Magazine_Post_Layout_1',
             __('SM News Layout 1', 'smarty_magazine'),
             array(
-                'description' => __('Posts display layout 1 for recently published post', 'smarty_magazine')
+                'description' => __('Posts display layout 1 for recently published post.', 'smarty_magazine')
             )
         );
     }

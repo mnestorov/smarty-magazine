@@ -19,14 +19,13 @@ if (!function_exists('__smarty_magazine_render_news_carousel')) {
      * 
      * @return void
      */
-    function __smarty_magazine_render_news_carousel($posts, $status) {
-        $items_per_slide = wp_is_mobile() ? 1 : 2; // TODO: Change the number of items per slide dynamically
+    function __smarty_magazine_render_news_carousel($posts, $status, $items_per_slide = '') {
         $carousel_id = "news-$status-carousel";
         ?>
         <section class="news-section news-<?php echo esc_attr($status); ?> mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2 px-2">
                 <h2 class="section-title <?php echo esc_attr("text-$status"); ?>">
-                    <?php echo esc_html(sprintf(__('%s News', 'smarty_magazine'), ucfirst($status))); ?>
+                    <?php echo esc_html(sprintf(__('%s', 'smarty_magazine'), ucfirst($status))); ?>
                 </h2>
                 <?php if (count($posts) > 1) : ?>
                     <div class="carousel-controls">
@@ -100,8 +99,8 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
                 <?php __smarty_magazine_posted_on($post_id); ?>
             </div>
 
-            <div class="card-body py-0 px-2">
-                <h3 class="card-title" itemprop="headline">
+            <div class="card-body px-2">
+                <h3 class="card-title fs-4" itemprop="headline">
                     <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
                         <?php echo esc_html(get_the_title($post_id)); ?>
                     </a>

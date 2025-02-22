@@ -23,27 +23,34 @@ get_header(); ?>
                             <header class="page-header mb-4">
                                 <?php the_archive_title('<h1 class="page-title">', '</h1>'); ?>
                                 <?php the_archive_description('<div class="taxonomy-description lead">', '</div>'); ?>
+                                <?php if (is_tax('news_category')) : ?>
+                                    <div class="taxonomy-description lead">
+                                        <?php echo term_description(); ?>
+                                    </div>
+                                <?php endif; ?>
                             </header>
 
                             <?php
                             $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                             $is_first_page = $paged === 1;
                             $statuses_priority = ['breaking', 'featured', 'sponsored'];     // TODO: Change the priority statuses dynamically 
+                            $main_statuses = ['breaking', 'featured']; // Only breaking and featured for main content
                             $posts_by_status = [];
+                            $items_per_slide = wp_is_mobile() ? 1 : 2; // TODO: Change the number of items per slide dynamically
                             ?>
 
-                            <!-- Priority Sections with Carousel -->
+                            <!-- Priority Sections with Carousel (Breaking and Featured only) -->
                             <?php if ($is_first_page) : ?>
                                 <div class="row">
                                     <div class="col-lg-9 col-md-9">
                                         <?php
                                         $priority_args = array(
-                                            'post_type'       => 'news',
-                                            'posts_per_page'  => -1,
-                                            'meta_query'      => array(
+                                            'post_type' => 'news',
+                                            'posts_per_page' => -1,
+                                            'meta_query' => array(
                                                 array(
-                                                    'key'     => '_news_status',
-                                                    'value'   => $statuses_priority,
+                                                    'key' => '_news_status',
+                                                    'value' => $statuses_priority,
                                                     'compare' => 'IN',
                                                 ),
                                             ),
@@ -58,15 +65,25 @@ get_header(); ?>
                                             wp_reset_postdata();
                                         endif;
 
-                                        foreach ($statuses_priority as $status) :
+                                        // Render Breaking and Featured in main content
+                                        foreach ($main_statuses as $status) :
                                             if (!empty($posts_by_status[$status])) :
-                                                __smarty_magazine_render_news_carousel($posts_by_status[$status], $status);
+                                                __smarty_magazine_render_news_carousel($posts_by_status[$status], $status, $items_per_slide);
                                             endif;
                                         endforeach;
                                         ?>
                                     </div>
                                     <div class="col-lg-3 col-md-3">
-                                        <?php get_sidebar(); ?>
+                                        <?php 
+                                        // Sponsored Section in Sidebar
+                                        if (!empty($posts_by_status['sponsored'])) { ?>
+                                            <div class="mb-5">
+                                                <?php __smarty_magazine_render_news_carousel($posts_by_status['sponsored'], 'sponsored', 1); ?>
+                                            </div><?php 
+                                        }
+
+                                        get_sidebar('news');
+                                        ?>
                                     </div>
                                 </div>
                             <?php endif; ?>

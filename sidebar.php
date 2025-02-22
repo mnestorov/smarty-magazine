@@ -1,7 +1,7 @@
 <?php
 /**
- * The sidebar containing the error widget area.
- *
+ * The sidebar containing the main widget area.
+ * 
  * @since 1.0.0
  * 
  * @package SmartyMagazine

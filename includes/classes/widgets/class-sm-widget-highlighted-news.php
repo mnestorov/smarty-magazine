@@ -27,7 +27,7 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
             '__Smarty_Magazine_Highlighted_News',
             __('SM Highlighted News', 'smarty_magazine'),
             array(
-                'description' => __('Highlighted grid news posts from 4 different categories', 'smarty_magazine')
+                'description' => __('Highlighted grid news posts from 4 different categories.', 'smarty_magazine')
             )
         );
     }

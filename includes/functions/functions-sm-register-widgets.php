@@ -29,6 +29,15 @@ if (!function_exists('__smarty_magazine_widgets_init')) {
                 'after_title'   => '</h2>',
             ],
             [
+                'name'          => __('News Sidebar', 'smarty_magazine'),
+                'id'            => 'sm-news-sidebar',
+                'description'   => __('Add widgets to show widgets at the right panel of the news post type', 'smarty_magazine'),
+                'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+                'after_widget'  => '</aside>',
+                'before_title'  => '<h2 class="widget-title">',
+                'after_title'   => '</h2>',
+            ],
+            [
                 'name'          => __('Top Bar: Search', 'smarty_magazine'),
                 'id'            => 'sm-top-bar-search',
                 'description'   => __('Top Bar search icon', 'smarty_magazine'),
@@ -174,6 +183,7 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
             '__Smarty_Magazine_Ads_262_220',
             '__Smarty_Magazine_News_Ticker',
             '__Smarty_Magazine_Highlighted_News',
+            '__Smarty_Magazine_News_Categories',
             '__Smarty_Magazine_Post_Layout_1',
             '__Smarty_Magazine_Post_Layout_2',
             '__Smarty_Magazine_Post_Layout_3',
