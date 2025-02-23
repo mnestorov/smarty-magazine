@@ -42,7 +42,7 @@
                     <?php endwhile; ?>
                 </main>
             </div>
-            <div class="col-lg-3 col-md-3">
+            <div class="col-lg-3 col-md-3 mt-5">
                 <?php get_sidebar(); ?>
             </div>
         </div>

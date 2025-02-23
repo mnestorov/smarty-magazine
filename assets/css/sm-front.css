@@ -240,7 +240,7 @@ textarea {
 # Widgets
 --------------------------------------------------------------*/
 .widget {
-	margin: 0 0 .5em;
+	margin: 0 0 3em;
 }
 
 .widget select {
@@ -2418,6 +2418,7 @@ button.sm-sec-nav:hover {
 	border-radius: 5px;
 }
 
+.sm-sidebar .widget,
 .sm-news-sidebar .widget {
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
@@ -2434,6 +2435,7 @@ button.sm-sec-nav:hover {
 .sm-sidebar .widget_tag_cloud h2,
 .sm-sidebar .widget_text h2,
 .sm-sidebar .sm-social-icons h2,
+.sm-sidebar .widget h2,
 .sm-news-sidebar .widget h2 {
 	font-size: 16px;
 	margin: 0;
@@ -2488,6 +2490,7 @@ button.sm-sec-nav:hover {
 	padding: 0;
 }
 
+.sm-sidebar .widget li.list-group-item,
 .sm-news-sidebar .widget li.list-group-item {
 	border: none;
 	padding: 10px 15px;
