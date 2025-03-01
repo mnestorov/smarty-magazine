@@ -40,7 +40,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
     <div class="entry-content">
         <?php if (has_post_thumbnail()) : ?>
             <figure class="sm-single-news-img mb-4 position-relative" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                <?php the_post_thumbnail('sm-featured-post-large', array('class' => 'img-fluid')); ?>
+                <?php the_post_thumbnail('sm-featured-post-extra-large', array('class' => 'img-fluid')); ?>
                 <meta itemprop="url" content="<?php echo esc_url($thumbnail_url); ?>">
                 <meta itemprop="width" content="<?php echo esc_attr(getimagesize($thumbnail_url)[0]); ?>">
                 <meta itemprop="height" content="<?php echo esc_attr(getimagesize($thumbnail_url)[1]); ?>">

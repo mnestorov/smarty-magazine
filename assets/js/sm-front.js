@@ -21,16 +21,18 @@ jQuery(document).ready(function($) {
 
     // Initialize post slider
     new Swiper('.sm-featured-post-slider', {
-        paginationClickable: true,
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
         slidesPerView: 1,
         spaceBetween: 0,
         loop: true,
         autoplay: {
             delay: 3000,
+            disableOnInteraction: false,
         },
-        speed: 600
+        speed: 600,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        }
     });
 
     // Back to Top

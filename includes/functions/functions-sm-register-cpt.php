@@ -54,6 +54,8 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
             'exclude_from_search' => false,
             'publicly_queryable'  => true,
             'capability_type'     => 'post',
+            'show_in_rest'        => true,
+            'query_var'           => true,
         );
 
         register_post_type('news', $args);

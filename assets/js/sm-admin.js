@@ -12,6 +12,10 @@ jQuery(document).ready(function($) {
      * If the 'add_media' button is clicked, the custom media flag is set to false, and the default WordPress media
      * uploader behavior is restored.
      */
+    
+    /**
+     * Initializes a media uploader for elements with the specified button class.
+     */
     function mediaUploader(buttonClass) {
         var _custom_media = true,
             _orig_send_attachment = wp.media.editor.send.attachment;
@@ -45,4 +49,35 @@ jQuery(document).ready(function($) {
     }
 
     mediaUploader('.sm-custom-media-button');
+
+    /**
+     * Updates the category dropdown based on the selected post type
+     */
+    function updateCategories($widget) {
+        let selectedValue = $widget.find('input.sm-show-posts-type:checked').val();
+        console.log("Updating Categories for:", selectedValue);
+
+        if (selectedValue === 'news') {
+            $widget.find('.sm-category-posts').hide();
+            $widget.find('.sm-category-news').show();
+        } else {
+            $widget.find('.sm-category-news').hide();
+            $widget.find('.sm-category-posts').show();
+        }
+    }
+
+    /**
+     * When the page loads, update categories for all instances of the widget
+     */
+    $('.sm-featured-post-slider').each(function() {
+        updateCategories($(this));
+    });
+
+    /**
+     * Change event listener for dynamically updating category dropdowns
+     */
+    $(document).on('change', '.sm-show-posts-type', function() {
+        let $widget = $(this).closest('.sm-featured-post-slider');
+        updateCategories($widget);
+    });
 });
