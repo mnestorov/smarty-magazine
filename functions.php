@@ -204,7 +204,7 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-sh
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ads-728-90.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ads-130-130.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ads-870-150.php';
-require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ads-262-220.php';
+require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ads-300-250.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-news-ticker.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-featured-post-slider.php';
 require get_template_directory() . '/includes/classes/widgets/class-sm-widget-highlighted-news.php';

@@ -63,10 +63,10 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 		// News Ticker Colors
 		$news_ticker_bg       = get_theme_mod('__smarty_magazine_news_ticker_bg', '#212529');
 		$news_ticker_border   = get_theme_mod('__smarty_magazine_news_ticker_border', '#ffffff');
-		$news_ticker_tag_bg   = get_theme_mod('__smarty_magazine_news_ticker_tag_bg', '#212529');
-		$news_ticker_icon 	  = get_theme_mod('__smarty_magazine_news_ticker_icon', '#be3434');
+		$news_ticker_tag_bg   = get_theme_mod('__smarty_magazine_news_ticker_tag_bg', '#be3434');
+		$news_ticker_icon 	  = get_theme_mod('__smarty_magazine_news_ticker_icon', '#ffffff');
 		$news_ticker_tag_text = get_theme_mod('__smarty_magazine_news_ticker_tag_text', '#ffffff');
-		$news_ticker_arrow    = get_theme_mod('__smarty_magazine_news_ticker_arrow', '#212529');
+		$news_ticker_arrow    = get_theme_mod('__smarty_magazine_news_ticker_arrow', '#be3434');
 		$news_ticker_text     = get_theme_mod('__smarty_magazine_news_ticker_text', '#ffffff');
 
 		// Footer Colors

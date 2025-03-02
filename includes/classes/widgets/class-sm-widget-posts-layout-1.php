@@ -31,7 +31,7 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
             '__Smarty_Magazine_Post_Layout_1',
             __('SM News Layout 1', 'smarty_magazine'),
             array(
-                'description' => __('Posts display layout 1 for recently published post.', 'smarty_magazine')
+                'description' => __('Posts display layout 1 for recently published post or news.', 'smarty_magazine')
             )
         );
     }
@@ -55,25 +55,54 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
                 'name'  => 'title',
                 'label' => esc_html__('Title', 'smarty_magazine'),
             ),
+
+            array(
+                'type'  => 'radio',
+                'name'  => 'post_type',
+                'label' => esc_html__('Choose Type', 'smarty_magazine'),
+                'options' => array(
+                    'post' => esc_html__('Posts', 'smarty_magazine'),
+                    'news' => esc_html__('News', 'smarty_magazine'),
+                ),
+                'default' => 'post'
+            ),
+
             array(
                 'type'  => 'list_cat',
                 'name'  => 'category',
                 'label' => esc_html__('Categories', 'smarty_magazine'),
             ),
+
             array(
                 'type'  => 'text',
                 'name'  => 'no_of_posts',
-                'label' => esc_html__('No. of Posts', 'smarty_magazine'),
+                'label' => esc_html__('Number of Posts', 'smarty_magazine'),
             ),
+
             array(
                 'type'  => 'orderby',
                 'name'  => 'orderby',
                 'label' => esc_html__('Order by', 'smarty_magazine'),
             ),
+
             array(
                 'type'  => 'order',
                 'name'  => 'order',
                 'label' => esc_html__('Order', 'smarty_magazine'),
+            ),
+
+            array(
+                'type'  => 'checkbox',
+                'name'  => 'top_spacing',
+                'label' => esc_html__('Add Top Spacing', 'smarty_magazine'),
+                'default' => 'no'
+            ),
+
+            array(
+                'type'  => 'checkbox',
+                'name'  => 'bottom_spacing',
+                'label' => esc_html__('Add Bottom Spacing', 'smarty_magazine'),
+                'default' => 'no'
             ),
         );
 
@@ -93,10 +122,16 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
      */
     public function form($instance) {
         $fields = $this->get_configs();
+        $defaults = array(
+            'post_type'      => 'post',
+            'top_spacing'    => 'no',
+            'bottom_spacing' => 'no'
+        );
+        $instance = wp_parse_args((array) $instance, $defaults);
 
         foreach ($fields as $field) {
             $value = !empty($instance[$field['name']]) ? $instance[$field['name']] : '';
-            $this->generate_input_field($field, $value);
+            $this->generate_input_field($field, $value, $instance);
         }
     }
 
@@ -112,7 +147,7 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
      * 
      * @return void
      */
-    private function generate_input_field($field, $value) {
+    private function generate_input_field($field, $value, $instance) {
         ?>
         <div class="sm-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id($field['name'])); ?>"><?php echo esc_html($field['label']); ?></label>
@@ -122,30 +157,43 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
                     id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
                     name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
                     value="<?php echo esc_attr($value); ?>">
-            <?php elseif ($field['type'] === 'number') : ?>
-                <input 
-                    type="number" 
-                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
-                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
-                    value="<?php echo esc_attr($value); ?>" 
-                    min="1" step="1">
+            <?php elseif ($field['type'] === 'radio' && $field['name'] === 'post_type') : ?>
+                <div class="sm-post-type-options">
+                    <?php foreach ($field['options'] as $option_value => $option_label) : ?>
+                        <label>
+                            <input 
+                                type="radio" 
+                                class="sm-show-posts-type"
+                                name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
+                                value="<?php echo esc_attr($option_value); ?>"
+                                <?php checked($value, $option_value); ?>>
+                            <?php echo esc_html($option_label); ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
             <?php elseif ($field['type'] === 'list_cat') : ?>
-                <select 
-                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
-                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>">
-                    <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
-                    <?php
-                    $categories = get_terms(array('taxonomy' => 'category', 'hide_empty' => false));
-                    foreach ($categories as $term) {
-                        printf(
-                            '<option value="%s" %s>%s</option>',
-                            esc_attr($term->term_id),
-                            selected($value, $term->term_id, false),
-                            esc_html($term->name)
-                        );
-                    }
-                    ?>
-                </select>
+                <div class="sm-category-dropdown">
+                    <select 
+                        id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                        name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>">
+                        <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
+                        <?php
+                        $taxonomy = !empty($instance['post_type']) && $instance['post_type'] === 'news' ? 'news_category' : 'category';
+                        $categories = get_terms(array(
+                            'taxonomy' => $taxonomy,
+                            'hide_empty' => false
+                        ));
+                        foreach ($categories as $term) {
+                            printf(
+                                '<option value="%s" %s>%s</option>',
+                                esc_attr($term->term_id),
+                                selected($value, $term->term_id, false),
+                                esc_html($term->name)
+                            );
+                        }
+                        ?>
+                    </select>
+                </div>
             <?php elseif ($field['type'] === 'orderby') : ?>
                 <select 
                     id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
@@ -161,6 +209,13 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
                     <option value="ASC" <?php selected($value, 'ASC'); ?>><?php _e('Ascending', 'smarty_magazine'); ?></option>
                     <option value="DESC" <?php selected($value, 'DESC'); ?>><?php _e('Descending', 'smarty_magazine'); ?></option>
                 </select>
+            <?php elseif ($field['type'] === 'checkbox') : ?>
+                <input 
+                    type="checkbox" 
+                    id="<?php echo esc_attr($this->get_field_id($field['name'])); ?>" 
+                    name="<?php echo esc_attr($this->get_field_name($field['name'])); ?>" 
+                    value="yes" <?php checked($value, 'yes'); ?>>
+                <small><?php _e('Check to add top and/or bottom margin', 'smarty_magazine'); ?></small>
             <?php endif; ?>
         </div>
         <?php
@@ -184,7 +239,11 @@ class __Smarty_Magazine_Post_Layout_1 extends __Smarty_Magazine_Tabs_Content {
         $fields = $this->get_configs();
 
         foreach ($fields as $field) {
-            $instance[$field['name']] = sanitize_text_field($new_instance[$field['name']]);
+            if ($field['type'] === 'checkbox') {
+                $instance[$field['name']] = isset($new_instance[$field['name']]) && $new_instance[$field['name']] === 'yes' ? 'yes' : 'no';
+            } else {
+                $instance[$field['name']] = sanitize_text_field($new_instance[$field['name']]);
+            }
         }
 
         return $instance;

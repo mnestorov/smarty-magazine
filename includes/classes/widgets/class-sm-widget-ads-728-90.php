@@ -44,18 +44,20 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        $title          = !empty($instance['title']) ? $instance['title'] : __('728x90 Ads', 'smarty_magazine');
-        $ads_image_path = !empty($instance['ads_image']) ? esc_url($instance['ads_image']) : '';
-        $ads_link       = !empty($instance['ads_link']) ? esc_url($instance['ads_link']) : esc_url(home_url('/'));
-        $ads_link_type  = ($instance['ads_link_type'] === 'nofollow') ? 'nofollow' : 'dofollow';
+        $title           = !empty($instance['title']) ? $instance['title'] : __('728x90 Ads', 'smarty_magazine');
+        $ads_image_path  = !empty($instance['ads_image']) ? esc_url($instance['ads_image']) : '';
+        $ads_link        = !empty($instance['ads_link']) ? esc_url($instance['ads_link']) : esc_url(home_url('/'));
+        $ads_link_type   = ($instance['ads_link_type'] === 'nofollow') ? 'nofollow' : 'dofollow';
+        $add_spacing     = !empty($instance['add_spacing']) && $instance['add_spacing'] === 'yes';
+        $alignment       = !empty($instance['alignment']) ? $instance['alignment'] : 'center';
+        $alignment_class = 'text-' . $alignment;
 
         if (!empty($ads_image_path)) : ?>
-            <a href="<?php echo esc_url($ads_link); ?>" 
-               title="<?php echo esc_attr($title); ?>" 
-               rel="<?php echo esc_attr($ads_link_type); ?>" 
-               target="_blank">
-                <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>">
-            </a>
+            <div class="<?php echo esc_attr($alignment_class . ($add_spacing ? ' my-5' : '')); ?>">
+                <a href="<?php echo esc_url($ads_link); ?>" title="<?php echo esc_attr($title); ?>" rel="<?php echo esc_attr($ads_link_type); ?>" target="_blank">
+                    <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>">
+                </a>
+            </div>
         <?php endif;
     }
 
@@ -75,7 +77,9 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             'title'         => '',
             'ads_link'      => '',
             'ads_image'     => '',
-            'ads_link_type' => 'dofollow'
+            'ads_link_type' => 'dofollow',
+            'add_spacing'   => 'yes',
+            'alignment'     => 'center'
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
@@ -139,6 +143,29 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
                        name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
+
+            <!-- Add Spacing Checkbox -->
+            <div class="sm-admin-input-wrap">
+                <label for="<?php echo $this->get_field_id('add_spacing'); ?>"><?php _e('Add Top and Bottom Spacing', 'smarty_magazine'); ?></label>
+                <input type="checkbox"
+                       id="<?php echo $this->get_field_id('add_spacing'); ?>"
+                       name="<?php echo $this->get_field_name('add_spacing'); ?>"
+                       value="yes"
+                       <?php checked($instance['add_spacing'], 'yes'); ?>>
+                <small><?php _e('Check to add top and bottom margin', 'smarty_magazine'); ?></small>
+            </div>
+
+            <!-- Alignment Select -->
+            <div class="sm-admin-input-wrap">
+                <label for="<?php echo $this->get_field_id('alignment'); ?>"><?php _e('Alignment', 'smarty_magazine'); ?></label>
+                <select id="<?php echo $this->get_field_id('alignment'); ?>"
+                        name="<?php echo $this->get_field_name('alignment'); ?>">
+                    <option value="start" <?php selected($instance['alignment'], 'start'); ?>><?php _e('Left', 'smarty_magazine'); ?></option>
+                    <option value="center" <?php selected($instance['alignment'], 'center'); ?>><?php _e('Center', 'smarty_magazine'); ?></option>
+                    <option value="end" <?php selected($instance['alignment'], 'end'); ?>><?php _e('Right', 'smarty_magazine'); ?></option>
+                </select>
+                <small><?php _e('Choose the alignment of the ad banner', 'smarty_magazine'); ?></small>
+            </div>
         </div><?php
     }
 
@@ -161,7 +188,9 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
         $instance['ads_link']      = esc_url_raw($new_instance['ads_link']);
         $instance['ads_link_type'] = in_array($new_instance['ads_link_type'], array('dofollow', 'nofollow')) ? $new_instance['ads_link_type'] : 'dofollow';
         $instance['ads_image']     = esc_url_raw($new_instance['ads_image']);
-
+        $instance['add_spacing']   = isset($new_instance['add_spacing']) && $new_instance['add_spacing'] === 'yes' ? 'yes' : 'no';
+        $instance['alignment']     = in_array($new_instance['alignment'], array('start', 'center', 'end')) ? $new_instance['alignment'] : 'center';
+        
         return $instance;
     }
 }

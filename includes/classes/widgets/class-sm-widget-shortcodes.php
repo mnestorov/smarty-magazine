@@ -44,7 +44,46 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        echo $args['before_widget'];
+        $args = wp_parse_args($args, array(
+            'before_widget' => '<div class="widget %s">',
+            'after_widget'  => '</div>',
+            'before_title'  => '<h2 class="widget-title">',
+            'after_title'   => '</h2>',
+        ));
+
+        // Get spacing settings
+        $top_spacing = !empty($instance['top_spacing']) && $instance['top_spacing'] === 'yes' ? 'mt-5' : '';
+        $bottom_spacing = !empty($instance['bottom_spacing']) && $instance['bottom_spacing'] === 'yes' ? 'mb-5' : '';
+
+        // Extract existing classes from before_widget
+        preg_match('/class=["\'](.*?)["\']/i', $args['before_widget'], $matches);
+        $existing_classes = isset($matches[1]) ? explode(' ', $matches[1]) : array('widget');
+        
+        // Add widget ID base and spacing classes
+        $widget_classes = array_merge($existing_classes, array($this->id_base));
+        if ($top_spacing) {
+            $widget_classes[] = $top_spacing;
+        }
+        if ($bottom_spacing) {
+            $widget_classes[] = $bottom_spacing;
+        }
+
+        // Remove duplicates and empty values
+        $widget_classes = array_filter(array_unique($widget_classes));
+
+        // Replace the class attribute in before_widget with the updated classes
+        $before_widget = preg_replace(
+            '/class=["\'].*?["\']/i',
+            'class="' . esc_attr(implode(' ', $widget_classes)) . '"',
+            $args['before_widget']
+        );
+        if (!preg_match('/class=["\'].*?["\']/i', $before_widget)) {
+            // If no class attribute exists, add one
+            $before_widget = str_replace('>', ' class="' . esc_attr(implode(' ', $widget_classes)) . '">', $args['before_widget']);
+        }
+
+        // Output the widget
+        echo $before_widget;
 
         if (!empty($instance['shortcode'])) {
             $shortcode = trim($instance['shortcode']);
@@ -66,7 +105,16 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
      * @return void
      */
     public function form($instance) {
-        $shortcode = !empty($instance['shortcode']) ? esc_textarea($instance['shortcode']) : '';
+        $defaults = array(
+            'shortcode'      => '',
+            'top_spacing'    => 'no',
+            'bottom_spacing' => 'no'
+        );
+        $instance = wp_parse_args((array) $instance, $defaults);
+
+        $shortcode = esc_textarea($instance['shortcode']);
+        $top_spacing = $instance['top_spacing'];
+        $bottom_spacing = $instance['bottom_spacing'];
         ?>
         <div class="sm-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id('shortcode')); ?>">
@@ -76,6 +124,32 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
                       id="<?php echo esc_attr($this->get_field_id('shortcode')); ?>" 
                       name="<?php echo esc_attr($this->get_field_name('shortcode')); ?>"><?php echo esc_textarea($shortcode); ?></textarea>
             <small><?php esc_html_e('Example: [my_shortcode]', 'smarty_magazine'); ?></small>
+        </div>
+
+        <div class="sm-admin-input-wrap">
+            <label for="<?php echo esc_attr($this->get_field_id('top_spacing')); ?>">
+                <?php esc_html_e('Add Top Spacing', 'smarty_magazine'); ?>
+            </label>
+            <input 
+                type="checkbox" 
+                id="<?php echo esc_attr($this->get_field_id('top_spacing')); ?>" 
+                name="<?php echo esc_attr($this->get_field_name('top_spacing')); ?>" 
+                value="yes" 
+                <?php checked($top_spacing, 'yes'); ?>>
+            <small><?php _e('Check to add top margin', 'smarty_magazine'); ?></small>
+        </div>
+
+        <div class="sm-admin-input-wrap">
+            <label for="<?php echo esc_attr($this->get_field_id('bottom_spacing')); ?>">
+                <?php esc_html_e('Add Bottom Spacing', 'smarty_magazine'); ?>
+            </label>
+            <input 
+                type="checkbox" 
+                id="<?php echo esc_attr($this->get_field_id('bottom_spacing')); ?>" 
+                name="<?php echo esc_attr($this->get_field_name('bottom_spacing')); ?>" 
+                value="yes" 
+                <?php checked($bottom_spacing, 'yes'); ?>>
+            <small><?php _e('Check to add bottom margin', 'smarty_magazine'); ?></small>
         </div>
         <?php
     }
@@ -95,6 +169,8 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = array();
         $instance['shortcode'] = !empty($new_instance['shortcode']) ? sanitize_text_field($new_instance['shortcode']) : '';
+        $instance['top_spacing'] = isset($new_instance['top_spacing']) && $new_instance['top_spacing'] === 'yes' ? 'yes' : 'no';
+        $instance['bottom_spacing'] = isset($new_instance['bottom_spacing']) && $new_instance['bottom_spacing'] === 'yes' ? 'yes' : 'no';
         return $instance;
     }
 }

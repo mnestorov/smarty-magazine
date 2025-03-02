@@ -1,8 +1,8 @@
 <?php
 /**
- * Ads 262x220 Widget Class.
+ * Ads 300x250 Widget Class.
  *
- * Displays an advertisement banner with dimensions 262x220, designed for sidebar placement.
+ * Displays an advertisement banner with dimensions 300x250, designed for sidebar placement.
  * 
  * @since 1.0.0
  * 
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
+class __Smarty_Magazine_Ads_300_250 extends WP_Widget {
     /**
      * Constructor: Initializes the widget with its name and description.
      * 
@@ -23,10 +23,10 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
      */
     public function __construct() {
         parent::__construct(
-            '__smarty_magazine_ads_262_220',
-            __('SM Ads 262x220', 'smarty_magazine'),
+            '__smarty_magazine_ads_300_250',
+            __('SM Ads 300x250', 'smarty_magazine'),
             array(
-                'description' => __('Advertisement with size of 262x220 for sidebar position.', 'smarty_magazine')
+                'description' => __('Advertisement with size of 300x250 for sidebar position.', 'smarty_magazine')
             )
         );
     }
@@ -42,14 +42,15 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        $title          = !empty($instance['title']) ? $instance['title'] : __('262x220 Ads', 'smarty_magazine');
+        $title          = !empty($instance['title']) ? $instance['title'] : __('300x250 Ads', 'smarty_magazine');
         $ads_image_path = !empty($instance['ads_image']) ? esc_url($instance['ads_image']) : '';
         $ads_link       = !empty($instance['ads_link']) ? esc_url($instance['ads_link']) : esc_url(home_url('/'));
         $ads_link_type  = ($instance['ads_link_type'] === 'nofollow') ? 'nofollow' : 'dofollow';
+        $add_spacing    = !empty($instance['add_spacing']) && $instance['add_spacing'] === 'yes';
 
         // Display ad only if the image path is provided
         if (!empty($ads_image_path)) : ?>
-            <div class="text-center"> <!-- Bootstrap class to center the link wrapper -->
+            <div class="text-center <?php echo esc_attr(($add_spacing ? ' my-5' : '')); ?>">
                 <a href="<?php echo esc_url($ads_link); ?>" 
                 title="<?php echo esc_attr($title); ?>" 
                 rel="<?php echo esc_attr($ads_link_type); ?>" 
@@ -77,13 +78,14 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
             'title'         => '',
             'ads_link'      => '',
             'ads_image'     => '',
-            'ads_link_type' => 'dofollow'
+            'ads_link_type' => 'dofollow',
+            'add_spacing'   => 'yes'
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
         ?>
 
-        <div class="ads-262x220">
+        <div class="ads-300x250">
             <!-- Title Field -->
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'smarty_magazine'); ?></label>
@@ -141,6 +143,17 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
                        name="<?php echo $this->get_field_name('ads_image'); ?>"
                        value="<?php _e('Select Image', 'smarty_magazine'); ?>" />
             </div>
+
+            <!-- Add Spacing Checkbox -->
+            <div class="sm-admin-input-wrap">
+                <label for="<?php echo $this->get_field_id('add_spacing'); ?>"><?php _e('Add Top and Bottom Spacing', 'smarty_magazine'); ?></label>
+                <input type="checkbox"
+                       id="<?php echo $this->get_field_id('add_spacing'); ?>"
+                       name="<?php echo $this->get_field_name('add_spacing'); ?>"
+                       value="yes"
+                       <?php checked($instance['add_spacing'], 'yes'); ?>>
+                <small><?php _e('Check to add top and bottom margin', 'smarty_magazine'); ?></small>
+            </div>
         </div><?php
     }
 
@@ -161,6 +174,7 @@ class __Smarty_Magazine_Ads_262_220 extends WP_Widget {
         $instance['ads_link']      = esc_url_raw($new_instance['ads_link']);
         $instance['ads_link_type'] = in_array($new_instance['ads_link_type'], array('dofollow', 'nofollow')) ? $new_instance['ads_link_type'] : 'dofollow';
         $instance['ads_image']     = esc_url_raw($new_instance['ads_image']);
+        $instance['add_spacing']   = isset($new_instance['add_spacing']) && $new_instance['add_spacing'] === 'yes' ? 'yes' : 'no';
 
         return $instance;
     }

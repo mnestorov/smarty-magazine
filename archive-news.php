@@ -105,7 +105,7 @@ get_header(); ?>
 
                             <?php if ($normal_query->have_posts()) : ?>
                                 <section class="news-section news-normal">
-                                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+                                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                                         <?php while ($normal_query->have_posts()) : $normal_query->the_post(); ?>
                                             <div class="col">
                                                 <?php __smarty_magazine_render_news_post(get_the_ID(), null); ?>

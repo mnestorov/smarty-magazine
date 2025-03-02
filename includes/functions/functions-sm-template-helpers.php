@@ -23,7 +23,7 @@ if (!function_exists('__smarty_magazine_render_news_carousel')) {
         $carousel_id = "news-$status-carousel";
         ?>
         <section class="news-section news-<?php echo esc_attr($status); ?> mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-2 px-2">
+            <div class="d-flex justify-content-between align-items-center px-2">
                 <h2 class="section-title <?php echo esc_attr("text-$status"); ?>">
                     <?php echo esc_html(sprintf(__('%s', 'smarty_magazine'), ucfirst($status))); ?>
                 </h2>
@@ -86,7 +86,7 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
             <figure class="sm-news-post-img">
                 <?php if (has_post_thumbnail($post_id)) : ?>
                     <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="card-img-top">
-                        <?php echo get_the_post_thumbnail($post_id, 'sm-featured-post-medium', array('class' => 'img-fluid', 'itemprop' => 'image')); ?>
+                        <?php echo get_the_post_thumbnail($post_id, 'sm-featured-post-large', array('class' => 'img-fluid', 'itemprop' => 'image')); ?>
                     </a>
                 <?php else : ?>
                     <div class="card-img-top">
@@ -95,45 +95,33 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
                 <?php endif; ?>
             </figure>
 
-            <div class="text-center text-muted small">
-                <?php __smarty_magazine_posted_on($post_id); ?>
-            </div>
+            <?php __smarty_magazine_posted_on($post_id); ?>
 
-            <div class="card-body px-2">
-                <h3 class="card-title fs-4" itemprop="headline">
-                    <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
-                        <?php echo esc_html(get_the_title($post_id)); ?>
-                    </a>
-                </h3>
-                <?php if ($status === null) : ?>
-                    <div class="card-text mb-4" itemprop="description">
-                        <?php
-                        $excerpt = get_the_excerpt($post_id);
-                        $limit = 260;
-                        $pad = "...";
-                        if (strlen($excerpt) <= $limit) {
-                            echo esc_html($excerpt);
-                        } else {
-                            $excerpt = substr($excerpt, 0, $limit) . $pad;
-                            echo esc_html($excerpt);
-                        }
-                        ?>
-                    </div>
+            <div class="card-body p-2">
+                <?php if ($status) : ?>
+                    <h2 class="card-title" itemprop="headline">
+                        <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
+                            <?php echo esc_html(get_the_title($post_id)); ?>
+                        </a>
+                    </h2>
+                <?php else : ?>
+                    <h3 class="card-title" itemprop="headline">
+                        <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
+                            <?php echo esc_html(get_the_title($post_id)); ?>
+                        </a>
+                    </h3>
                 <?php endif; ?>
             </div>
-
-            <div class="card-footer bg-transparent border-0 p-0">
-                <div class="d-grid gap-2">
-                    <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="btn btn-<?php echo esc_attr($button_class); ?> rounded-0">
-                        <?php _e('Read More', 'smarty_magazine'); ?>
-                    </a>
+            
+            <?php if ($status) : ?>
+                <div class="card-footer bg-transparent border-0 p-0">
+                    <div class="d-grid gap-2">
+                        <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="btn btn-<?php echo esc_attr($button_class); ?> rounded-0">
+                            <?php _e('Read More', 'smarty_magazine'); ?>
+                        </a>
+                    </div>
                 </div>
-                <span class="search-icon position-absolute top-0 end-0 m-2">
-                    <a href="<?php echo esc_url(get_permalink($post_id)); ?>" title="<?php the_title_attribute(); ?>" rel="bookmark" class="btn btn-sm btn-dark">
-                        <i class="bi bi-search"></i>
-                    </a>
-                </span>
-            </div>
+            <?php endif; ?>
 
             <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink($post_id)); ?>">
             <?php if (has_post_thumbnail($post_id)) : ?>

@@ -239,10 +239,6 @@ textarea {
 /*--------------------------------------------------------------
 # Widgets
 --------------------------------------------------------------*/
-.widget {
-	margin: 0 0 3em;
-}
-
 .widget select {
 	max-width: 100%;
 }
@@ -558,7 +554,6 @@ figure.sm-news-post-img {
 	background: rgba(204,41,54,1);
 }
 
-.sm-news-layout2 .sm-news-post:hover,
 .sm-pagination-nav .current,
 .sm-pagination-nav a:hover {
 	border-color: rgba(204,41,54,1);
@@ -1338,6 +1333,7 @@ button.sm-sec-nav:hover {
 	-o-transform: scale(1.12);
 	transform: scale(1.12);
 }
+
 .sm-highlighted-news-desc {
 	position: absolute;
 	bottom: 0;
@@ -1387,10 +1383,8 @@ button.sm-sec-nav:hover {
 
 /*--------------------------------------------------------------
 # Front Page News Section
-# Ajax filter
 --------------------------------------------------------------*/
 .sm-news-layout-wrap {
-	margin: 20px 0;
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }
@@ -1437,9 +1431,8 @@ button.sm-sec-nav:hover {
 .sm-news-post-meta span {
 	font-size: 14px;
 	display: inline-block;
-	margin-top: 10px;
 	margin-right: 25px;
-	padding: 5px 0;
+	padding-bottom: 5px;
 	opacity: .7;
 }
 
@@ -1876,12 +1869,8 @@ button.sm-sec-nav:hover {
     margin-right: 15px;
     margin-bottom: 15px !important;
     padding: 10px;
+	border-radius: 5px;
     border: 1px solid var(--color-border);
-    background: var(--color-light);
-}
-
-.sm-news-layout2 .sm-news-post:hover {
-	background: var(--color-white);
 }
 
 .sm-news-layout2 .sm-news-post:nth-child(1),
@@ -1950,8 +1939,8 @@ button.sm-sec-nav:hover {
 .sm-news-layout2 .sm-news-post h3,
 .sm-related-posts h3 {
 	font-size: 16px;
-	font-weight: 500;
-	line-height: 1.4em;
+	font-weight: 400;
+	line-height: 1.2em;
     margin-top: .9rem; 
 }
 
@@ -1967,13 +1956,8 @@ button.sm-sec-nav:hover {
 /*--------------------------------------------------------------
 # Front Page News Section Layout 3
 --------------------------------------------------------------*/
-.sm-news-list-3 .sm-news-layout-wrap {
-	margin: 20px 0 0;
-}
-
 .sm-news-layout-half {
 	float: left;
-
 	width: 48.5%;
 }
 
@@ -2437,14 +2421,14 @@ button.sm-sec-nav:hover {
 .sm-sidebar .widget_tag_cloud,
 .sm-sidebar .widget_text,
 .sm-sidebar .sm-social-icons {
-	margin-top: 20px;
+	margin-top: 3rem;
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }
 
 .sm-sidebar .widget,
 .sm-news-sidebar .widget {
-	margin-top: 20px;
+	margin-top: 3rem;
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }
@@ -2521,7 +2505,8 @@ button.sm-sec-nav:hover {
 	padding: 10px 15px;
 }
 
-.sm-sidebar .tagcloud {
+.sm-sidebar .tagcloud,
+.sm-news-sidebar .tagcloud {
 	padding: 10px;
 }
 
@@ -2749,6 +2734,15 @@ button.sm-sec-nav:hover {
 
 .sm-news-layout2 .sm-news-post-img img {
 	width: 100%;
+	transition: transform 0.5s ease-in-out;
+}
+
+.sm-news-layout2 .sm-news-post-img:hover img {
+	-webkit-transform: scale(1.12);
+	-moz-transform: scale(1.12);
+	-ms-transform: scale(1.12);
+	-o-transform: scale(1.12);
+	transform: scale(1.12);
 }
 
 .sm-footer .sm-news-layout-half {
@@ -3060,10 +3054,6 @@ button.sm-sec-nav:hover {
 		margin: 0;
 	}
 
-	.sm-sidebar .sm-news-layout-wrap {
-		margin: 20px 0 0;
-	}
-
 	.sm-sidebar .sm-news-layout4 .sm-news-post {
 		width: 100%;
 		padding: 10px;
@@ -3264,10 +3254,6 @@ button.sm-sec-nav:hover {
 	.sm-archive-post figure {
 		width: 100%;
 		text-align: center;
-	}
-
-	.sm-half-last {
-		margin-top: 20px !important;
 	}
 }
 
@@ -3490,17 +3476,28 @@ button.sm-sec-nav:hover {
 }
 
 /*--------------------------------------------------------------
+# BS5 Custom Styles
+--------------------------------------------------------------*/
+h2.card-title  {
+	font-size: 20px;
+	font-weight: 400;
+}
+
+h3.card-title  {
+	font-size: 18px;
+	font-weight: 400;
+}
+
+/*--------------------------------------------------------------
 # Post Archive
 --------------------------------------------------------------*/
 /* Card Styling */
 .sm-post-archive .card {
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	position: relative; /* For absolute positioning of search icon */
 }
 .sm-post-archive .card:hover {
 	transform: translateY(-5px);
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 .sm-post-archive .card-img-top {
 	width: 100%;
@@ -3508,19 +3505,6 @@ button.sm-sec-nav:hover {
 }
 .sm-post-archive .card {
 	overflow: hidden; /* Prevent image overflow */
-}
-
-/* Highlighted Post */
-.sm-post-highlighted {
-	margin-bottom: 2rem;
-}
-.sm-post-highlighted .card-title {
-	font-size: 1.5rem;
-}
-
-/* Search Icon */
-.sm-post-archive .search-icon {
-	z-index: 10;
 }
 
 /*--------------------------------------------------------------
@@ -3556,29 +3540,24 @@ button.sm-sec-nav:hover {
 
 /* Card Styling */
 .sm-news-archive .card {
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	overflow: hidden; /* Ensure image doesn't overflow */
 }
 
 .sm-news-archive .card:hover {
 	transform: translateY(-5px);
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .sm-news-archive .news-breaking .card { 
-	border-top: 3px solid #dc3545;
-	border-bottom: 1px solid #dc3545;
+	border: 1px solid #dc3545;
 }
 
 .sm-news-archive .news-featured .card { 
-	border-top: 3px solid #ffc107;
-	border-bottom: 1px solid #ffc107;
+	border: 1px solid #ffc107;
 }
 
 .sm-news-archive .news-sponsored .card { 
-	border-top: 3px solid #0d6efd; 
-	border-bottom: 1px solid #0d6efd;
+	border: 1px solid #0d6efd;
 }
 /* No special border for normal news cards */
 
@@ -3598,10 +3577,6 @@ button.sm-sec-nav:hover {
 .news-section .carousel-control-prev:hover,
 .news-section .carousel-control-next:hover {
 	background: rgba(0, 0, 0, 0.4);
-}
-.news-section .carousel-control-prev-icon,
-.news-section .carousel-control-next-icon {
-	filter: invert(1); /* White icons */
 }
 
 /* Full-width image in card */

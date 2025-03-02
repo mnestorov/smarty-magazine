@@ -30,52 +30,6 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 'description' => __('Featured News Image Slider with title and published date.', 'smarty_magazine')
             )
         );
-
-        add_action('wp_ajax_sm_get_categories', [$this, 'get_categories']);
-        add_action('wp_ajax_nopriv_sm_get_categories', [$this, 'get_categories']);
-    }
-
-    /**
-     * Fetch categories dynamically based on post type (AJAX handler)
-     * 
-     * @since 1.0.0
-     * 
-     * @return void
-     * 
-     * @throws Exception If the request is invalid.
-     */
-    public function get_categories() {
-        if (!isset($_POST['post_type'], $_POST['selected_categories']) || !check_ajax_referer('sm_ajax_nonce', 'security', false)) {
-            wp_send_json_error(['message' => 'Invalid request']);
-            return;
-        }
-
-        $post_type = sanitize_text_field($_POST['post_type']);
-        $taxonomy = ($post_type === 'news') ? 'news_category' : 'category';
-        $selected_categories = array_map('intval', (array) $_POST['selected_categories']);
-
-        $categories = get_terms(array(
-            'taxonomy'   => $taxonomy,
-            'hide_empty' => false
-        ));
-
-        if (is_wp_error($categories)) {
-            wp_send_json_error(['message' => 'Error fetching categories']);
-            return;
-        }
-
-        $category_options = '<option value="">' . __('Select Category', 'smarty_magazine') . '</option>';
-        foreach ($categories as $category) {
-            $selected = in_array($category->term_id, $selected_categories) ? 'selected="selected"' : '';
-            $category_options .= sprintf(
-                '<option value="%s" %s>%s</option>',
-                esc_attr($category->term_id),
-                $selected,
-                esc_html($category->name)
-            );
-        }
-
-        wp_send_json_success(['categories' => $category_options]);
     }
 
     /**

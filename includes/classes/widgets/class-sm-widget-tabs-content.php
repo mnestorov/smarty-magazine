@@ -54,7 +54,9 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * @return WP_Query The constructed query object.
      */
     public function query($instance = array()) {
-        $instance = wp_parse_args($instance, array());
+        $instance = wp_parse_args($instance, array(
+            'post_type' => 'post' // Default post type
+        ));
         $viewing = isset($instance['viewing']) ? explode(',', $instance['viewing']) : array();
 
         $viewing = array_map('absint', $viewing);
@@ -72,7 +74,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
         if (is_string($instance['category'])) {
             $instance['category'] = array_map('absint', explode(',', $instance['category']));
         } elseif (is_int($instance['category'])) {
-            $instance['category'] = [absint($instance['category'])];  // Convert single int to array
+            $instance['category'] = [absint($instance['category'])];
         } elseif (!is_array($instance['category'])) {
             $instance['category'] = [];
         }
@@ -88,20 +90,34 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
         $max_posts = apply_filters('__smarty_magazine_tabs_content_max_posts', 30);
         $no_of_posts = min($no_of_posts, $max_posts);
 
+        // Determine post type and taxonomy
+        $post_type = $instance['post_type'] === 'news' ? 'news' : 'post';
+        $taxonomy = $post_type === 'news' ? 'news_category' : 'category';
+
         $args = array(
-            'post_type'           => 'post',
-            'category__in'        => $viewing,
+            'post_type'           => $post_type,
             'posts_per_page'      => $no_of_posts,
             'ignore_sticky_posts' => true,
             'paged'               => absint($instance['paged'] ?? 0),
         );
+
+        // Use tax_query instead of category__in for more flexibility with custom taxonomies
+        if (!empty($viewing)) {
+            $args['tax_query'] = array(
+                array(
+                    'taxonomy' => $taxonomy,
+                    'field'    => 'term_id',
+                    'terms'    => $viewing,
+                ),
+            );
+        }
 
         if (in_array($instance['orderby'] ?? '', ['date', 'title', 'rand', 'comment_count'])) {
             $args['orderby'] = $instance['orderby'];
         }
 
         if (in_array($instance['order'] ?? '', ['asc', 'desc'])) {
-            $args['order'] = $instance['order'];
+            $args['order'] = strtoupper($instance['order']);
         }
 
         return new WP_Query(apply_filters('__smarty_magazine_widget_content_args', $args, $instance, $this));
@@ -138,6 +154,11 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
             $prepared_instance['show_all'] = '';
         }
 
+        // Ensure 'post_type' is set
+        if (!isset($prepared_instance['post_type'])) {
+            $prepared_instance['post_type'] = 'post';
+        }
+
         return $prepared_instance;
     }
 
@@ -154,78 +175,98 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * @return void
      */
     public function widget($args, $instance) {
-        // Ensure default arguments exist to prevent undefined index warnings
         $args = wp_parse_args($args, array(
-            'before_widget' => '<div class="widget %s">',  // Default opening div for widget
-            'after_widget'  => '</div>',                   // Default closing div for widget
-            'before_title'  => '<h2 class="widget-title">', // Default before title tag
-            'after_title'   => '</h2>',                     // Default after title tag
+            'before_widget' => '<div class="widget %s">',
+            'after_widget'  => '</div>',
+            'before_title'  => '<h2 class="widget-title">',
+            'after_title'   => '</h2>',
         ));
 
-        // Output the opening widget structure
-        echo $args['before_widget'];
+        // Extract existing classes from before_widget
+        preg_match('/class=["\'](.*?)["\']/i', $args['before_widget'], $matches);
+        $existing_classes = isset($matches[1]) ? explode(' ', $matches[1]) : array('widget');
 
-        // Setup the instance data if not already done
         if (!isset($instance['__setup_data']) || $instance['__setup_data'] !== false) {
             $instance = $this->setup_instance($instance);
         }
 
-        // Get the title or set a default
         $title = !empty($instance['title']) ? $instance['title'] : __('Default Title', 'smarty_magazine');
-        unset($instance['title']);  // Remove title from instance to avoid conflicts in queries
+        unset($instance['title']);
 
-        // Query posts based on widget settings
         $query = $this->query($instance);
-        $instance['_layout'] = $this->layout;  // Apply layout information
+        $instance['_layout'] = $this->layout;
 
-        // Prepare CSS classes for widget display
-        $classes = ['sm-news-list-' . $this->layout];
+        // Handle spacing options
+        $top_spacing = !empty($instance['top_spacing']) && $instance['top_spacing'] === 'yes' ? 'mt-5' : '';
+        $bottom_spacing = !empty($instance['bottom_spacing']) && $instance['bottom_spacing'] === 'yes' ? 'mb-5' : '';
+
+        // Merge classes
+        $widget_classes = array_merge($existing_classes, array('sm-news-list-' . $this->layout));
         if ($this->layout_class) {
-            $classes[] = $this->layout_class;
-        } ?>
-        <div class="<?php echo esc_attr(implode(' ', $classes)); ?>">
-            <div class="news-layout-tabs sm-news-layout-wrap" data-ajax="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" data-instance="<?php echo esc_attr(json_encode($instance)); ?>">
-                <?php if ($title) : ?>
-                    <div class="widget-title filter-inside" style="display: flex; justify-content: space-between; align-items: center;">
-                        <?php echo $args['before_title'] . esc_html($title) . $args['after_title']; ?>
+            $widget_classes[] = $this->layout_class;
+        }
+        if ($top_spacing) {
+            $widget_classes[] = $top_spacing;
+        }
+        if ($bottom_spacing) {
+            $widget_classes[] = $bottom_spacing;
+        }
 
-                        <?php
-                        // Handle category display
-                        $first_category = is_array($instance['category']) ? reset($instance['category']) : $instance['category'];
-                        if ($term = get_term($first_category, 'category')) :
-                        ?>
-                            <span class="view-all-link">
-                                <a href="<?php echo esc_url(get_term_link($term)); ?>">
-                                    <?php esc_html_e('[ View All ]', 'smarty_magazine'); ?>
-                                </a>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
+        // Remove duplicates and empty values
+        $widget_classes = array_filter(array_unique($widget_classes));
 
-                <div class="news-tab-layout animate sm-news-layout<?php echo esc_attr($this->layout); ?>">
-                    <div class="news-tab-posts">
-                        <?php
-                        // Display posts if available
-                        if ($query->have_posts()) {
-                            $layout_method = 'layout_' . $this->layout;
-                            if (method_exists($this, $layout_method)) {
-                                $this->$layout_method($query);
-                            } else {
-                                $this->layout_content($query);
-                            }
-                        } else {
-                            $this->not_found();  // Fallback if no posts found
-                        }
-                        ?>
-                    </div>
+        // Replace or add class attribute in before_widget
+        $before_widget = preg_replace(
+            '/class=["\'].*?["\']/i',
+            'class="' . esc_attr(implode(' ', $widget_classes)) . '"',
+            $args['before_widget']
+        );
+        if (!preg_match('/class=["\'].*?["\']/i', $before_widget)) {
+            // If no class attribute exists, add one
+            $before_widget = str_replace('>', ' class="' . esc_attr(implode(' ', $widget_classes)) . '">', $args['before_widget']);
+        }
+
+        // Output the widget
+        echo $before_widget;
+
+        $taxonomy = $instance['post_type'] === 'news' ? 'news_category' : 'category';
+        ?>
+        <div class="news-layout-tabs sm-news-layout-wrap">
+            <?php if ($title) : ?>
+                <div class="widget-title filter-inside" style="display: flex; justify-content: space-between; align-items: center;">
+                    <?php echo $args['before_title'] . esc_html($title) . $args['after_title']; ?>
+                    <?php
+                    $first_category = is_array($instance['category']) ? reset($instance['category']) : $instance['category'];
+                    if ($term = get_term($first_category, $taxonomy)) :
+                    ?>
+                        <span class="view-all-link">
+                            <a href="<?php echo esc_url(get_term_link($term)); ?>">
+                                <?php esc_html_e('[ View All ]', 'smarty_magazine'); ?>
+                            </a>
+                        </span>
+                    <?php endif; ?>
                 </div>
-                <?php wp_reset_postdata(); ?>
+            <?php endif; ?>
+
+            <div class="news-tab-layout sm-news-layout<?php echo esc_attr($this->layout); ?>">
+                <div class="news-tab-posts">
+                    <?php
+                    if ($query->have_posts()) {
+                        $layout_method = 'layout_' . $this->layout;
+                        if (method_exists($this, $layout_method)) {
+                            $this->$layout_method($query);
+                        } else {
+                            $this->layout_content($query);
+                        }
+                    } else {
+                        $this->not_found();
+                    }
+                    ?>
+                </div>
             </div>
+            <?php wp_reset_postdata(); ?>
         </div>
         <?php
-
-        // Output the closing widget structure
         echo $args['after_widget'];
     }
 
@@ -244,8 +285,9 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
         while ($query->have_posts()) : $query->the_post(); ?>
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
-                    <?php if (has_post_thumbnail()) : the_post_thumbnail('sm-featured-post-medium');
-                    endif; ?>
+                    <?php if (has_post_thumbnail()) : ?>
+                        <?php the_post_thumbnail('sm-featured-post-large'); ?>
+                    <?php endif; ?>
                     <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark">
                         <span><i class="bi bi-search"></i></span>
                     </a>
@@ -256,9 +298,9 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                         <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>
                     </div>
                     <h3>
-                        <a href="<?php echo esc_url(get_permalink()); ?>"><?php echo esc_html(wp_trim_words(get_the_title(), 10, '...')); ?></a>
+                        <a href="<?php echo esc_url(get_permalink()); ?>"><?php echo esc_html(wp_trim_words(get_the_title(), 15, '...')); ?></a>
                     </h3>
-                    <div class="sm-news-post-desc"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 40, '...')); ?></div>
+                    <div class="sm-news-post-desc"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 50, '...')); ?></div>
                 </div>
             </div>
             <?php endwhile;
@@ -336,9 +378,9 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * 
      * @return void
      */
-    public function layout_2( $query ) {
+    public function layout_2($query) {
         global $post;
-        while ( $query->have_posts() ) { $query->the_post(); ?>
+        while ($query->have_posts()) { $query->the_post(); ?>
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
                     <?php
@@ -348,7 +390,6 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                         $image .= '<a href="' . esc_url(get_permalink()) . '" title="' . esc_html(the_title('', '', false)) . '">';
                         $image .= get_the_post_thumbnail($post->ID, 'sm-featured-post-medium', array('title' => esc_attr($title_attribute), 'alt' => esc_attr($title_attribute))) . '</a>';
                         echo $image;
-
                     endif;
                     ?>
                     <div class="sm-news-post-meta">
@@ -356,23 +397,16 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                         <span class="sm-news-post-day"><?php esc_attr(the_time("d")); ?></span>
                     </div>
                 </figure>
-
                 <div class="sm-news-post-content">
                     <h3>
                         <a href="<?php esc_url(the_permalink()); ?>" title="<?php the_title_attribute(); ?>">
                             <?php echo wp_trim_words(get_the_title(), 15, '...'); ?>
                         </a>
                     </h3>
-                    <!--
-                    <div class="sm-news-post-desc">
-                        <?php //echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
-                    </div>
-                    -->
                 </div>
             </div><?php
         };
-
-        $this->end_layout( $query );
+        $this->end_layout($query);
     }
 
     /**
@@ -387,44 +421,43 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * @return void
      */
     public function layout_3($query) {
-        while ( $query->have_posts() ) { $query->the_post(); ?>
+        while ($query->have_posts()) { $query->the_post(); ?>
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
-                    <?php
-                    if ( has_post_thumbnail() ) :
-                        the_post_thumbnail( 'sm-featured-post-medium' );
-                    endif;
-                    ?>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
+                    <?php if (has_post_thumbnail()) : ?>
+                        <?php the_post_thumbnail('sm-featured-post-large'); ?>
+                    <?php endif; ?>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
                 </figure>
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
-                        <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time ( get_option ( 'date_format' ) ); ?></span>
-                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number( 'No Responses', 'one Response', '% Responses' ); ?></span>
+                        <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time(get_option('date_format')); ?></span>
+                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number('No Responses', 'one Response', '% Responses'); ?></span>
                     </div>
                     <h3>
-                        <a href="<?php esc_url( the_permalink() ); ?>" title="<?php the_title_attribute(); ?>">
-                            <?php echo wp_trim_words( get_the_title(), 10, '...' ); ?>
+                        <a href="<?php esc_url(the_permalink()); ?>" title="<?php the_title_attribute(); ?>">
+                            <?php echo wp_trim_words(get_the_title(), 10, '...'); ?>
                         </a>
                     </h3>
+                    <!--
                     <div class="sm-news-post-desc">
                         <?php
-                        $excerpt = get_the_excerpt();
-                        $limit   = "210";
-                        $pad     = "...";
-                        if ( strlen( $excerpt ) <= $limit ) {
-                            echo esc_html( $excerpt );
-                        } else {
-                            $excerpt = substr( $excerpt, 0, $limit ) . $pad;
-                            echo esc_html( $excerpt );
-                        }
+                        //$excerpt = get_the_excerpt();
+                        //$limit = "210";
+                        //$pad = "...";
+                        //if (strlen($excerpt) <= $limit) {
+                            //echo esc_html($excerpt);
+                        //} else {
+                            //$excerpt = substr($excerpt, 0, $limit) . $pad;
+                            //echo esc_html($excerpt);
+                        //}
                         ?>
                     </div>
+                    -->
                 </div>
                 <div class="clearfix"></div>
             </div><?php 
         }
-
         $this->end_layout($query);
     }
 
@@ -440,46 +473,47 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * @return void
      */
     public function layout_4($query) {
-        $n = count( $query->posts );
+        $n = count($query->posts);
         global $post;
 
         $i = 0;
-        while ( $query->have_posts() ) { $query->the_post();
+        while ($query->have_posts()) { $query->the_post();
             $i++;
             $c = 'sm-news-post';
-            if ( $n % 2 == 0 ){
-                if ( $i == $n ) {
-                    $c.= ' last';
-                } else if ( $i == $n - 1 ) {
-                    $c.= ' e-last';
+            if ($n % 2 == 0) {
+                if ($i == $n) {
+                    $c .= ' last';
+                } else if ($i == $n - 1) {
+                    $c .= ' e-last';
                 }
             } else {
-                if ( $i == $n ) {
-                    $c.= ' last';
+                if ($i == $n) {
+                    $c .= ' last';
                 }
             }
-
             ?>
-            <div class="<?php echo esc_attr( $c ); ?>">
+            <div class="<?php echo esc_attr($c); ?>">
                 <figure class="sm-news-post-img">
                     <?php
-                    if ( has_post_thumbnail() ) :
+                    if (has_post_thumbnail()) :
                         $image = '';
-                        $title_attribute = get_the_title( $post->ID );
-                        $image .= '<a href="'. esc_url( get_permalink() ) . '" title="' . esc_html( the_title( '', '', false ) ) .'">';
-                        $image .= get_the_post_thumbnail( $post->ID, 'sm-featured-post-small', array( 'title' => esc_attr( $title_attribute ), 'alt' => esc_attr( $title_attribute ) ) ).'</a>';
+                        $title_attribute = get_the_title($post->ID);
+                        $image .= '<a href="' . esc_url(get_permalink()) . '" title="' . esc_html(the_title('', '', false)) . '">';
+                        $image .= get_the_post_thumbnail($post->ID, 'sm-featured-post-small', array('title' => esc_attr($title_attribute), 'alt' => esc_attr($title_attribute))) . '</a>';
                         echo $image;
-
                     endif;
                     ?>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
                 </figure>
                 <div class="sm-news-post-content">
-                    <h3><a href="<?php esc_url( the_permalink() ); ?>" title="<?php the_title_attribute(); ?>"><?php esc_html( the_title() ); ?></a></h3>
+                    <div class="sm-news-post-meta">
+                        <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time(get_option('date_format')); ?></span>
+                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number('No Responses', 'one Response', '% Responses'); ?></span>
+                    </div>
+                    <h3><a href="<?php esc_url(the_permalink()); ?>" title="<?php the_title_attribute(); ?>"> <?php echo wp_trim_words(get_the_title(), 10, '...'); ?></a></h3>
                 </div>
             </div><?php
         };
-
         $this->end_layout($query);
     }
 
@@ -508,7 +542,6 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                 break;
 
             case 'list_cat':
-                // Ensure single value for select input
                 $selected_value = is_array($value) ? reset($value) : $value; ?>
                 <p>
                     <label for="<?php echo $id; ?>"><?php echo esc_html($field['label']); ?></label>
@@ -554,7 +587,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                 </p><?php
                 break;
 
-            default: // Fallback for unhandled field types ?>
+            default: ?>
                 <p>
                     <label for="<?php echo $id; ?>"><?php echo esc_html($field['label']); ?></label>
                     <input class="widefat" id="<?php echo $id; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo $value; ?>">
@@ -576,21 +609,19 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
         $fields = $this->get_configs();
         foreach ($fields as $field) {
             $field = wp_parse_args($field, array(
-                'type'      => 'text',  // Default type
+                'type'      => 'text',
                 'name'      => '',
                 'label'     => '',
                 'value'     => '',
                 'default'   => '',
             ));
 
-            // Get saved value or default
             if (isset($instance[$field['name']])) {
                 $field['value'] = $instance[$field['name']];
             } else {
                 $field['value'] = $field['default'];
             }
 
-            // Render the field
             $this->field($field);
         }
     }
@@ -625,7 +656,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
      * @return array Sanitized and updated widget settings.
      */
     public function update($new_instance, $old_instance) {
-        $instance = $old_instance;  // Retain existing values
+        $instance = $old_instance;
 
         foreach ($this->get_configs() as $field) {
             $name = $field['name'] ?? '';
@@ -634,12 +665,10 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
             if (isset($new_instance[$name])) {
                 switch ($type) {
                     case 'list_cat':
-                        // Save as integer if it's a single category
                         $instance[$name] = absint($new_instance[$name]);
                         break;
 
                     case 'repeatable':
-                        // For multiple categories, ensure array
                         $instance[$name] = is_array($new_instance[$name])
                             ? array_map('absint', $new_instance[$name])
                             : [absint($new_instance[$name])];

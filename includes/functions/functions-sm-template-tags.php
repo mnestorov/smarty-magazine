@@ -49,7 +49,7 @@
  
 		 // Output with Bootstrap icons and styling
 		 ?>
-		 <div class="sm-post-meta text-muted my-3" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+		 <div class="sm-post-meta text-muted small px-2 my-2" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
 			 <span class="posted-on me-3">
 				 <i class="bi bi-calendar me-1"></i><?php echo $posted_on; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			 </span>

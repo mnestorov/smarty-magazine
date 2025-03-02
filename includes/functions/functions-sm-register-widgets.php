@@ -180,7 +180,7 @@ if (!function_exists('__smarty_magazine_register_widgets')) {
             '__Smarty_Magazine_Ads_728_90',
             '__Smarty_Magazine_Ads_130_130',
             '__Smarty_Magazine_Ads_870_150',
-            '__Smarty_Magazine_Ads_262_220',
+            '__Smarty_Magazine_Ads_300_250',
             '__Smarty_Magazine_News_Ticker',
             '__Smarty_Magazine_Highlighted_News',
             '__Smarty_Magazine_News_Categories',

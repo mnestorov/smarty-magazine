@@ -46,19 +46,29 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
     public function widget($args, $instance) {
         $title           = !empty($instance['title']) ? $instance['title'] : __('Headlines', 'smarty_magazine');
         $show_posts_from = !empty($instance['show_posts_from']) ? $instance['show_posts_from'] : 'recent';
+        $post_type       = !empty($instance['post_type']) ? $instance['post_type'] : 'post';
         $category        = !empty($instance['category']) ? $instance['category'] : '';
         $no_of_posts     = !empty($instance['no_of_posts']) ? absint($instance['no_of_posts']) : 5;
 
         // Set up query parameters
         $query_args = array(
-            'post_type'           => 'post',
+            'post_type'           => $post_type,
             'posts_per_page'      => $no_of_posts,
             'ignore_sticky_posts' => true
         );
 
+        // Determine taxonomy based on post type
+        $taxonomy = $post_type === 'news' ? 'news_category' : 'category';
+
         // If the widget is set to display posts from a specific category
         if ($show_posts_from === 'category' && !empty($category)) {
-            $query_args['category__in'] = array($category);
+            $query_args['tax_query'] = array(
+                array(
+                    'taxonomy' => $taxonomy,
+                    'field'    => 'term_id',
+                    'terms'    => $category,
+                ),
+            );
         }
 
         $news_ticker_posts = new WP_Query($query_args);
@@ -76,7 +86,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
                         <li>
                             <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
                                 <?php the_title(); ?>
-                            </a> <!-- - --> <?php //echo wp_strip_all_tags(get_the_excerpt()); ?>
+                            </a>
                         </li>
                     <?php endwhile; ?>
                 </ul>
@@ -103,6 +113,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
         $defaults = array(
             'title'           => __('Headlines', 'smarty_magazine'),
             'show_posts_from' => 'recent',
+            'post_type'       => 'post',
             'category'        => '',
             'no_of_posts'     => 5
         );
@@ -121,6 +132,25 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
                        name="<?php echo $this->get_field_name('title'); ?>" 
                        value="<?php echo esc_attr($instance['title']); ?>" 
                        placeholder="<?php _e('News Ticker Title', 'smarty_magazine'); ?>">
+            </div>
+
+            <!-- Post Type Selection -->
+            <div class="sm-admin-input-wrap">
+                <label><?php _e('Choose Type', 'smarty_magazine'); ?></label><br>
+                <label>
+                    <input type="radio" 
+                           name="<?php echo $this->get_field_name('post_type'); ?>" 
+                           value="post" 
+                           <?php checked($instance['post_type'], 'post'); ?>>
+                    <?php _e('Posts', 'smarty_magazine'); ?>
+                </label>
+                <label>
+                    <input type="radio" 
+                           name="<?php echo $this->get_field_name('post_type'); ?>" 
+                           value="news" 
+                           <?php checked($instance['post_type'], 'news'); ?>>
+                    <?php _e('News', 'smarty_magazine'); ?>
+                </label>
             </div>
 
             <!-- Post Source Selection -->
@@ -148,10 +178,12 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
                     <?php _e('Category', 'smarty_magazine'); ?>
                 </label>
                 <select id="<?php echo $this->get_field_id('category'); ?>" 
-                        name="<?php echo $this->get_field_name('category'); ?>">
+                        name="<?php echo $this->get_field_name('category'); ?>" 
+                        class="sm-ticker-category">
                     <option value=""><?php _e('Select a Category', 'smarty_magazine'); ?></option>
                     <?php
-                    $categories = get_terms(array('taxonomy' => 'category', 'hide_empty' => false));
+                    $taxonomy = $instance['post_type'] === 'news' ? 'news_category' : 'category';
+                    $categories = get_terms(array('taxonomy' => $taxonomy, 'hide_empty' => false));
                     foreach ($categories as $term) {
                         printf(
                             '<option value="%s" %s>%s</option>',
@@ -197,6 +229,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
         $instance['title']           = sanitize_text_field($new_instance['title']);
         $instance['show_posts_from'] = in_array($new_instance['show_posts_from'], array('recent', 'category')) ? $new_instance['show_posts_from'] : 'recent';
+        $instance['post_type']       = in_array($new_instance['post_type'], array('post', 'news')) ? $new_instance['post_type'] : 'post';
         $instance['category']        = intval($new_instance['category']);
         $instance['no_of_posts']     = absint($new_instance['no_of_posts']);
 
