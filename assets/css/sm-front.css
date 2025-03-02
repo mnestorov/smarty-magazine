@@ -1328,6 +1328,7 @@ button.sm-sec-nav:hover {
 	width: auto;
 	height: 100%;
 	margin: auto;
+	transition: transform 0.5s ease-in-out;
 }
 
 .sm-highlighted-news-img:hover img {
@@ -1337,7 +1338,6 @@ button.sm-sec-nav:hover {
 	-o-transform: scale(1.12);
 	transform: scale(1.12);
 }
-
 .sm-highlighted-news-desc {
 	position: absolute;
 	bottom: 0;
@@ -1347,9 +1347,9 @@ button.sm-sec-nav:hover {
 }
 
 .sm-highlighted-news-desc h2 {
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 400;
-	line-height: 1.4em;
+	line-height: 1.2em;
 	margin: 0;
 	background: rgba(0,0,0,.6);
 }
@@ -2444,6 +2444,7 @@ button.sm-sec-nav:hover {
 
 .sm-sidebar .widget,
 .sm-news-sidebar .widget {
+	margin-top: 20px;
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }

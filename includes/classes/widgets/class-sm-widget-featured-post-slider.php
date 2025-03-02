@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Featured Post Slider Widget Class.
  *
@@ -29,6 +30,52 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 'description' => __('Featured News Image Slider with title and published date.', 'smarty_magazine')
             )
         );
+
+        add_action('wp_ajax_sm_get_categories', [$this, 'get_categories']);
+        add_action('wp_ajax_nopriv_sm_get_categories', [$this, 'get_categories']);
+    }
+
+    /**
+     * Fetch categories dynamically based on post type (AJAX handler)
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     * 
+     * @throws Exception If the request is invalid.
+     */
+    public function get_categories() {
+        if (!isset($_POST['post_type'], $_POST['selected_categories']) || !check_ajax_referer('sm_ajax_nonce', 'security', false)) {
+            wp_send_json_error(['message' => 'Invalid request']);
+            return;
+        }
+
+        $post_type = sanitize_text_field($_POST['post_type']);
+        $taxonomy = ($post_type === 'news') ? 'news_category' : 'category';
+        $selected_categories = array_map('intval', (array) $_POST['selected_categories']);
+
+        $categories = get_terms(array(
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => false
+        ));
+
+        if (is_wp_error($categories)) {
+            wp_send_json_error(['message' => 'Error fetching categories']);
+            return;
+        }
+
+        $category_options = '<option value="">' . __('Select Category', 'smarty_magazine') . '</option>';
+        foreach ($categories as $category) {
+            $selected = in_array($category->term_id, $selected_categories) ? 'selected="selected"' : '';
+            $category_options .= sprintf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr($category->term_id),
+                $selected,
+                esc_html($category->name)
+            );
+        }
+
+        wp_send_json_success(['categories' => $category_options]);
     }
 
     /**
@@ -124,7 +171,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
     }
 
     /**
-     * Renders a single post slide.
+     * Renders the individual post slide.
      * 
      * @since 1.0.0
      * 
@@ -178,12 +225,19 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
     public function form($instance) {
         $defaults = array(
             'title'           => '',
-            'show_posts_from' => 'recent',
-            'category'        => '',
+            'show_posts_from' => 'post',
+            'category'        => [],
             'no_of_posts'     => 5,
+            'sort_order'      => 'DESC'
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
+        $selected_post_type = $instance['show_posts_from'];
+        $selected_categories = isset($instance['category']) ? (array) $instance['category'] : [];
+
+        // Determine the correct taxonomy
+        $taxonomy = ($selected_post_type === 'news') ? 'news_category' : 'category';
+        $categories = get_terms(array('taxonomy' => $taxonomy, 'hide_empty' => false));
         ?>
 
         <div class="sm-featured-post-slider">
@@ -197,37 +251,30 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                        value="<?php echo esc_attr($instance['title']); ?>" 
                        placeholder="<?php _e('Title for Featured Posts', 'smarty_magazine'); ?>">
             </div>
+
             <div class="sm-admin-input-wrap">
                 <label><?php _e('Choose Type', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
                         class="sm-show-posts-type"
                         name="<?php echo $this->get_field_name('show_posts_from'); ?>" 
-                        value="recent" 
+                        value="post"
                         data-field-name="<?php echo $this->get_field_name('show_posts_from'); ?>"
-                        <?php checked($instance['show_posts_from'], 'recent'); ?>>
-                    <?php _e('Recent Posts', 'smarty_magazine'); ?>
+                        <?php checked($selected_post_type, 'post'); ?>>
+                    <?php _e('Posts', 'smarty_magazine'); ?>
                 </label>
                 <label>
                     <input type="radio" 
                         class="sm-show-posts-type"
                         name="<?php echo $this->get_field_name('show_posts_from'); ?>" 
-                        value="category" 
+                        value="news"
                         data-field-name="<?php echo $this->get_field_name('show_posts_from'); ?>"
-                        <?php checked($instance['show_posts_from'], 'category'); ?>>
-                    <?php _e('Category', 'smarty_magazine'); ?>
-                </label>
-                <label>
-                    <input type="radio" 
-                        class="sm-show-posts-type"
-                        name="<?php echo $this->get_field_name('show_posts_from'); ?>" 
-                        value="news" 
-                        data-field-name="<?php echo $this->get_field_name('show_posts_from'); ?>"
-                        <?php checked($instance['show_posts_from'], 'news'); ?>>
-                    <?php _e('News Post Type', 'smarty_magazine'); ?>
+                        <?php checked($selected_post_type, 'news'); ?>>
+                    <?php _e('News', 'smarty_magazine'); ?>
                 </label>
             </div>
-            <div class="sm-admin-input-wrap">
+
+            <div class="sm-admin-input-wrap sm-category-dropdown">
                 <label for="<?php echo $this->get_field_id('category'); ?>">
                     <?php _e('Select Categories (Hold CTRL to Select Multiple)', 'smarty_magazine'); ?>
                 </label>
@@ -235,32 +282,18 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                         name="<?php echo $this->get_field_name('category'); ?>[]" 
                         class="sm-category-select" multiple="multiple">
                     <?php
-                    $selected_categories = isset($instance['category']) ? (array) $instance['category'] : [];
-
-                    // Default category selection (for regular posts)
-                    $categories = get_terms(array('taxonomy' => 'category', 'hide_empty' => false));
-                    foreach ($categories as $term) {
+                    foreach ($categories as $category) {
                         printf(
                             '<option value="%s" %s>%s</option>',
-                            esc_attr($term->term_id),
-                            in_array($term->term_id, $selected_categories) ? 'selected="selected"' : '',
-                            esc_html($term->name)
-                        );
-                    }
-
-                    // Custom taxonomy selection (for news posts)
-                    $news_categories = get_terms(array('taxonomy' => 'news_category', 'hide_empty' => false));
-                    foreach ($news_categories as $term) {
-                        printf(
-                            '<option value="%s" %s>%s</option>',
-                            esc_attr($term->term_id),
-                            in_array($term->term_id, $selected_categories) ? 'selected="selected"' : '',
-                            esc_html($term->name)
+                            esc_attr($category->term_id),
+                            in_array($category->term_id, $selected_categories) ? 'selected="selected"' : '',
+                            esc_html($category->name)
                         );
                     }
                     ?>
                 </select>
             </div>
+
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('sort_order'); ?>">
                     <?php _e('Sort Order', 'smarty_magazine'); ?>
@@ -271,6 +304,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                     <option value="ASC" <?php selected($instance['sort_order'], 'ASC'); ?>><?php _e('Ascending (Oldest First)', 'smarty_magazine'); ?></option>
                 </select>
             </div>
+
             <div class="sm-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('no_of_posts'); ?>">
                     <?php _e('Number of Posts', 'smarty_magazine'); ?>
@@ -281,7 +315,8 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                        value="<?php echo esc_attr($instance['no_of_posts']); ?>" 
                        min="1" step="1">
             </div>
-        </div><?php
+        </div>
+        <?php
     }
 
     /**

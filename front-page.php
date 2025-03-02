@@ -74,9 +74,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-3">
-				<div class="mt-6">
-					<?php get_sidebar(); ?>
-				</div>
+				<?php get_sidebar(); ?>
 			</div>
 		</div>
 	</div>

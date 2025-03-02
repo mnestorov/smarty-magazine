@@ -116,7 +116,11 @@ if (!function_exists('__smarty_magazine_enqueue_admin_scripts')) {
 			wp_enqueue_script('wp-color-picker');
 			wp_enqueue_media();
 			wp_enqueue_script('sm-admin-js', get_template_directory_uri() . '/assets/js/sm-admin.js', array('jquery'), null, true);
-		}
+            wp_localize_script('sm-admin-js', 'sm_ajax_data', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce'    => wp_create_nonce('sm_ajax_nonce'),
+            ));
+        }
 	}
 	add_action('admin_enqueue_scripts', '__smarty_magazine_admin_scripts');
 }
