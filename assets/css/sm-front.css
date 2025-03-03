@@ -265,6 +265,7 @@ textarea {
 }
 
 .entry-title,
+.search-entry-title,
 .sub-title {
 	font-weight: normal;
     padding-bottom: 5px; /* Space between title and border */
@@ -281,9 +282,8 @@ textarea {
     border-top-right-radius: 5px;
 }
 
-.entry-title,
-.entry-meta {
-	margin-top: 2rem;
+.search-entry-title > a {
+	color: var(--color-dark);
 }
 
 .byline,

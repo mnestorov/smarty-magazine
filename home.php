@@ -15,7 +15,7 @@
 
 <?php get_header(); ?>
 
-<div class="container">
+<div class="container my-4">
 	<div class="row">
 		<div class="col-lg-9 col-md-9">
 			<div id="primary" class="sm-archive-wrap">
@@ -28,8 +28,8 @@
 								</figure>
 							<?php endif; ?>
 							<article>
-								<header class="entry-header">
-									<?php the_title(sprintf('<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url(get_permalink())), '</a></h2>'); ?>
+								<header>
+									<?php the_title('<h1 class="page-title">', '</h1>'); ?>
 								</header>
 								<div class="sm-archive-post-content">
 									<?php the_excerpt(); ?>

@@ -277,30 +277,16 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         echo '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Home', 'smarty_magazine') . '</a></li>';
 
         if (is_category()) {
-            // Category archive
+            // Standard post category archive
             $category = get_queried_object();
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html($category->name) . '</li>';
         } elseif (is_tag()) {
-            // Tag archive
+            // Detect if it's a tag for "news"
+            $queried_tag = get_queried_object();
+            if ($queried_tag->taxonomy === 'news_tag') {
+                echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
+            }
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(single_tag_title('', false)) . '</li>';
-        } elseif (is_day()) {
-            // Daily archive
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date() . '</li>';
-        } elseif (is_month()) {
-            // Monthly archive
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date('F, Y') . '</li>';
-        } elseif (is_year()) {
-            // Yearly archive
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Archive for', 'smarty_magazine') . ' ' . get_the_date('Y') . '</li>';
-        } elseif (is_author()) {
-            // Author archive
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Author Archive', 'smarty_magazine') . '</li>';
-        } elseif (is_search()) {
-            // Search results
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Search Results', 'smarty_magazine') . '</li>';
-        } elseif (is_post_type_archive('news')) {
-            // News archive
-            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('News', 'smarty_magazine') . '</li>';
         } elseif (is_tax('news_category')) {
             // News category archive
             echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
@@ -310,6 +296,13 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
                 echo '<li class="breadcrumb-item"><a href="' . esc_url(get_term_link($parent_term)) . '">' . esc_html($parent_term->name) . '</a></li>';
             }
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html($term->name) . '</li>';
+        } elseif (is_tax('news_tag')) {
+            // News tag archive
+            echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(single_tag_title('', false)) . '</li>';
+        } elseif (is_post_type_archive('news')) {
+            // News archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('News', 'smarty_magazine') . '</li>';
         } elseif (is_singular('news')) {
             // Single news post
             echo '<li class="breadcrumb-item"><a href="' . esc_url(get_post_type_archive_link('news')) . '">' . esc_html__('News', 'smarty_magazine') . '</a></li>';
@@ -338,6 +331,12 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
                 }
             }
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
+        } elseif (is_author()) {
+            // Author archive
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Author Archive', 'smarty_magazine') . '</li>';
+        } elseif (is_search()) {
+            // Search results
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Search Results', 'smarty_magazine') . '</li>';
         } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {
             // Paged blog archive
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Blog Archive', 'smarty_magazine') . '</li>';
@@ -602,7 +601,7 @@ if (!function_exists('__smarty_magazine_add_nav_pills_metabox')) {
     function __smarty_magazine_add_nav_pills_metabox() {
         add_meta_box(
             'smarty_magazine_nav_pills_metabox',            // Metabox ID
-            __('Full Width Nav Content', 'smartymagazine'), // Title
+            __('Full Width Nav Content', 'smarty_magazine'), // Title
             '__smarty_magazine_nav_pills_metabox_callback', // Callback function
             'page',                                         // Post type
             'normal',                                       // Context (below editor)
@@ -638,7 +637,7 @@ if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
         // Only show metabox for the specific template
         $template = get_post_meta($post->ID, '_wp_page_template', true);
         if ($template !== 'full-width-nav.php') {
-            echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smartymagazine') . '</p>';
+            echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smarty_magazine') . '</p>';
             return;
         }
         ?>
@@ -648,11 +647,11 @@ if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
                 <div class="sm-magazine-tab-section">
                     <h4><?php echo esc_html(ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?></h4>
                     <p>
-                        <label for="<?php echo esc_attr($tab . '_title'); ?>"><?php esc_html_e('Title:', 'smartymagazine'); ?></label>
+                        <label for="<?php echo esc_attr($tab . '_title'); ?>"><?php esc_html_e('Title:', 'smarty_magazine'); ?></label>
                         <input type="text" id="<?php echo esc_attr($tab . '_title'); ?>" name="<?php echo esc_attr($tab . '_title'); ?>" value="<?php echo esc_attr($data['title']); ?>">
                     </p>
                     <p>
-                        <label for="<?php echo esc_attr($tab . '_content'); ?>"><?php esc_html_e('Content:', 'smartymagazine'); ?></label>
+                        <label for="<?php echo esc_attr($tab . '_content'); ?>"><?php esc_html_e('Content:', 'smarty_magazine'); ?></label>
                         <?php
                         wp_editor(
                             $data['content'],

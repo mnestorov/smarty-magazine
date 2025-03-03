@@ -11,14 +11,14 @@
 
 get_header(); ?>
 
-<div class="container my-5">
+<div class="container my-4">
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="sm-news-archive">
                 <div id="primary" class="content-area">
                     <main id="main" class="site-main" role="main">
                         <?php if (have_posts()) : ?>
-                            <header class="page-header mb-4">
+                            <header class="entry-header mb-4">
                                 <?php the_archive_title('<h1 class="page-title">', '</h1>'); ?>
                                 <?php the_archive_description('<div class="taxonomy-description lead">', '</div>'); ?>
                                 <?php if (is_tax('news_category')) : ?>

@@ -15,22 +15,22 @@
 
 <?php get_header(); ?>
 
-<div class="container">
+<div class="container my-4">
 	<div class="row">
 		<div class="col-lg-12 col-md-12">
 			<div id="primary" class="content-area">
 				<main id="main" class="site-main" role="main">
 					<?php if (have_posts()) : ?>
-						<?php if (is_home() && ! is_front_page()) : ?>
+						<?php if (is_home() && !is_front_page()) : ?>
 							<header>
 								<h1 class="page-title screen-reader-text"><?php single_post_title(); ?></h1>
 							</header>
 						<?php endif; ?>
 						<?php while (have_posts()) : the_post(); ?>
-							<!-- Main Content (Title and Description) -->
-                            <?php get_template_part('template-parts/content', get_post_format()); ?>
+							<!-- Two Cols Content -->
+                            <?php get_template_part('template-parts/content', 'cols'); ?>
 
-                            <!-- Nav Pills and Tabbed Content -->
+                            <!-- Tabbed Content -->
                             <?php get_template_part('template-parts/content', 'nav'); ?>
 						<?php endwhile; ?>
 						<?php the_posts_navigation(); ?>

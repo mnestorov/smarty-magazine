@@ -10,34 +10,54 @@
 
 <?php get_header(); ?>
 
-<div class="container">
-	<div class="row">
-		<div class="col-lg-9 col-md-9">
-			<section id="primary" class="content-area">
-				<main id="main" class="site-main" role="main">
-					<?php if (have_posts()) : ?>
-						<header class="page-header">
-							<h1 class="page-title"><?php printf(esc_html__('Search Results for: %s', 'smarty_magazine'), '<span>' . get_search_query() . '</span>'); ?></h1>
-						</header>
-						<?php while (have_posts()) : the_post(); ?>
-							<?php
-							/**
-							 * Run the loop for the search to output the results.
-							 * If you want to overload this in a child theme then include a file
-							 * called content-search.php and that will be used instead.
-							 */
-							get_template_part('template-parts/content', 'search');
-							?>
-						<?php endwhile; ?>
-						<?php the_posts_navigation(); ?>
-					<?php else: ?>
-						<?php get_template_part('template-parts/content', 'none'); ?>
-					<?php endif; ?>
+<div class="container my-4">
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div id="primary" class="content-area">
+                <main id="main" class="site-main" role="main">
+					<header class="entry-header mb-4">
+						<h1 class="page-title">
+							<?php printf(esc_html__('Search Results for: %s', 'smartymagazine'), '<span>' . get_search_query() . '</span>'); ?>
+						</h1>
+					</header>
+					<div class="row">
+						<!-- Main Content Area -->
+						<div class="col-lg-9 col-md-9">
+							<?php if (have_posts()) : ?>
+								<div class="search-results-list">
+									<?php while (have_posts()) : the_post(); ?>
+										<article id="post-<?php the_ID(); ?>" <?php post_class('mb-4 pb-4 border-bottom'); ?>>
+											<h2 class="search-entry-title">
+												<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+											</h2>
+
+											<?php __smarty_magazine_posted_on(); ?>
+
+											<div class="entry-summary">
+												<?php the_excerpt(); ?>
+											</div>
+										</article>
+									<?php endwhile; ?>
+								</div>
+
+								<!-- Pagination -->
+								<div class="sm-pagination-nav">
+									<?php echo paginate_links(); ?>
+								</div>
+
+							<?php else : ?>
+								<p class="no-results"><?php esc_html_e('No results found. Try a different search.', 'smartymagazine'); ?></p>
+								<?php get_search_form(); ?>
+							<?php endif; ?>
+						</div>
+
+						<!-- Sidebar -->
+						<div class="col-lg-3 col-md-3">
+							<?php get_sidebar(); ?>
+						</div>
+					</div>
 				</main>
-			</section>
-		</div>
-		<div class="col-lg-3 col-md-3">
-			<?php get_sidebar(); ?>
+			</div>
 		</div>
 	</div>
 </div>
