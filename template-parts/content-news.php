@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Part for displaying a content for a single news post with enhanced Schema.org markup.
+ * Template part for displaying a content for a single news post with enhanced Schema.org markup.
  * 
  * @since 1.0.0
  * 

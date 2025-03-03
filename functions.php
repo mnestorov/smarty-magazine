@@ -222,6 +222,28 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ne
 require get_template_directory() . '/includes/functions/functions-sm-register-cpt.php';
 require get_template_directory() . '/includes/functions/functions-sm-register-widgets.php';
 
+if (!function_exists('__smarty_magazine_tinymce_init')) {
+    /**
+     * Customize TinyMCE settings.
+     * 
+     * @since 1.0.0
+     * 
+     * @param array $init TinyMCE settings.
+     * 
+     * @return array Modified TinyMCE settings.
+     */
+    function __smarty_magazine_tinymce_init($init) {
+        // Force TinyMCE to keep paragraph tags
+        $init['wpautop'] = true;
+        $init['forced_root_block'] = 'p';
+        $init['force_p_newlines'] = true;
+        $init['remove_redundant_brs'] = false; // Prevent TinyMCE from removing <br> tags
+
+        return $init;
+    }
+    add_filter('tiny_mce_before_init', '__smarty_magazine_tinymce_init');
+}
+
 if (!function_exists('__smarty_archive_excerpt_length')) {
 	/**
 	 * Filter the excerpt length.

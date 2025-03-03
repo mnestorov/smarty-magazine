@@ -1,8 +1,6 @@
 <?php
 /**
- * Template Part: Two Columns Layout
- *
- * Displays content in a two-column format using Bootstrap 5.
+ * Template part for displaying content in a two-column format using Bootstrap 5.
  *
  * @since 1.0.0
  * 
@@ -17,33 +15,18 @@
     <div class="container">
         <div class="row">
             <!-- Left Column (Main Content) -->
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6 px-0">
                 <div class="entry-content">
-                    <?php the_content(); ?>
-                    <?php
-                    wp_link_pages(array(
-                        'before' => '<div class="page-links">' . esc_html__('Pages:', 'smarty_magazine'),
-                        'after'  => '</div>',
-                    ));
-                    ?>
+                    <?php wpautop(the_content()); ?>
                 </div>
             </div>
             <!-- Right Column (Sidebar / Additional Content) -->
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6 px-0">
                 
             </div>
         </div>
     </div>
-    <footer class="entry-footer">
-        <?php
-        edit_post_link(
-            sprintf(
-                esc_html__('Edit %s', 'smarty_magazine'),
-                the_title('<span class="screen-reader-text">"', '"</span>', false)
-            ),
-            '<span class="edit-link">',
-            '</span>'
-        );
-        ?>
+    <footer class="entry-footer text-center fw-bold my-4">
+        <?php __smarty_magazine_entry_footer(); ?>
     </footer>
 </article>
