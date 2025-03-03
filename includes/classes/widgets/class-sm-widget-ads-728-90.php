@@ -87,7 +87,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
 
         <div class="sm-header-ads-728x90">
             <!-- Title Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'smarty_magazine'); ?></label>
                 <input type="text"
                        id="<?php echo $this->get_field_id('title'); ?>"
@@ -97,7 +97,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             </div>
 
             <!-- Ads Link Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link'); ?>"><?php _e('Ads Link', 'smarty_magazine'); ?></label>
                 <input type="text"
                     id="<?php echo esc_attr($this->get_field_id('ads_link')); ?>"
@@ -107,7 +107,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             </div>
 
             <!-- Link Type Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link_type'); ?>"><?php _e('Link Type', 'smarty_magazine'); ?></label>
                 <select id="<?php echo $this->get_field_id('ads_link_type'); ?>"
                         name="<?php echo $this->get_field_name('ads_link_type'); ?>">
@@ -117,7 +117,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             </div>
 
             <!-- Ads Image Upload Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_image'); ?>"><?php _e('Ads Image', 'smarty_magazine'); ?></label>
 
                 <!-- Display uploaded image if available -->
@@ -145,7 +145,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             </div>
 
             <!-- Add Spacing Checkbox -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('add_spacing'); ?>"><?php _e('Add Top and Bottom Spacing', 'smarty_magazine'); ?></label>
                 <input type="checkbox"
                        id="<?php echo $this->get_field_id('add_spacing'); ?>"
@@ -156,7 +156,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
             </div>
 
             <!-- Alignment Select -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('alignment'); ?>"><?php _e('Alignment', 'smarty_magazine'); ?></label>
                 <select id="<?php echo $this->get_field_id('alignment'); ?>"
                         name="<?php echo $this->get_field_name('alignment'); ?>">

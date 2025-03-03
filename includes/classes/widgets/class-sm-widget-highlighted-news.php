@@ -170,7 +170,7 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
         $instance = wp_parse_args((array) $instance, $defaults);
         ?>
         <div class="sm-highlighted-news-grid">
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>"><strong><?php _e('Title', 'smarty_magazine'); ?></strong></label>
                 <input type="text" id="<?php echo $this->get_field_id('title'); ?>" 
                     name="<?php echo $this->get_field_name('title'); ?>" 
@@ -178,7 +178,7 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
                     placeholder="<?php _e('Title for Highlighted News', 'smarty_magazine'); ?>">
             </div>
 
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label><strong><?php _e('Choose Type', 'smarty_magazine'); ?></strong></label><br>
                 <label>
                     <input type="radio" class="sm-show-posts-type" 
@@ -195,7 +195,7 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
             </div>
 
             <?php for ($i = 1; $i <= 4; $i++) : ?>
-                <div class="sm-admin-input-wrap sm-category-dropdown">
+                <div class="sm-magazine-admin-input-wrap sm-category-dropdown">
                     <label for="<?php echo $this->get_field_id('category' . $i); ?>">
                         <strong><?php printf(__('Category %d', 'smarty_magazine'), $i); ?></strong>
                     </label>

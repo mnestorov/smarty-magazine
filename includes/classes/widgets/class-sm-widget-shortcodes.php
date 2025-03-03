@@ -116,7 +116,7 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
         $top_spacing = $instance['top_spacing'];
         $bottom_spacing = $instance['bottom_spacing'];
         ?>
-        <div class="sm-admin-input-wrap">
+        <div class="sm-magazine-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id('shortcode')); ?>">
                 <?php esc_html_e('Enter Shortcode:', 'smarty_magazine'); ?>
             </label>
@@ -126,7 +126,7 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
             <small><?php esc_html_e('Example: [my_shortcode]', 'smarty_magazine'); ?></small>
         </div>
 
-        <div class="sm-admin-input-wrap">
+        <div class="sm-magazine-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id('top_spacing')); ?>">
                 <?php esc_html_e('Add Top Spacing', 'smarty_magazine'); ?>
             </label>
@@ -139,7 +139,7 @@ class __Smarty_Magazine_Shortcodes extends WP_Widget {
             <small><?php _e('Check to add top margin', 'smarty_magazine'); ?></small>
         </div>
 
-        <div class="sm-admin-input-wrap">
+        <div class="sm-magazine-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id('bottom_spacing')); ?>">
                 <?php esc_html_e('Add Bottom Spacing', 'smarty_magazine'); ?>
             </label>

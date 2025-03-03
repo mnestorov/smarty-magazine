@@ -590,3 +590,140 @@ if (!function_exists('__smarty_magazine_custom_page_link')) {
     }
     add_filter('post_type_link', '__smarty_magazine_custom_page_link', 10, 2);
 }
+
+if (!function_exists('__smarty_magazine_add_nav_pills_metabox')) {
+    /**
+     * Add metabox for tab titles and content
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_add_nav_pills_metabox() {
+        add_meta_box(
+            'smarty_magazine_nav_pills_metabox',            // Metabox ID
+            __('Full Width Nav Content', 'smartymagazine'), // Title
+            '__smarty_magazine_nav_pills_metabox_callback', // Callback function
+            'page',                                         // Post type
+            'normal',                                       // Context (below editor)
+            'high',                                         // Priority
+            null                                            // Callback args
+        );
+    }
+    add_action('add_meta_boxes', '__smarty_magazine_add_nav_pills_metabox');
+}
+
+if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
+    /**
+     * Metabox callback to render fields
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object
+     * 
+     * @return void
+     */
+    function __smarty_magazine_nav_pills_metabox_callback($post) {
+        // Nonce field for security
+        wp_nonce_field('smarty_magazine_nav_pills_save_meta', 'smarty_magazine_nav_pills_nonce');
+
+        // Get existing meta values
+        $tabs = [
+            'smarty_magazine_tab1' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab1_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab1_content', true)],
+            'smarty_magazine_tab2' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab2_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab2_content', true)],
+            'smarty_magazine_tab3' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab3_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab3_content', true)]
+        ];
+
+
+        // Only show metabox for the specific template
+        $template = get_post_meta($post->ID, '_wp_page_template', true);
+        if ($template !== 'full-width-nav.php') {
+            echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smartymagazine') . '</p>';
+            return;
+        }
+        ?>
+
+        <div class="sm-magazine-pills-metabox">
+            <?php foreach ($tabs as $tab => $data) : ?>
+                <div class="sm-magazine-tab-section">
+                    <h4><?php echo esc_html(ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?></h4>
+                    <p>
+                        <label for="<?php echo esc_attr($tab . '_title'); ?>"><?php esc_html_e('Title:', 'smartymagazine'); ?></label>
+                        <input type="text" id="<?php echo esc_attr($tab . '_title'); ?>" name="<?php echo esc_attr($tab . '_title'); ?>" value="<?php echo esc_attr($data['title']); ?>">
+                    </p>
+                    <p>
+                        <label for="<?php echo esc_attr($tab . '_content'); ?>"><?php esc_html_e('Content:', 'smartymagazine'); ?></label>
+                        <?php
+                        wp_editor(
+                            $data['content'],
+                            $tab . '_content',
+                            array(
+                                'textarea_name' => $tab . '_content',
+                                'textarea_rows' => 5,
+                                'media_buttons' => true,
+                            )
+                        );
+                        ?>
+                    </p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+    }
+}
+
+if (!function_exists('__smarty_magazine_save_nav_pills_meta')) {
+    /**
+     * Save metabox data
+     * 
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID
+     * 
+     * @return void
+     */
+    function __smarty_magazine_save_nav_pills_meta($post_id) {
+        // Check if our nonce is set and verify it
+        if (!isset($_POST['smarty_magazine_nav_pills_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_nav_pills_nonce'], 'smarty_magazine_nav_pills_save_meta')) {
+            return;
+        }
+
+        // Check if this is an autosave
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check user permissions
+        if (!current_user_can('edit_page', $post_id)) {
+            return;
+        }
+
+        // Only save for the specific template
+        $template = get_post_meta($post_id, '_wp_page_template', true);
+        if ($template !== 'full-width-nav.php') {
+            return;
+        }
+
+        // Save meta fields
+        $fields = [
+            'smarty_magazine_tab1_title',
+            'smarty_magazine_tab1_content',
+            'smarty_magazine_tab2_title',
+            'smarty_magazine_tab2_content',
+            'smarty_magazine_tab3_title',
+            'smarty_magazine_tab3_content',
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($_POST[$field])) {
+                $value = $field === 'smarty_magazine_tab1_title' || $field === 'smarty_magazine_tab2_title' || $field === 'smarty_magazine_tab3_title' 
+                    ? sanitize_text_field($_POST[$field]) 
+                    : wp_kses_post($_POST[$field]);
+                update_post_meta($post_id, "_{$field}", $value);
+            } else {
+                delete_post_meta($post_id, "_{$field}");
+            }
+        }
+    }
+    add_action('save_post', '__smarty_magazine_save_nav_pills_meta');
+}

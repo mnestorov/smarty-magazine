@@ -138,39 +138,93 @@
 /*--------------------------------------------------------------
     Widgets
 --------------------------------------------------------------*/
-.sm-widget-field,
-.sm-admin-input-wrap {
+.sm-magazine-widget-field,
+.sm-magazine-admin-input-wrap {
     margin-top: 25px;
     margin-bottom: 15px;
 }
 
-.sm-widget-field label,
-.sm-admin-input-wrap label {
+.sm-magazine-widget-field label,
+.sm-magazine-admin-input-wrap label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.sm-widget-field input[type="text"],
-.sm-widget-field input[type="url"],
-.sm-widget-field input[type="number"],
-.sm-admin-input-wrap input[type="text"],
-.sm-admin-input-wrap input[type="url"],
-.sm-admin-input-wrap input[type="number"],
-.sm-admin-input-wrap select,
-.sm-admin-input-wrap textarea {
+.sm-magazine-widget-field input[type="text"],
+.sm-magazine-widget-field input[type="url"],
+.sm-magazine-widget-field input[type="number"],
+.sm-magazine-admin-input-wrap input[type="text"],
+.sm-magazine-admin-input-wrap input[type="url"],
+.sm-magazine-admin-input-wrap input[type="number"],
+.sm-magazine-admin-input-wrap select,
+.sm-magazine-admin-input-wrap textarea {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #8c8f94;
     border-radius: 4px;
 }
 
-.sm-admin-input-wrap input[type="radio"] {
+.sm-magazine-admin-input-wrap input[type="radio"] {
     margin-right: 5px;
 }
 
-.sm-admin-input-wrap img {
+.sm-magazine-admin-input-wrap img {
     max-width: 100%;
     height: auto;
     margin-top: 10px;
+}
+
+/*--------------------------------------------------------------
+    Full Width Nav - page template
+--------------------------------------------------------------*/
+.sm-magazine-pills-metabox { 
+    margin-top: 10px; 
+}
+
+.sm-magazine-pills-metabox .sm-magazine-tab-section {
+    background: #f6f7f7;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #dcdcde;
+}
+
+.sm-magazine-pills-metabox h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dcdcde;
+    color: #333;
+}
+
+.sm-magazine-pills-metabox label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+    font-size: 14px;
+}
+
+.sm-magazine-pills-metabox input[type="text"] {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.sm-magazine-pills-metabox input[type="text"]:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 5px rgba(0, 115, 170, 0.2);
+    outline: none;
+}
+
+.sm-magazine-pills-metabox .wp-editor-wrap {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #8c8f94;
 }

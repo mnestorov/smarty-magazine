@@ -161,7 +161,7 @@ class __Smarty_Magazine_Post_Layout_3 extends __Smarty_Magazine_Tabs_Content {
      */
     private function generate_input_field($field, $value, $instance) {
         ?>
-        <div class="sm-admin-input-wrap">
+        <div class="sm-magazine-admin-input-wrap">
             <label for="<?php echo esc_attr($this->get_field_id($field['name'])); ?>"><?php echo esc_html($field['label']); ?></label>
             <?php if ($field['type'] === 'text') : ?>
                 <input 

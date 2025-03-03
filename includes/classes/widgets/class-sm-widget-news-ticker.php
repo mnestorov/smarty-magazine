@@ -123,7 +123,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
 
         <div class="sm-news-ticker-settings">
             <!-- Title Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>">
                     <?php _e('Title', 'smarty_magazine'); ?>
                 </label>
@@ -135,7 +135,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
             </div>
 
             <!-- Post Type Selection -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label><?php _e('Choose Type', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
@@ -154,7 +154,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
             </div>
 
             <!-- Post Source Selection -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label><?php _e('Choose Post Source', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
@@ -173,7 +173,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
             </div>
 
             <!-- Category Selection -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('category'); ?>">
                     <?php _e('Category', 'smarty_magazine'); ?>
                 </label>
@@ -197,7 +197,7 @@ class __Smarty_Magazine_News_Ticker extends WP_Widget {
             </div>
 
             <!-- Number of Posts Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('no_of_posts'); ?>">
                     <?php _e('Number of Posts', 'smarty_magazine'); ?>
                 </label>

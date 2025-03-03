@@ -112,7 +112,7 @@ class __Smarty_Magazine_Social_Icons extends WP_Widget {
      */
     private function generate_input_field($field_id, $label, $value) {
         ?>
-        <div class="sm-widget-field">
+        <div class="sm-magazine-widget-field">
             <label for="<?php echo esc_attr($this->get_field_id($field_id)); ?>"><?php echo esc_html($label); ?></label>
             <input 
                 type="text" 

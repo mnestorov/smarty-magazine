@@ -195,7 +195,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
         ?>
 
         <div class="sm-featured-post-slider">
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>">
                     <?php _e('Title', 'smarty_magazine'); ?>
                 </label>
@@ -206,7 +206,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                        placeholder="<?php _e('Title for Featured Posts', 'smarty_magazine'); ?>">
             </div>
 
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label><?php _e('Choose Type', 'smarty_magazine'); ?></label><br>
                 <label>
                     <input type="radio" 
@@ -228,7 +228,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 </label>
             </div>
 
-            <div class="sm-admin-input-wrap sm-category-dropdown">
+            <div class="sm-magazine-admin-input-wrap sm-category-dropdown">
                 <label for="<?php echo $this->get_field_id('category'); ?>">
                     <?php _e('Select Categories (Hold CTRL to Select Multiple)', 'smarty_magazine'); ?>
                 </label>
@@ -248,7 +248,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 </select>
             </div>
 
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('sort_order'); ?>">
                     <?php _e('Sort Order', 'smarty_magazine'); ?>
                 </label>
@@ -259,7 +259,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 </select>
             </div>
 
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('no_of_posts'); ?>">
                     <?php _e('Number of Posts', 'smarty_magazine'); ?>
                 </label>

@@ -83,7 +83,7 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
 
         <div class="sm-ads-870x150">
             <!-- Title Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'smarty_magazine'); ?></label>
                 <input type="text"
                        id="<?php echo $this->get_field_id('title'); ?>"
@@ -93,7 +93,7 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
             </div>
 
             <!-- Ads Link Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link'); ?>"><?php _e('Ads Link', 'smarty_magazine'); ?></label>
                 <input type="text"
                     id="<?php echo esc_attr($this->get_field_id('ads_link')); ?>"
@@ -103,7 +103,7 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
             </div>
 
             <!-- Link Type Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_link_type'); ?>"><?php _e('Link Type', 'smarty_magazine'); ?></label>
                 <select id="<?php echo $this->get_field_id('ads_link_type'); ?>"
                         name="<?php echo $this->get_field_name('ads_link_type'); ?>">
@@ -113,7 +113,7 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
             </div>
 
             <!-- Ads Image Upload Field -->
-            <div class="sm-admin-input-wrap">
+            <div class="sm-magazine-admin-input-wrap">
                 <label for="<?php echo $this->get_field_id('ads_image'); ?>"><?php _e('Ads Image', 'smarty_magazine'); ?></label>
 
                 <!-- Display uploaded image if available -->
