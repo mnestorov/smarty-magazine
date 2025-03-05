@@ -615,7 +615,7 @@ if (!function_exists('__smarty_magazine_custom_page_link')) {
     add_filter('post_type_link', '__smarty_magazine_custom_page_link', 10, 2);
 }
 
-if (!function_exists('__smarty_magazine_add_nav_pills_metabox')) {
+if (!function_exists('__smarty_magazine_add_full_width_tabs_metabox')) {
     /**
      * Add metabox for tab titles and content
      * 
@@ -623,21 +623,21 @@ if (!function_exists('__smarty_magazine_add_nav_pills_metabox')) {
      * 
      * @return void
      */
-    function __smarty_magazine_add_nav_pills_metabox() {
+    function __smarty_magazine_add_full_width_tabs_metabox() {
         add_meta_box(
-            'smarty_magazine_nav_pills_metabox',            // Metabox ID
-            __('Full Width Nav Content', 'smarty_magazine'), // Title
-            '__smarty_magazine_nav_pills_metabox_callback', // Callback function
-            'page',                                         // Post type
-            'normal',                                       // Context (below editor)
-            'high',                                         // Priority
-            null                                            // Callback args
+            'smarty_magazine_full_width_tabs_metabox',             // Metabox ID
+            __('Full Width Tab Content', 'smarty_magazine'), // Title
+            '__smarty_magazine_full_width_tabs_metabox_callback',  // Callback function
+            'page',                                          // Post type
+            'normal',                                        // Context (below editor)
+            'high',                                          // Priority
+            null                                             // Callback args
         );
     }
-    add_action('add_meta_boxes', '__smarty_magazine_add_nav_pills_metabox');
+    add_action('add_meta_boxes', '__smarty_magazine_add_full_width_tabs_metabox');
 }
 
-if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
+if (!function_exists('__smarty_magazine_full_width_tabs_metabox_callback')) {
     /**
      * Metabox callback to render fields
      * 
@@ -647,15 +647,29 @@ if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
      * 
      * @return void
      */
-    function __smarty_magazine_nav_pills_metabox_callback($post) {
+    function __smarty_magazine_full_width_tabs_metabox_callback($post) {
         // Nonce field for security
         wp_nonce_field('smarty_magazine_nav_pills_save_meta', 'smarty_magazine_nav_pills_nonce');
 
         // Get existing meta values
         $tabs = [
-            'smarty_magazine_tab1' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab1_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab1_content', true)],
-            'smarty_magazine_tab2' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab2_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab2_content', true)],
-            'smarty_magazine_tab3' => ['title' => get_post_meta($post->ID, '_smarty_magazine_tab3_title', true), 'content' => get_post_meta($post->ID, '_smarty_magazine_tab3_content', true)]
+            'smarty_magazine_tab1' => [
+                'title'   => get_post_meta($post->ID, '_smarty_magazine_tab1_title', true), 
+                'content' => get_post_meta($post->ID, '_smarty_magazine_tab1_content', true),
+                'enabled' => get_post_meta($post->ID, '_smarty_magazine_tab1_enabled', true) === '1'
+            ],
+
+            'smarty_magazine_tab2' => [
+                'title'   => get_post_meta($post->ID, '_smarty_magazine_tab2_title', true), 
+                'content' => get_post_meta($post->ID, '_smarty_magazine_tab2_content', true),
+                'enabled' => get_post_meta($post->ID, '_smarty_magazine_tab2_enabled', true) === '1'
+            ],
+
+            'smarty_magazine_tab3' => [
+                'title'   => get_post_meta($post->ID, '_smarty_magazine_tab3_title', true), 
+                'content' => get_post_meta($post->ID, '_smarty_magazine_tab3_content', true),
+                'enabled' => get_post_meta($post->ID, '_smarty_magazine_tab3_enabled', true) === '1'
+            ]
         ];
 
 
@@ -670,7 +684,15 @@ if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
         <div class="sm-magazine-pills-metabox">
             <?php foreach ($tabs as $tab => $data) : ?>
                 <div class="sm-magazine-tab-section">
-                    <h4><?php echo esc_html(ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?></h4>
+                    <div class="sm-magazine-tab-header">
+                        <h4><?php echo esc_html(ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?></h4>
+                        <p class="mb-0">
+                            <label class="smarty-toggle-switch" aria-label="<?php echo esc_attr__('Enable/Disable ' . ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?>">
+                                <input type="checkbox" name="<?php echo esc_attr($tab . '_enabled'); ?>" value="1" <?php checked($data['enabled'], true); ?> aria-checked="<?php echo $data['enabled'] ? 'true' : 'false'; ?>">
+                                <span class="smarty-slider round"></span>
+                            </label>
+                        </p>
+                    </div>
                     <p>
                         <label for="<?php echo esc_attr($tab . '_title'); ?>"><?php esc_html_e('Title:', 'smarty_magazine'); ?></label>
                         <input type="text" id="<?php echo esc_attr($tab . '_title'); ?>" name="<?php echo esc_attr($tab . '_title'); ?>" value="<?php echo esc_attr($data['title']); ?>">
@@ -696,7 +718,7 @@ if (!function_exists('__smarty_magazine_nav_pills_metabox_callback')) {
     }
 }
 
-if (!function_exists('__smarty_magazine_save_nav_pills_meta')) {
+if (!function_exists('__smarty_magazine_save_full_width_tabs_meta')) {
     /**
      * Save metabox data
      * 
@@ -706,7 +728,7 @@ if (!function_exists('__smarty_magazine_save_nav_pills_meta')) {
      * 
      * @return void
      */
-    function __smarty_magazine_save_nav_pills_meta($post_id) {
+    function __smarty_magazine_save_full_width_tabs_meta($post_id) {
         // Check if our nonce is set and verify it
         if (!isset($_POST['smarty_magazine_nav_pills_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_nav_pills_nonce'], 'smarty_magazine_nav_pills_save_meta')) {
             return;
@@ -732,22 +754,196 @@ if (!function_exists('__smarty_magazine_save_nav_pills_meta')) {
         $fields = [
             'smarty_magazine_tab1_title',
             'smarty_magazine_tab1_content',
+            'smarty_magazine_tab1_enabled',
             'smarty_magazine_tab2_title',
             'smarty_magazine_tab2_content',
+            'smarty_magazine_tab2_enabled',
             'smarty_magazine_tab3_title',
             'smarty_magazine_tab3_content',
+            'smarty_magazine_tab3_enabled',
         ];
 
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
                 $value = $field === 'smarty_magazine_tab1_title' || $field === 'smarty_magazine_tab2_title' || $field === 'smarty_magazine_tab3_title' 
                     ? sanitize_text_field($_POST[$field]) 
-                    : wp_kses_post($_POST[$field]);
+                    : ($field === 'smarty_magazine_tab1_enabled' || $field === 'smarty_magazine_tab2_enabled' || $field === 'smarty_magazine_tab3_enabled' 
+                        ? sanitize_text_field($_POST[$field]) // Save as '1' or '0'
+                        : wp_kses_post($_POST[$field]));
                 update_post_meta($post_id, "_{$field}", $value);
             } else {
-                delete_post_meta($post_id, "_{$field}");
+                // Default to enabled (1) if not set
+                if (strpos($field, '_enabled') !== false) {
+                    update_post_meta($post_id, "_{$field}", '1');
+                } else {
+                    delete_post_meta($post_id, "_{$field}");
+                }
             }
         }
     }
-    add_action('save_post', '__smarty_magazine_save_nav_pills_meta');
+    add_action('save_post', '__smarty_magazine_save_full_width_tabs_meta');
+}
+
+if (!function_exists('__smarty_magazine_add_two_column_tabs_metabox')) {
+    /**
+     * Add metabox for two-column tabs titles and content
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_add_two_column_tabs_metabox() {
+        add_meta_box(
+            'smarty_magazine_two_column_tabs_metabox',       // Metabox ID
+            __('Two Column Tabs Content', 'smarty_magazine'), // Title
+            '__smarty_magazine_two_column_tabs_metabox_callback', // Callback function
+            'page',                                         // Post type
+            'normal',                                       // Context (below editor)
+            'high',                                         // Priority
+            null                                            // Callback args
+        );
+    }
+    add_action('add_meta_boxes', '__smarty_magazine_add_two_column_tabs_metabox');
+}
+
+if (!function_exists('__smarty_magazine_two_column_tabs_metabox_callback')) {
+    /**
+     * Metabox callback to render fields for two-column tabs
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object
+     * 
+     * @return void
+     */
+    function __smarty_magazine_two_column_tabs_metabox_callback($post) {
+        // Nonce field for security
+        wp_nonce_field('smarty_magazine_two_column_tabs_save_meta', 'smarty_magazine_two_column_tabs_nonce');
+
+        // Get existing meta values
+        $tabs = [
+            'smarty_magazine_nav_tab1' => [
+                'title'    => get_post_meta($post->ID, '_smarty_magazine_nav_tab1_title', true),
+                'content'  => get_post_meta($post->ID, '_smarty_magazine_nav_tab1_content', true),
+                'enabled'  => get_post_meta($post->ID, '_smarty_magazine_nav_tab1_enabled', true) === '1'
+            ],
+            'smarty_magazine_nav_tab2' => [
+                'title'    => get_post_meta($post->ID, '_smarty_magazine_nav_tab2_title', true),
+                'content'  => get_post_meta($post->ID, '_smarty_magazine_nav_tab2_content', true),
+                'enabled'  => get_post_meta($post->ID, '_smarty_magazine_nav_tab2_enabled', true) === '1'
+            ],
+        ];
+
+        // Only show metabox for the specific template (assuming it's 'two-column.php' or similar)
+        $template = get_post_meta($post->ID, '_wp_page_template', true);
+        if ($template !== 'full-width-nav.php') { // Adjust template name as needed
+            echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smarty_magazine') . '</p>';
+            return;
+        }
+        ?>
+
+        <div class="sm-magazine-pills-metabox">
+            <?php foreach ($tabs as $tab => $data) : ?>
+                <div class="sm-magazine-tab-section">
+                    <div class="sm-magazine-tab-header">
+                        <h4><?php echo esc_html(ucwords(str_replace('smarty_magazine_nav_tab', 'Tab ', $tab))); ?></h4>
+                        <p class="mb-0">
+                            <label class="smarty-toggle-switch" aria-label="<?php echo esc_attr__('Enable/Disable ' . ucwords(str_replace('smarty_magazine_tab', 'Tab ', $tab))); ?>">
+                                <input type="checkbox" name="<?php echo esc_attr($tab . '_enabled'); ?>" value="1" <?php checked($data['enabled'], true); ?> aria-checked="<?php echo $data['enabled'] ? 'true' : 'false'; ?>">
+                                <span class="smarty-slider round"></span>
+                            </label>
+                        </p>
+                    </div>
+                    <p>
+                        <label for="<?php echo esc_attr($tab . '_title'); ?>"><?php esc_html_e('Title:', 'smarty_magazine'); ?></label>
+                        <input type="text" id="<?php echo esc_attr($tab . '_title'); ?>" name="<?php echo esc_attr($tab . '_title'); ?>" value="<?php echo esc_attr($data['title']); ?>">
+                    </p>
+                    <p>
+                        <label for="<?php echo esc_attr($tab . '_content'); ?>"><?php esc_html_e('Content:', 'smarty_magazine'); ?></label>
+                        <?php
+                        wp_editor(
+                            $data['content'],
+                            $tab . '_content',
+                            array(
+                                'textarea_name' => $tab . '_content',
+                                'textarea_rows' => 5,
+                                'media_buttons' => true,
+                            )
+                        );
+                        ?>
+                    </p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+        // Debug: Log if the toggle switch CSS is enqueued
+        if (wp_style_is('smarty-toggle-switch', 'enqueued')) {
+            _cdg_write_logs("✅ Smarty toggle switch CSS enqueued successfully for two-column tabs.");
+        } else {
+            _cdg_write_logs("⚠️ Smarty toggle switch CSS not enqueued for two-column tabs.");
+        }
+    }
+}
+
+if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
+    /**
+     * Save metabox data for two-column tabs
+     * 
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID
+     * 
+     * @return void
+     */
+    function __smarty_magazine_save_two_column_tabs_meta($post_id) {
+        // Check if our nonce is set and verify it
+        if (!isset($_POST['smarty_magazine_two_column_tabs_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_two_column_tabs_nonce'], 'smarty_magazine_two_column_tabs_save_meta')) {
+            return;
+        }
+
+        // Check if this is an autosave
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check user permissions
+        if (!current_user_can('edit_page', $post_id)) {
+            return;
+        }
+
+        // Only save for the specific template
+        $template = get_post_meta($post_id, '_wp_page_template', true);
+        if ($template !== 'full-width-nav.php') { // Adjust template name as needed
+            return;
+        }
+
+        // Save meta fields
+        $fields = [
+            'smarty_magazine_nav_tab1_title',
+            'smarty_magazine_nav_tab1_content',
+            'smarty_magazine_nav_tab1_enabled',
+            'smarty_magazine_nav_tab2_title',
+            'smarty_magazine_nav_tab2_content',
+            'smarty_magazine_nav_tab2_enabled',
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($_POST[$field])) {
+                $value = $field === 'smarty_magazine_nav_tab1_title' || $field === 'smarty_magazine_nav_tab2_title' 
+                    ? sanitize_text_field($_POST[$field]) 
+                    : ($field === 'smarty_magazine_nav_tab1_enabled' || $field === 'smarty_magazine_nav_tab2_enabled' 
+                        ? sanitize_text_field($_POST[$field]) // Save as '1' or '0'
+                        : wp_kses_post($_POST[$field]));
+                update_post_meta($post_id, "_{$field}", $value);
+            } else {
+                // Default to enabled (1) if not set
+                if (strpos($field, '_enabled') !== false) {
+                    update_post_meta($post_id, "_{$field}", '1');
+                } else {
+                    delete_post_meta($post_id, "_{$field}");
+                }
+            }
+        }
+    }
+    add_action('save_post', '__smarty_magazine_save_two_column_tabs_meta');
 }
