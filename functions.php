@@ -649,7 +649,7 @@ if (!function_exists('__smarty_magazine_full_width_tabs_metabox_callback')) {
      */
     function __smarty_magazine_full_width_tabs_metabox_callback($post) {
         // Nonce field for security
-        wp_nonce_field('smarty_magazine_nav_pills_save_meta', 'smarty_magazine_nav_pills_nonce');
+        wp_nonce_field('smarty_magazine_full_width_tabs_save_meta', 'smarty_magazine_full_width_tabs_nonce');
 
         // Get existing meta values
         $tabs = [
@@ -730,7 +730,7 @@ if (!function_exists('__smarty_magazine_save_full_width_tabs_meta')) {
      */
     function __smarty_magazine_save_full_width_tabs_meta($post_id) {
         // Check if our nonce is set and verify it
-        if (!isset($_POST['smarty_magazine_nav_pills_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_nav_pills_nonce'], 'smarty_magazine_nav_pills_save_meta')) {
+        if (!isset($_POST['smarty_magazine_full_width_tabs_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_full_width_tabs_nonce'], 'smarty_magazine_full_width_tabs_save_meta')) {
             return;
         }
 
@@ -768,15 +768,18 @@ if (!function_exists('__smarty_magazine_save_full_width_tabs_meta')) {
                 $value = $field === 'smarty_magazine_tab1_title' || $field === 'smarty_magazine_tab2_title' || $field === 'smarty_magazine_tab3_title' 
                     ? sanitize_text_field($_POST[$field]) 
                     : ($field === 'smarty_magazine_tab1_enabled' || $field === 'smarty_magazine_tab2_enabled' || $field === 'smarty_magazine_tab3_enabled' 
-                        ? sanitize_text_field($_POST[$field]) // Save as '1' or '0'
+                        ? (isset($_POST[$field]) && $_POST[$field] === '1' ? '1' : '0') // Explicitly check for '1' and default to '0'
                         : wp_kses_post($_POST[$field]));
-                update_post_meta($post_id, "_{$field}", $value);
+                update_post_meta($post_id, "_$field", $value); // Ensure meta key starts with underscore
+                error_log("✅ Saved $field: " . print_r($value, true));
             } else {
-                // Default to enabled (1) if not set
+                // Default to disabled (0) for _enabled fields if not set (unchecked checkbox)
                 if (strpos($field, '_enabled') !== false) {
-                    update_post_meta($post_id, "_{$field}", '1');
+                    update_post_meta($post_id, "_$field", '0'); // Default to disabled (0) for unchecked checkboxes
+                    error_log("⚠️ Defaulted $field to disabled (0).");
                 } else {
-                    delete_post_meta($post_id, "_{$field}");
+                    delete_post_meta($post_id, "_$field"); // Ensure meta key starts with underscore
+                    error_log("⚠️ Deleted $field (not set).");
                 }
             }
         }
@@ -794,13 +797,13 @@ if (!function_exists('__smarty_magazine_add_two_column_tabs_metabox')) {
      */
     function __smarty_magazine_add_two_column_tabs_metabox() {
         add_meta_box(
-            'smarty_magazine_two_column_tabs_metabox',       // Metabox ID
-            __('Two Column Tabs Content', 'smarty_magazine'), // Title
+            'smarty_magazine_two_column_tabs_metabox',            // Metabox ID
+            __('Two Column Tabs Content', 'smarty_magazine'),     // Title
             '__smarty_magazine_two_column_tabs_metabox_callback', // Callback function
-            'page',                                         // Post type
-            'normal',                                       // Context (below editor)
-            'high',                                         // Priority
-            null                                            // Callback args
+            'page',                                               // Post type
+            'normal',                                             // Context (below editor)
+            'high',                                               // Priority
+            null                                                  // Callback args
         );
     }
     add_action('add_meta_boxes', '__smarty_magazine_add_two_column_tabs_metabox');
@@ -878,9 +881,9 @@ if (!function_exists('__smarty_magazine_two_column_tabs_metabox_callback')) {
         <?php
         // Debug: Log if the toggle switch CSS is enqueued
         if (wp_style_is('smarty-toggle-switch', 'enqueued')) {
-            _cdg_write_logs("✅ Smarty toggle switch CSS enqueued successfully for two-column tabs.");
+            error_log("Smarty toggle switch CSS enqueued successfully for two-column tabs.");
         } else {
-            _cdg_write_logs("⚠️ Smarty toggle switch CSS not enqueued for two-column tabs.");
+            error_log("Smarty toggle switch CSS not enqueued for two-column tabs.");
         }
     }
 }
@@ -896,8 +899,9 @@ if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
      * @return void
      */
     function __smarty_magazine_save_two_column_tabs_meta($post_id) {
-        // Check if our nonce is set and verify it
-        if (!isset($_POST['smarty_magazine_two_column_tabs_nonce']) || !wp_verify_nonce($_POST['smarty_magazine_two_column_tabs_nonce'], 'smarty_magazine_two_column_tabs_save_meta')) {
+        // Verify nonce
+        if (!isset($_POST['smarty_magazine_two_column_tabs_nonce']) || 
+            !wp_verify_nonce($_POST['smarty_magazine_two_column_tabs_nonce'], 'smarty_magazine_two_column_tabs_save_meta')) {
             return;
         }
 
@@ -929,18 +933,21 @@ if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
 
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
-                $value = $field === 'smarty_magazine_nav_tab1_title' || $field === 'smarty_magazine_nav_tab2_title' 
+                $value = in_array($field, ['smarty_magazine_nav_tab1_title', 'smarty_magazine_nav_tab2_title'])
                     ? sanitize_text_field($_POST[$field]) 
-                    : ($field === 'smarty_magazine_nav_tab1_enabled' || $field === 'smarty_magazine_nav_tab2_enabled' 
-                        ? sanitize_text_field($_POST[$field]) // Save as '1' or '0'
+                    : (in_array($field, ['smarty_magazine_nav_tab1_enabled', 'smarty_magazine_nav_tab2_enabled'])
+                        ? (isset($_POST[$field]) && $_POST[$field] === '1' ? '1' : '0') // Explicitly check for '1' and default to '0'
                         : wp_kses_post($_POST[$field]));
-                update_post_meta($post_id, "_{$field}", $value);
+                update_post_meta($post_id, "_$field", $value); // Ensure meta key starts with underscore
+                error_log("Saved $field: " . print_r($value, true));
             } else {
-                // Default to enabled (1) if not set
+                // Default to disabled (0) for _enabled fields if not set (unchecked checkbox)
                 if (strpos($field, '_enabled') !== false) {
-                    update_post_meta($post_id, "_{$field}", '1');
+                    update_post_meta($post_id, "_$field", '0'); // Default to disabled (0) for unchecked checkboxes
+                    error_log("Defaulted $field to disabled (0).");
                 } else {
-                    delete_post_meta($post_id, "_{$field}");
+                    delete_post_meta($post_id, "_$field"); // Ensure meta key starts with underscore
+                    error_log("Deleted $field (not set).");
                 }
             }
         }

@@ -19,52 +19,54 @@ $tab3_content = get_post_meta(get_the_ID(), '_smarty_magazine_tab3_content', tru
 $tab3_enabled = get_post_meta(get_the_ID(), '_smarty_magazine_tab3_enabled', true) === '1';
 ?>
 
-<div class="nav-pills-container mx-auto my-5">
-    <!-- Nav Pills -->
-    <ul class="nav nav-underline mb-4" id="pills-tab" role="tablist">
-        <?php if ($tab1_enabled): ?>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link text-uppercase active" id="pills-tab1-tab" data-bs-toggle="pill" href="#pills-tab1" role="tab" aria-controls="pills-tab1" aria-selected="true">
-                    <?php echo esc_html($tab1_title); ?>
-                </a>
-            </li>
-        <?php endif; ?>
+<?php if ($tab1_enabled || $tab2_enabled || $tab3_enabled) : ?>
+    <div class="nav-pills-container mx-auto my-5">
+        <!-- Nav Pills -->
+        <ul class="nav nav-underline mb-4" id="pills-tab" role="tablist">
+            <?php if ($tab1_enabled): ?>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-uppercase active" id="pills-tab1-tab" data-bs-toggle="pill" href="#pills-tab1" role="tab" aria-controls="pills-tab1" aria-selected="true">
+                        <?php echo esc_html($tab1_title); ?>
+                    </a>
+                </li>
+            <?php endif; ?>
 
-        <?php if ($tab2_enabled): ?>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link text-uppercase" id="pills-tab2-tab" data-bs-toggle="pill" href="#pills-tab2" role="tab" aria-controls="pills-tab2" aria-selected="false">
-                    <?php echo esc_html($tab2_title); ?>
-                </a>
-            </li>
-        <?php endif; ?>
+            <?php if ($tab2_enabled): ?>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-uppercase" id="pills-tab2-tab" data-bs-toggle="pill" href="#pills-tab2" role="tab" aria-controls="pills-tab2" aria-selected="false">
+                        <?php echo esc_html($tab2_title); ?>
+                    </a>
+                </li>
+            <?php endif; ?>
 
-        <?php if ($tab3_enabled): ?>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link text-uppercase" id="pills-tab3-tab" data-bs-toggle="pill" href="#pills-tab3" role="tab" aria-controls="pills-tab3" aria-selected="false">
-                    <?php echo esc_html($tab3_title); ?>
-                </a>
-            </li>
-        <?php endif; ?>
-    </ul>
+            <?php if ($tab3_enabled): ?>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link text-uppercase" id="pills-tab3-tab" data-bs-toggle="pill" href="#pills-tab3" role="tab" aria-controls="pills-tab3" aria-selected="false">
+                        <?php echo esc_html($tab3_title); ?>
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
 
-    <!-- Tab Content -->
-    <div class="tab-content sm-tab-content" id="pills-tabContent">
-        <?php if ($tab1_enabled): ?>
-            <div class="tab-pane fade show active" id="pills-tab1" role="tabpanel" aria-labelledby="pills-tab1-tab">
-                <?php echo do_shortcode($tab1_content); ?>
-            </div>
-        <?php endif; ?>
+        <!-- Tab Content -->
+        <div class="tab-content sm-tab-content" id="pills-tabContent">
+            <?php if ($tab1_enabled): ?>
+                <div class="tab-pane fade show active" id="pills-tab1" role="tabpanel" aria-labelledby="pills-tab1-tab">
+                    <?php echo do_shortcode($tab1_content); ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if ($tab2_enabled): ?>
-            <div class="tab-pane fade" id="pills-tab2" role="tabpanel" aria-labelledby="pills-tab2-tab">
-                <?php echo do_shortcode($tab2_content); ?>
-            </div>
-        <?php endif; ?>
+            <?php if ($tab2_enabled): ?>
+                <div class="tab-pane fade" id="pills-tab2" role="tabpanel" aria-labelledby="pills-tab2-tab">
+                    <?php echo do_shortcode($tab2_content); ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if ($tab3_enabled): ?>
-            <div class="tab-pane fade" id="pills-tab3" role="tabpanel" aria-labelledby="pills-tab3-tab">
-                <?php echo do_shortcode($tab3_content); ?>
-            </div>
-        <?php endif; ?>
+            <?php if ($tab3_enabled): ?>
+                <div class="tab-pane fade" id="pills-tab3" role="tabpanel" aria-labelledby="pills-tab3-tab">
+                    <?php echo do_shortcode($tab3_content); ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
+<?php endif; ?>
