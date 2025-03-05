@@ -74,6 +74,9 @@ if (!function_exists('__smarty_magazine_setup')) {
             'default-image' => '',
         )));
 
+        // Add WooCommerce support.
+        add_theme_support('woocommerce');
+
         // Add custom editor style.
         add_editor_style('assets/css/sm-custom-editor.css'); // This is the path to the editor-style.css file.
     }
