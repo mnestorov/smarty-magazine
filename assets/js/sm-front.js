@@ -59,6 +59,15 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Table of Contents
+    $(".sm-magazine-toc-link").on("click", function(event) {
+        event.preventDefault();
+        var target = $(this).attr("href");
+        $("html, body").animate({
+            scrollTop: $(target).offset().top - 100 // Adjust offset if needed
+        }, 500);
+    });
+
     // Back to Top
     if ($('#sm-back-to-top').length) {
         var scrollTrigger = 600, // px

@@ -449,7 +449,7 @@ if (!function_exists('__smarty_magazine_hex2rgba')) {
 	 * @return string RGB or RGBA color string.
 	 */
 	function __smarty_magazine_hex2rgba($color, $opacity = false) {
-		$default = 'rgb(0,0,0)';
+		$default = 'rgb( 0, 0, 0)';
 
 		if (empty($color)) {
 			return $default;
@@ -956,6 +956,68 @@ if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
     add_action('save_post', '__smarty_magazine_save_two_column_tabs_meta');
 }
 
+if (!function_exists('__smarty_magazine_add_toc_to_post')) {
+    /**
+     * Adds a dynamic Table of Contents (ToC) to posts.
+     *
+     * @since 1.0.0
+     * @param string $content The post content
+     * @return string The modified content with ToC
+     */
+    function __smarty_magazine_add_toc_to_post($content) {
+        if (is_singular(array('post', 'news'))) {
+            global $post;
+
+            // Extract headings (H2-H6) with positions
+            preg_match_all('/<h([2-6])>(.*?)<\/h\1>/', $content, $matches, PREG_OFFSET_CAPTURE);
+            $headings = $matches[0];
+
+            if (!empty($headings)) {
+                // Start Bootstrap 5 TOC container
+                $toc_html = '<div class="container toc-container mb-5 px-0">';
+                
+                // TOC Header
+                $toc_html .= '
+                <div class="accordion shadow-lg rounded" id="tocAccordion">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="tocHeading">
+                            <button class="accordion-button fw-semibold shadow-sm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tocContent" aria-expanded="false" aria-controls="tocContent">
+                                <span><i class="bi bi-dot"></i></span>' . esc_html__('Table of Contents', 'smarty_magazine') . '
+                            </button>
+                        </h3>
+                        <div id="tocContent" class="accordion-collapse collapse" aria-labelledby="tocHeading" data-bs-parent="#tocAccordion">
+                            <div class="accordion-body">
+                                <ul class="ps-3">';
+                                    // Add each heading as a link
+                                    foreach ($headings as $index => $heading) {
+                                        $heading_text = strip_tags($heading[0]);
+                                        $anchor_id = 'sm-magazine-toc-heading-' . $index;
+
+                                        // Replace heading in content with an anchor
+                                        $content = str_replace($heading[0], '<h' . $matches[1][$index][0] . ' id="' . esc_attr($anchor_id) . '">' . $heading_text . '</h' . $matches[1][$index][0] . '>', $content);
+
+                                        // Add ToC entry
+                                        $toc_html .= '<li><a href="#' . esc_attr($anchor_id) . '" class="sm-magazine-toc-link d-block py-1">' . esc_html($heading_text) . '</a></li>';
+                                    }
+
+                                    $toc_html .= '
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End ToC accordion item -->
+                </div> <!-- End ToC container -->';
+
+                // Prepend ToC to content
+                $content = $toc_html . $content;
+            }
+        }
+
+        return $content;
+    }
+    add_filter('the_content', '__smarty_magazine_add_toc_to_post');
+}
+
 if (!function_exists('__smarty_magazine_add_faq_meta_box')) {
     /**
 	 * Add a meta box for FAQs in the post edit screen.
@@ -1157,4 +1219,106 @@ if (!function_exists('__smarty_magazine_display_faqs')) {
         return $content;
     }
     add_filter('the_content', '__smarty_magazine_display_faqs');
+}
+
+if (!function_exists('__smarty_magazine_add_twitter_embed_metabox')) {
+    /**
+     * Add metabox for Twitter embed code
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_add_twitter_embed_metabox() {
+        add_meta_box(
+            '__smarty_magazine_twitter_embed',
+            __('Twitter Embed', 'smarty_magazine'),
+            '__smarty_magazine_render_twitter_embed_metabox',
+            array('post', 'news'), 
+            'normal',
+            'high'
+        );
+    }
+    add_action('add_meta_boxes', '__smarty_magazine_add_twitter_embed_metabox');
+}
+
+if (!function_exists('__smarty_magazine_render_twitter_embed_metabox')) {
+    /**
+     * Render the Twitter embed metabox
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object
+     * 
+     * @return void
+     */
+    function __smarty_magazine_render_twitter_embed_metabox($post) {
+        // Get the saved Twitter embed code
+        $twitter_embed = get_post_meta($post->ID, 'smarty_magazine_twitter_embed', true); ?>
+        <textarea name="smarty_magazine_twitter_embed" rows="5" style="width:100%;" placeholder="Paste Twitter embed code here..."><?php echo esc_textarea($twitter_embed); ?></textarea>
+        <?php if (!empty($twitter_embed)) : ?>
+            <p><strong>Shortcode:</strong> <input type="text" value='[sm_magazine_twitter_embed]' readonly style="width:100%; background:#f3f3f3; border:none; padding:5px;"></p>
+            <div style="margin-top: 10px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9;">
+                <strong>Preview:</strong>
+                <div><?php echo $twitter_embed; ?></div>
+            </div>
+        <?php endif; ?>
+        <?php
+    }
+}
+
+if (!function_exists('__smarty_magazine_save_twitter_embed_metabox')) {
+    /**
+     * Save the Twitter embed code when the post is saved
+     * 
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID
+     * 
+     * @return void
+     */
+    function __smarty_magazine_save_twitter_embed_metabox($post_id) {
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+        if (!isset($_POST['smarty_magazine_twitter_embed'])) return;
+        if (!current_user_can('edit_post', $post_id)) return;
+
+        // **Allow script tags**
+        $allowed_tags = array(
+            'blockquote' => array('class' => array()),
+            'p' => array('lang' => array(), 'dir' => array()),
+            'a' => array('href' => array(), 'rel' => array(), 'target' => array()),
+            'script' => array('src' => array(), 'async' => array(), 'charset' => array())
+        );
+
+        $twitter_embed = wp_kses($_POST['smarty_magazine_twitter_embed'], $allowed_tags);
+        update_post_meta($post_id, 'smarty_magazine_twitter_embed', $twitter_embed);
+
+    }
+    add_action('save_post', '__smarty_magazine_save_twitter_embed_metabox');
+}
+
+if (!function_exists('__smarty_magazine_twitter_embed_shortcode')) {
+    /**
+     * Shortcode to display the Twitter embed code
+     * 
+     * @since 1.0.0
+     * 
+     * @param array $atts The shortcode attributes
+     * 
+     * @return string The Twitter embed code
+     */
+    function __smarty_magazine_twitter_embed_shortcode($atts) {
+        global $post;
+        if (!$post) return '';
+
+        // Retrieve saved Twitter embed code
+        $twitter_embed = get_post_meta($post->ID, 'smarty_magazine_twitter_embed', true);
+
+        if (!empty($twitter_embed)) {
+            return '<div class="sm-magazine-twitter-embed">' . $twitter_embed . '</div>';
+        }
+
+        return ''; // Return empty if no embed exists
+    }
+    add_shortcode('sm_magazine_twitter_embed', '__smarty_magazine_twitter_embed_shortcode');
 }

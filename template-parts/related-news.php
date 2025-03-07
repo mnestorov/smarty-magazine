@@ -46,7 +46,7 @@ $__smarty_magazine_related = __smarty_magazine_get_related_news(get_the_ID());
 					</h3>
 					<?php if ($related_status) : ?>
 						<span class="badge <?php echo esc_attr("bg-$related_status status-$related_status"); ?>">
-							<?php echo esc_html(ucfirst($related_status)); ?>
+							<?php echo esc_html(__smarty_magazine_translate_news_status($related_status)); ?>
 						</span>
 					<?php endif; ?>
 				</li>
