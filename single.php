@@ -31,7 +31,7 @@
                         __smarty_magazine_news_post_navigation();
                     } else {
                         the_post_navigation(array(
-                            'screen_reader_text' => __('Post navigation', 'smarty-magazine'),
+                            'screen_reader_text' => __('Post navigation', 'smarty_magazine'),
                         ));
                     }
                     ?>

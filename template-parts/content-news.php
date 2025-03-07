@@ -23,7 +23,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
         <?php the_title('<h1 class="entry-title mb-0" itemprop="headline">', '</h1>'); ?>
         <?php if ($news_status) : ?>
             <span class="badge <?php echo esc_attr("bg-$news_status status-$news_status"); ?> d-inline-block w-100 p-2 text-uppercase rounded-top-0">
-                <?php echo esc_html(ucfirst($news_status)); ?>
+            <?php echo esc_html(__smarty_magazine_translate_news_status($news_status)); ?>
             </span>
         <?php endif; ?>
         <div class="entry-meta mt-4">

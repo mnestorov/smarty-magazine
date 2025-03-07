@@ -21,7 +21,7 @@ $__smarty_magazine_related = get_posts(
 ?>
 
 <div class="sm-news-layout-wrap sm-related-posts">
-	<h2><?php _e('Related posts', 'smarty-magazine'); ?></h2>
+	<h2><?php _e('Related posts', 'smarty_magazine'); ?></h2>
 	<ul>
 		<?php if ($__smarty_magazine_related) foreach ($__smarty_magazine_related as $post) { ?>
 			<?php setup_postdata($post); ?>

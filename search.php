@@ -17,7 +17,7 @@
                 <main id="main" class="site-main" role="main">
 					<header class="entry-header mb-4">
 						<h1 class="page-title">
-							<?php printf(esc_html__('Search Results for: %s', 'smartymagazine'), '<span>' . get_search_query() . '</span>'); ?>
+							<?php printf(esc_html__('Search Results for: %s', 'smarty_magazine'), '<span>' . get_search_query() . '</span>'); ?>
 						</h1>
 					</header>
 					<div class="row">
@@ -46,7 +46,7 @@
 								</div>
 
 							<?php else : ?>
-								<p class="no-results"><?php esc_html_e('No results found. Try a different search.', 'smartymagazine'); ?></p>
+								<p class="no-results"><?php esc_html_e('No results found. Try a different search.', 'smarty_magazine'); ?></p>
 								<?php get_search_form(); ?>
 							<?php endif; ?>
 						</div>

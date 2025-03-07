@@ -515,78 +515,26 @@ a {
 	text-decoration: none;
 }
 
-a:hover,
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover,
+a:hover {
+	text-decoration: underline;
+}
+
 .sm-footer-cont li a:hover,
 .sm-sec-menu li a:hover,
 .sm-featured-posts-wrap h2 a:hover,
 .sm-pagination-nav .current,
 .sm-footer .sm-news-layout-wrap a:hover {
-	color: var(--color-primary);
 	text-decoration: none;
-}
-
-.sm-featured-posts-wrap h2 a:hover {
-	color: var(--color-white);
 }
 
 figure.sm-news-post-img {
 	margin: 0;
-}
-
-.sm-news-layout1 .sm-news-post-img .bi,
-.sm-news-layout-half .sm-news-post-img .bi,
-.sm-sidebar-news .sm-news-post-img .bi,
-.sm-related-posts .sm-news-post-img .bi,
-.sm-category-posts .sm-news-post-img .bi {
-	background: rgba(204,41,54,.75);
-}
-
-.sm-news-layout1 .sm-news-post-img .bi:hover,
-.sm-news-layout-half .sm-news-post-img .bi:hover,
-.sm-sidebar-news .sm-news-post-img .bi:hover,
-.sm-footer h2:after,
-.sm-footer .tagcloud a:hover,
-.sm-related-posts .sm-news-post-img .bi:hover,
-.sm-search-bar,
-.sm-category-posts .sm-news-post-img .bi:hover,
-.sm-category-post-readmore a:hover,
-.sm-nav-md-trigger:hover .bi {
-	background: rgba(204,41,54,1);
-}
-
-.sm-pagination-nav .current,
-.sm-pagination-nav a:hover {
-	border-color: rgba(204,41,54,1);
-}
-
-.sm-main-menu li a,
-.sm-main-menu li:hover,
-.menu-item-has-children:after,
-.current-menu-item a,
-.sm-nav-md li a,
-.sm-nav-md .menu-item-has-children:after,
-.sm-logo-md a,
-.sm-nav-md-trigger {
-	color: var(--color-white);
-}
-
-/*.sm-main-menu li:hover,*/
-/*.sm-main-menu li a:hover,*/
-/*.current-menu-item > a,*/
-/*.sm-nav-md li a:hover {*/
-	/*background: #be3434 !important;*/
-	/*color: var(--color-white) !important;*/
-/*}*/
-
-.current-menu-item.menu-item-has-children {
-	background: #be3434 !important;
-}
-
-.current-menu-item.menu-item-has-children:after,
-.current-menu-item.menu-item-has-children:hover:after,
-.menu-item-has-children:hover:after,
-.sm-main-menu li:hover > a {
-	color: var(--color-white);
 }
 
 .sm-boxed {
@@ -673,10 +621,6 @@ ol {
 	padding: 6px 12px;
 	opacity: .9;
 	color: var(--color-dark);
-}
-
-.sm-sec-menu li a:hover {
-	color: var(--color-primary);
 }
 
 .sm-sec-nav {
@@ -935,7 +879,6 @@ button.sm-sec-nav:hover {
 	display: block;
 	padding: 7px 18px 8px;
 	text-decoration: none;
-	color: var(--color-white);
 	margin-bottom: -1px;
 }
 
@@ -1377,10 +1320,6 @@ button.sm-sec-nav:hover {
 	font-weight: bold;;
 }
 
-.sm-highlighted-news-cat a:hover {
-	color: var(--color-white);
-}
-
 /*--------------------------------------------------------------
 # Front Page News Section
 --------------------------------------------------------------*/
@@ -1429,16 +1368,10 @@ button.sm-sec-nav:hover {
 }
 
 .sm-news-post-meta span {
-	font-size: 14px;
 	display: inline-block;
 	margin-right: 25px;
 	padding-bottom: 5px;
 	opacity: .7;
-}
-
-.sm-news-post-meta .bi {
-	font-size: 15px;
-	margin-right: 5px;
 }
    
 /* Highlighted Post */
@@ -2335,7 +2268,6 @@ button.sm-sec-nav:hover {
 .sm-pagination-nav .current,
 .sm-pagination-nav a:hover {
 	background: var(--color-light);
-	color: var(--color-primary);
 }
 
 /*--------------------------------------------------------------
@@ -2512,6 +2444,10 @@ button.sm-sec-nav:hover {
 
 .sm-sidebar .tagcloud a {
 	margin: 5px;
+}
+
+.sm-sidebar .tagcloud a:hover {
+	text-decoration: none;
 }
 
 .sm-sidebar .textwidget {
@@ -2842,11 +2778,6 @@ button.sm-sec-nav:hover {
 	color: var(--color-white);
 	font-size: 13px !important;
 	font-weight: 400;
-}
-
-.tagcloud a:hover {
-	background: var(--color-primary);
-	color: var(--color-white);
 }
 
 /*--------------------------------------------------------------
@@ -3539,11 +3470,13 @@ h3.card-title  {
 }
 
 /* Card Styling */
+.sm-archive .card,
 .sm-news-archive .card {
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	overflow: hidden; /* Ensure image doesn't overflow */
 }
 
+.sm-archive .card:hover,
 .sm-news-archive .card:hover {
 	transform: translateY(-5px);
 }

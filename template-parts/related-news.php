@@ -12,7 +12,7 @@ $__smarty_magazine_related = __smarty_magazine_get_related_news(get_the_ID());
 
 <?php if (!empty($__smarty_magazine_related)) : ?>
 	<div class="sm-news-layout-wrap sm-related-posts">
-		<h2><?php _e('Related news', 'smarty-magazine'); ?></h2>
+		<h2><?php _e('Related news', 'smarty_magazine'); ?></h2>
 		<ul>
 			<?php foreach ($__smarty_magazine_related as $related) :
 				$related_status = __smarty_magazine_get_news_status($related->ID);

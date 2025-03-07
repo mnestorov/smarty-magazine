@@ -7,6 +7,29 @@
  * @package Smarty_Magazine
  */
 
+if (!function_exists('__smarty_magazine_translate_news_status')) {
+    /**
+     * Translate news status.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $status
+     * 
+     * @return string
+     */
+    function __smarty_magazine_translate_news_status($status) {
+        // Define translatable statuses
+        $translatable_statuses = [
+            'breaking'  => __('Breaking', 'smarty_magazine'),
+            'featured'  => __('Featured', 'smarty_magazine'),
+            'sponsored' => __('Sponsored', 'smarty_magazine'),
+        ];
+
+        // Return the translated status if available, otherwise return ucfirst version
+        return $translatable_statuses[$status] ?? ucfirst($status);
+    }
+}
+
 if (!function_exists('__smarty_magazine_render_news_carousel')) {
     /**
      * Render news carousel.
@@ -24,9 +47,7 @@ if (!function_exists('__smarty_magazine_render_news_carousel')) {
         ?>
         <section class="news-section news-<?php echo esc_attr($status); ?> mb-5">
             <div class="d-flex justify-content-between align-items-center px-2">
-                <h2 class="section-title <?php echo esc_attr("text-$status"); ?>">
-                    <?php echo esc_html(sprintf(__('%s', 'smarty_magazine'), ucfirst($status))); ?>
-                </h2>
+                <h2 class="section-title <?php echo esc_attr("text-$status"); ?>"><?php echo esc_html(__smarty_magazine_translate_news_status($status)); ?></h2>
                 <?php if (count($posts) > 1) : ?>
                     <div class="carousel-controls">
                         <div class="d-inline-block">

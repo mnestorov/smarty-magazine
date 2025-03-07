@@ -30,7 +30,7 @@
 		));
 		?>
 	</div>
-	<footer class="entry-footer">
+	<footer class="entry-footer text-center fw-bold my-4">
 		<?php __smarty_magazine_entry_footer(); ?>
 	</footer>
 </article>
