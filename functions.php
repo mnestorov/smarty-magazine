@@ -47,7 +47,7 @@ if (!function_exists('__smarty_magazine_setup')) {
         // Register navigation menus.
         register_nav_menus(array(
             'primary'      => esc_html__('Primary Menu', 'smarty_magazine'),
-            'top-bar-menu' => esc_html__('Top-bar Menu', 'smarty_magazine'),
+            'top-bar-menu' => esc_html__('Top Bar Menu', 'smarty_magazine'),
         ));
 
         // Enable HTML5 support for various elements.
@@ -1066,8 +1066,17 @@ if (!function_exists('__smarty_magazine_save_faq_meta_box')) {
 }
 
 if (!function_exists('__smarty_magazine_display_faqs')) {
+    /**
+     * Display FAQs on single posts and 'news' CPTs.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $content The post content
+     * 
+     * @return string The modified post content
+     */
     function __smarty_magazine_display_faqs($content) {
-        if (is_singular(array('post', 'news'))) { // Apply to posts and custom post type 'news'
+        if (is_singular(array('post', 'news'))) { // Apply to posts and 'news' CPT
             global $post;
 
             // Retrieve saved FAQs and custom title
@@ -1131,10 +1140,14 @@ if (!function_exists('__smarty_magazine_display_faqs')) {
                 $faq_html .= '</div>'; // Close accordion
                 $faq_html .= '</div>'; // Close container
 
-                // Inject Schema JSON for SEO
-                add_action('wp_footer', function() use ($faq_schema) {
-                    echo '<script type="application/ld+json">' . json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
-                });
+                // Use a global flag to prevent duplicate schema injections
+                global $smarty_faq_schema_added;
+                if (!isset($smarty_faq_schema_added)) {
+                    $smarty_faq_schema_added = true;
+                    add_action('wp_footer', function() use ($faq_schema) {
+                        echo '<script type="application/ld+json">' . json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
+                    }, 1);
+                }
 
                 // Append FAQs to content
                 $content .= $faq_html;
@@ -1145,4 +1158,3 @@ if (!function_exists('__smarty_magazine_display_faqs')) {
     }
     add_filter('the_content', '__smarty_magazine_display_faqs');
 }
-
