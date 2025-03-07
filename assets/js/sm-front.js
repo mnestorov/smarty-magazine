@@ -36,19 +36,19 @@ jQuery(document).ready(function($) {
     });
 
     // Back to Top
-    if ($('#back-to-top').length) {
+    if ($('#sm-back-to-top').length) {
         var scrollTrigger = 600, // px
             backToTop = function() {
                 var scrollTop = $(window).scrollTop();
                 if (scrollTop > scrollTrigger) {
-                    $('#back-to-top').addClass('show');
+                    $('#sm-back-to-top').addClass('show');
                 } else {
-                    $('#back-to-top').removeClass('show');
+                    $('#sm-back-to-top').removeClass('show');
                 }
             };
         backToTop();
         $(window).on('scroll', backToTop);
-        $('#back-to-top').on('click', function(e) {
+        $('#sm-back-to-top').on('click', function(e) {
             e.preventDefault();
             $('html, body').animate({
                 scrollTop: 0

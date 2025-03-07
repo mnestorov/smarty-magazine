@@ -75,7 +75,7 @@
     </div>
 </footer>
 
-<a id="back-to-top"><i class="bi bi-arrow-up"></i></a>
+<a id="sm-back-to-top"><i class="bi bi-arrow-up"></i></a>
 
 </div><!-- .sm-body-wrap -->
 

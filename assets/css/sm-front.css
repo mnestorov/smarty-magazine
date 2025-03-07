@@ -4,7 +4,7 @@
 :root {
 	--color-primary: #cc2936;
 	--color-dark:    #212529;
-	--color-white:   #ffffff;
+	--color-white:   #f9f9f9;
 	--color-border:  #e5e5e5;
 	--color-light:   #fafafa;
 	--color-lighter: #f5f5f5;
@@ -2122,7 +2122,7 @@ button.sm-sec-nav:hover {
 /*--------------------------------------------------------------
 # Back to top
 --------------------------------------------------------------*/
-#back-to-top {
+#sm-back-to-top {
 	font-size: 32px;
 	position: fixed;
 	z-index: 9999;
@@ -2141,7 +2141,7 @@ button.sm-sec-nav:hover {
 	filter: alpha(opacity=0);
 }
 
-#back-to-top.show {
+#sm-back-to-top.show {
 	opacity: 1;
 	filter: alpha(opacity=100);
 }
@@ -3565,4 +3565,78 @@ h3.card-title  {
 	background: linear-gradient(45deg, #0d6efd, #4b92fc);
 	color: #fff;
 	font-weight: bold;
+}
+
+/*--------------------------------------------------------------
+# FAQ Section Styling
+--------------------------------------------------------------*/
+.faq-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* FAQ Header */
+.faq-header {
+	background: var(--color-dark);
+    color: #ffc107;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.faq-header h2 {
+    font-weight: bold;
+}
+
+.faq-header p {
+    font-size: 1.1rem;
+    color: var(--color-white);
+}
+
+/* Accordion Styling */
+.accordion-item {
+	background: var(--color-white); 
+    border: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* FAQ Question (Button) */
+.accordion-button {
+    background: var(--color-white); 
+    color: var(--color-dark);
+    font-weight: 600;
+    padding: 15px;
+    transition: background 0.3s ease, transform 0.2s ease-in-out;
+    border-radius: 8px;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--color-white);
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+/* FAQ Answer Box */
+.accordion-body {
+    background: var(--color-white);
+    color: var(--color-dark);
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* FAQ Icon (Inside Question Button) */
+.accordion-button span {
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+/* Remove default Bootstrap focus outline on button */
+.accordion-button:focus {
+    box-shadow: none;
 }

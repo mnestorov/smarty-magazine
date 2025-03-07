@@ -52,22 +52,22 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 
 		// Menu Colors
 		$menu_bg             = get_theme_mod('__smarty_magazine_menu_bg_color', '#212529');
-		$menu_color          = get_theme_mod('__smarty_magazine_menu_color', '#ffffff');
+		$menu_color          = get_theme_mod('__smarty_magazine_menu_color', '#f9f9f9');
 		$menu_hover_bg       = get_theme_mod('__smarty_magazine_menu_hover_bg_color', '#be3434');
 		$menu_color_hover    = get_theme_mod('__smarty_magazine_menu_color_hover', '#212529');
 
 		// Header Colors
-		$header_bg_color     = get_theme_mod('__smarty_magazine_header_bg_color', '#ffffff');
+		$header_bg_color     = get_theme_mod('__smarty_magazine_header_bg_color', '#f9f9f9');
 		$header_text_color   = get_theme_mod('__smarty_magazine_header_text_color', '#212529');
 
 		// News Ticker Colors
 		$news_ticker_bg       = get_theme_mod('__smarty_magazine_news_ticker_bg', '#212529');
-		$news_ticker_border   = get_theme_mod('__smarty_magazine_news_ticker_border', '#ffffff');
+		$news_ticker_border   = get_theme_mod('__smarty_magazine_news_ticker_border', '#f9f9f9');
 		$news_ticker_tag_bg   = get_theme_mod('__smarty_magazine_news_ticker_tag_bg', '#be3434');
-		$news_ticker_icon 	  = get_theme_mod('__smarty_magazine_news_ticker_icon', '#ffffff');
-		$news_ticker_tag_text = get_theme_mod('__smarty_magazine_news_ticker_tag_text', '#ffffff');
+		$news_ticker_icon 	  = get_theme_mod('__smarty_magazine_news_ticker_icon', '#f9f9f9');
+		$news_ticker_tag_text = get_theme_mod('__smarty_magazine_news_ticker_tag_text', '#f9f9f9');
 		$news_ticker_arrow    = get_theme_mod('__smarty_magazine_news_ticker_arrow', '#be3434');
-		$news_ticker_text     = get_theme_mod('__smarty_magazine_news_ticker_text', '#ffffff');
+		$news_ticker_text     = get_theme_mod('__smarty_magazine_news_ticker_text', '#f9f9f9');
 
 		// Footer Colors
 		$footer_bg_color     = get_theme_mod('__smarty_magazine_footer_bg_color', '#212529');
@@ -76,7 +76,7 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 
 		$custom_css = '';
 
-		// Apply Header Background Color
+		// Header Background
 		if ($header_bg_color) {
 			$custom_css .= "
 			.sm-header {
@@ -84,7 +84,7 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 			}";
 		}
 
-		// Apply Header Text Logo Color
+		// Header Text Logo
 		if ($header_text_color) {
 			$custom_css .= "
 			.sm-logo > h1.site-title > a {
@@ -92,7 +92,7 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 			}";
 		}
 
-		// Apply News Ticker Styles
+		// News Ticker
 		if ($news_ticker_bg || $news_ticker_border || $news_ticker_tag_bg || $news_ticker_icon || $news_ticker_tag_text || $news_ticker_arrow || $news_ticker_text) {
 			$custom_css .= "
 			.bt-news-ticker {
@@ -122,7 +122,77 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 			}";
 		}
 
-		// Primary Color
+		// Menu Background
+		if ($menu_bg) {
+			$custom_css .= "
+			.sm-menu-bar,
+			.sm-main-menu li ul {
+				background: {$menu_bg};
+			}";
+		}
+
+		// Menu Font
+		if ($menu_color) {
+			$custom_css .= "
+			.sm-main-menu li a,
+			.sm-main-menu li:hover,
+			.menu-item-has-children:after,
+			.current-menu-item a,
+			.sm-nav-md li a,
+			.sm-nav-md .menu-item-has-children:after,
+			.sm-logo-md a,
+			.sm-nav-md-trigger {
+				color: {$menu_color};
+			}";
+		}
+
+		// Menu Hover Background
+		if ($menu_hover_bg) {
+			$custom_css .= "
+			.sm-main-menu li:hover,
+			.sm-main-menu li a:hover,
+			.sm-main-menu li.current-menu-item > a,
+			.sm-nav-md li a:hover,
+			.current-menu-item.menu-item-has-children {
+				background: {$menu_hover_bg};
+			}";
+		}
+
+		// Menu Hover Font
+		if ($menu_color_hover) {
+			$custom_css .= "
+			.sm-main-menu li:hover,
+			.sm-main-menu li a:hover,
+			.sm-main-menu li .current-menu-item > a,
+			.sm-nav-md li a:hover,
+			.current-menu-item.menu-item-has-children:after,
+			.current-menu-item.menu-item-has-children:hover:after,
+			.menu-item-has-children:hover:after,
+			.sm-main-menu li:hover > a,
+			.sm-sec-menu li a:hover,
+			.sm-sec-menu li a:active,
+			.sm-sec-menu li a:focus,
+			.sm-nav-menu li.current-menu-item > a {
+				color: {$menu_color_hover};
+			}";
+		}
+
+		// Footer Background
+		if ($footer_bg_color) {
+			$custom_css .= ".sm-footer { background: {$footer_bg_color}; }";
+		}
+
+		// Footer Text
+		if ($footer_text_color) {
+			$custom_css .= ".sm-footer, .sm-footer p, .sm-footer a, .sm-footer-cont li a, .sm-footer-bar, .sm-footer-bar a { color: {$footer_text_color}; }";
+		}
+
+		// Footer Hover Text
+		if ($footer_hover_color) {
+			$custom_css .= ".sm-footer a:hover, .sm-footer-bar a:hover { color: {$footer_hover_color} !important; }";
+		}
+
+		// Primary
 		if ($primary) {
 			$custom_css .= "
 			.sm-footer-cont li a:hover,
@@ -153,7 +223,7 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 			}";
 		}
 
-		// Secondary Color
+		// Secondary
 		if ($secondary) {
 			$custom_css .= "
 			body, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
@@ -183,7 +253,7 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 			.sm-sidebar-news .sm-news-post-img .bi,
 			.sm-related-posts .sm-news-post-img .bi,
 			.sm-category-posts .sm-news-post-img .bi,
-			#back-to-top {
+			#sm-back-to-top {
 				background: {$rgba_primary};
 			}";
 		}
@@ -191,79 +261,9 @@ if (!function_exists('__smarty_magazine_customizer_styles')) {
 		$rgba_secondary = __smarty_magazine_hex2rgba($secondary, 0.75);
 		if ($rgba_secondary) {
 			$custom_css .= "
-			#back-to-top:hover {
+			#sm-back-to-top:hover {
 				background: {$rgba_secondary};
 			}";
-		}
-
-		// Menu Background Color
-		if ($menu_bg) {
-			$custom_css .= "
-			.sm-menu-bar,
-			.sm-main-menu li ul {
-				background: {$menu_bg};
-			}";
-		}
-
-		// Menu Font Color
-		if ($menu_color) {
-			$custom_css .= "
-			.sm-main-menu li a,
-			.sm-main-menu li:hover,
-			.menu-item-has-children:after,
-			.current-menu-item a,
-			.sm-nav-md li a,
-			.sm-nav-md .menu-item-has-children:after,
-			.sm-logo-md a,
-			.sm-nav-md-trigger {
-				color: {$menu_color};
-			}";
-		}
-
-		// Menu Hover Background Color
-		if ($menu_hover_bg) {
-			$custom_css .= "
-			.sm-main-menu li:hover,
-			.sm-main-menu li a:hover,
-			.sm-main-menu li.current-menu-item > a,
-			.sm-nav-md li a:hover,
-			.current-menu-item.menu-item-has-children {
-				background: {$menu_hover_bg};
-			}";
-		}
-
-		// Menu Hover Font Color
-		if ($menu_color_hover) {
-			$custom_css .= "
-			.sm-main-menu li:hover,
-			.sm-main-menu li a:hover,
-			.sm-main-menu li .current-menu-item > a,
-			.sm-nav-md li a:hover,
-			.current-menu-item.menu-item-has-children:after,
-			.current-menu-item.menu-item-has-children:hover:after,
-			.menu-item-has-children:hover:after,
-			.sm-main-menu li:hover > a,
-			.sm-sec-menu li a:hover,
-			.sm-sec-menu li a:active,
-			.sm-sec-menu li a:focus,
-			.sm-nav-menu li.current-menu-item > a {
-				color: {$menu_color_hover};
-			}";
-		}
-
-		// Footer Background Color
-		if ($footer_bg_color) {
-			$custom_css .= ".sm-footer { background: {$footer_bg_color}; }";
-		}
-
-		// Footer Text Color
-		if ($footer_text_color) {
-			$custom_css .= ".sm-footer, .sm-footer p, .sm-footer a, .sm-footer-cont li a, .sm-footer-bar, .sm-footer-bar a { color: {$footer_text_color}; }";
-		}
-
-		// Footer Hover Text Color
-		if ($footer_hover_color) {
-			$custom_css .= ".sm-footer a:hover, .sm-footer-bar a:hover { color: {$footer_hover_color} !important; }";
 		}
 
 		// Add Inline Styles

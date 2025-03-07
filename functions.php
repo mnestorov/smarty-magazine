@@ -111,21 +111,22 @@ if (!function_exists('__smarty_magazine_enqueue_admin_scripts')) {
 	 * 
 	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
 	 */
-	function __smarty_magazine_admin_scripts($hook) {
+	function __smarty_magazine_enqueue_admin_scripts($hook) {
+        wp_enqueue_script('jquery');
 		wp_enqueue_style('sm-admin-css', get_template_directory_uri() . '/assets/css/sm-admin.css', array(), null, 'all');
+        wp_enqueue_script('sm-admin-js', get_template_directory_uri() . '/assets/js/sm-admin.js', array('jquery'), null, true);
 		
 		if ('widgets.php' === $hook || 'customize.php' === $hook) {
 			wp_enqueue_style('wp-color-picker');
 			wp_enqueue_script('wp-color-picker');
 			wp_enqueue_media();
-			wp_enqueue_script('sm-admin-js', get_template_directory_uri() . '/assets/js/sm-admin.js', array('jquery'), null, true);
             wp_localize_script('sm-admin-js', 'sm_ajax_data', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce'    => wp_create_nonce('sm_ajax_nonce'),
             ));
         }
 	}
-	add_action('admin_enqueue_scripts', '__smarty_magazine_admin_scripts');
+	add_action('admin_enqueue_scripts', '__smarty_magazine_enqueue_admin_scripts');
 }
 
 if (!function_exists('__smarty_magazine_customizer_preview')) {
@@ -155,7 +156,7 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
 	 * 
 	 * @link https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
      */
-    function __smarty_magazine_front_scripts() {
+    function __smarty_magazine_enqueue_front_scripts() {
 		wp_enqueue_style('sm-style', get_stylesheet_uri(), array(), null, 'all');
 		wp_enqueue_style('sm-front-fonts', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
 		wp_enqueue_style('bootstrap-icons', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
@@ -172,7 +173,7 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
             wp_enqueue_script('comment-reply');
         }
     }
-    add_action('wp_enqueue_scripts', '__smarty_magazine_front_scripts');
+    add_action('wp_enqueue_scripts', '__smarty_magazine_enqueue_front_scripts');
 }
 
 /**
@@ -954,3 +955,194 @@ if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
     }
     add_action('save_post', '__smarty_magazine_save_two_column_tabs_meta');
 }
+
+if (!function_exists('__smarty_magazine_add_faq_meta_box')) {
+    /**
+	 * Add a meta box for FAQs in the post edit screen.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+	 */
+	function __smarty_magazine_add_faq_meta_box() {
+		add_meta_box(
+			'__smarty_magazine_add_faq_meta_box', 
+			__('FAQs', 'smarty_magazine'),
+			'__smarty_magazine_faq_meta_box_callback', 
+			array('post', 'news'), 
+			'normal', 
+			'high'
+		);
+	}
+	add_action('add_meta_boxes', '__smarty_magazine_add_faq_meta_box');
+}
+
+if (!function_exists('__smarty_magazine_faq_meta_box_callback')) {
+	/**
+	 * Callback function to display and manage FAQs in the post edit screen.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object
+     * 
+     * @return void
+	 */
+	function __smarty_magazine_faq_meta_box_callback($post) {
+		// Nonce field for security
+		wp_nonce_field('smarty_magazine_save_faq_meta_box', 'smarty_magazine_faq_meta_box_nonce');
+
+		// Retrieve existing FAQs and custom FAQ title
+		$faqs = get_post_meta($post->ID, '_smarty_magazine_faqs', true);
+		$faq_section_title = get_post_meta($post->ID, '_smarty_magazine_faq_section_title', true);
+
+		// Custom FAQ Section Title ?>
+		<p><strong><?php _e('Section Title', 'smarty_magazine'); ?></strong></p>
+		<p><input type="text" name="_smarty_magazine_faq_section_title" id="sm-magazine-faq-section-title" value="<?php echo esc_attr($faq_section_title); ?>" style="width: 100%;"></p>
+        <?php
+		
+        // Display existing FAQs
+		if (!empty($faqs)) {
+			foreach ($faqs as $index => $faq) {
+				?>
+				<div class="sm-magazine-custom-faq <?php echo ($index % 2 == 0) ? 'even' : 'odd'; ?>" data-index="<?php echo $index; ?>">
+					<div class="sm-magazine-faq-header">
+						<h4><?php printf(__('FAQ %d -', 'smarty_magazine'), ($index + 1)); ?> <span class="sm-magazine-faq-title"><?php echo esc_html($faq['question']); ?></span></h4>
+						<button type="button" class="button button-secondary sm-magazine-toggle-faq"><?php _e('Toggle', 'smarty_magazine'); ?></button>
+					</div>
+					<div class="sm-magazine-faq-content" style="display: none;">
+						<p>
+							<label><?php _e('Question', 'smarty_magazine'); ?></label><br>
+							<input type="text" name="_smarty_magazine_faqs[<?php echo $index; ?>][question]" value="<?php echo esc_attr($faq['question']); ?>" style="width: 100%;">
+						</p>
+						<p>
+							<label><?php _e('Answer', 'smarty_magazine'); ?></label><br>
+							<textarea name="_smarty_magazine_faqs[<?php echo $index; ?>][answer]" style="width: 100%;"><?php echo esc_textarea($faq['answer']); ?></textarea>
+						</p>
+						<input type="hidden" name="_smarty_magazine_faqs[<?php echo $index; ?>][delete]" value="0" class="sm-magazine-delete-input">
+						<button type="button" class="button button-secondary sm-magazine-remove-faq-button"><?php _e('Remove FAQ', 'smarty_magazine'); ?></button>
+					</div>
+				</div>
+				<?php
+			}
+		}
+		?>
+		<div id="sm-magazine-faqs-container"></div>
+		<button type="button" id="sm-magazine-add-faq-button" class="button button-primary"><?php _e('Add FAQ', 'smarty_magazine'); ?></button><?php
+	}
+}
+
+if (!function_exists('__smarty_magazine_save_faq_meta_box')) {
+	/**
+	 * Save FAQs and custom title when the post is saved.
+     * 
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID
+     * 
+     * @return void
+	 */
+	function __smarty_magazine_save_faq_meta_box($post_id) {
+		if (!isset($_POST['smarty_magazine_faq_meta_box_nonce']) 
+            || !wp_verify_nonce($_POST['smarty_magazine_faq_meta_box_nonce'], 'smarty_magazine_save_faq_meta_box')) return;
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+		if (!current_user_can('edit_post', $post_id)) return;
+
+		$new_faqs = array();
+
+		if (isset($_POST['_smarty_magazine_faqs'])) {
+			foreach ($_POST['_smarty_magazine_faqs'] as $faq) {
+				if (isset($faq['delete']) && $faq['delete'] == '0') {
+					$new_faqs[] = $faq;
+				}
+			}
+			update_post_meta($post_id, '_smarty_magazine_faqs', $new_faqs);
+		}
+
+		if (isset($_POST['_smarty_magazine_faq_section_title'])) {
+			update_post_meta($post_id, '_smarty_magazine_faq_section_title', sanitize_text_field($_POST['_smarty_magazine_faq_section_title']));
+		}
+	}
+	add_action('save_post', '__smarty_magazine_save_faq_meta_box');
+}
+
+if (!function_exists('__smarty_magazine_display_faqs')) {
+    function __smarty_magazine_display_faqs($content) {
+        if (is_singular(array('post', 'news'))) { // Apply to posts and custom post type 'news'
+            global $post;
+
+            // Retrieve saved FAQs and custom title
+            $faqs = get_post_meta($post->ID, '_smarty_magazine_faqs', true);
+            $faq_section_title = get_post_meta($post->ID, '_smarty_magazine_faq_section_title', true);
+
+            if (!empty($faqs)) {
+                // Start Bootstrap 5 FAQ container
+                $faq_html = '<div class="container faq-container">';
+
+                // Styled FAQ Header
+                $faq_html .= '
+               <div class="faq-header mb-4">
+                    <h2>' . (!empty($faq_section_title) ? esc_html($faq_section_title) : __('Frequently Asked Questions', 'smarty_magazine')) . '</h2>
+                    <p>' . __('Find answers to the most common questions below.', 'smarty_magazine') . '</p>
+                </div>';
+
+                // Accordion container with Bootstrap 5
+                $faq_html .= '<div class="accordion shadow-lg rounded" id="faqAccordion">';
+
+                // Schema.org FAQPage structure
+                $faq_schema = array(
+                    "@context"   => "https://schema.org",
+                    "@type"      => "FAQPage",
+                    "mainEntity" => array()
+                );
+
+                foreach ($faqs as $index => $faq) {
+                    if (!empty($faq['question']) && !empty($faq['answer'])) {
+                        // Generate unique IDs for Bootstrap accordion
+                        $question_id = 'faqHeading' . $index;
+                        $answer_id   = 'faqCollapse' . $index;
+
+                        // Bootstrap 5 Accordion Item with Custom Colors
+                        $faq_html .= '
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="' . esc_attr($question_id) . '">
+                                <button class="accordion-button fw-semibold shadow-sm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' . esc_attr($answer_id) . '" aria-expanded="false" aria-controls="' . esc_attr($answer_id) . '">
+                                    <span><i class="bi bi-dot fs-1"></i></span>' . esc_html($faq['question']) . '
+                                </button>
+                            </h2>
+                            <div id="' . esc_attr($answer_id) . '" class="accordion-collapse collapse" aria-labelledby="' . esc_attr($question_id) . '" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p class="mb-0">' . wp_kses_post($faq['answer']) . '</p>
+                                </div>
+                            </div>
+                        </div>';
+
+                        // Add FAQ to Schema.org structure
+                        $faq_schema['mainEntity'][] = array(
+                            "@type" => "Question",
+                            "name"  => esc_html($faq['question']),
+                            "acceptedAnswer" => array(
+                                "@type" => "Answer",
+                                "text"  => wp_kses_post($faq['answer'])
+                            )
+                        );
+                    }
+                }
+
+                $faq_html .= '</div>'; // Close accordion
+                $faq_html .= '</div>'; // Close container
+
+                // Inject Schema JSON for SEO
+                add_action('wp_footer', function() use ($faq_schema) {
+                    echo '<script type="application/ld+json">' . json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
+                });
+
+                // Append FAQs to content
+                $content .= $faq_html;
+            }
+        }
+
+        return $content;
+    }
+    add_filter('the_content', '__smarty_magazine_display_faqs');
+}
+
