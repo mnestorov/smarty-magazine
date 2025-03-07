@@ -1,4 +1,28 @@
 jQuery(document).ready(function($) {
+    // Toggle submenu on click
+    $("#mobile-primary-menu .menu-item-has-children > a").on("click", function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        let $parent = $(this).parent();
+        let $submenu = $parent.children(".sub-menu");
+
+        // Toggle submenu visibility with animation
+        if ($submenu.is(":visible")) {
+            $submenu.slideUp(300);
+            $parent.removeClass("open");
+        } else {
+            $submenu.slideDown(300);
+            $parent.addClass("open");
+        }
+    });
+
+    // Prevent Bootstrap Offcanvas from closing on submenu clicks
+    $(".offcanvas").on("click", function (e) {
+        if ($(e.target).closest(".menu-item-has-children").length) {
+            e.stopPropagation();
+        }
+    });
+
     // Convert Hex to RGBA
     function convertHex(hex, opacity) {
         hex = hex.replace('#', '');

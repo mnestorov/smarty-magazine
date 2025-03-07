@@ -77,7 +77,7 @@
         <!-- Offcanvas Menu (Visible on Desktop and Mobile) -->
         <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="responsiveOffcanvasMenu" aria-labelledby="responsiveOffcanvasMenuLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="responsiveOffcanvasMenuLabel"><?php bloginfo('name'); ?></h5>
+                <h5 class="offcanvas-title" id="responsiveOffcanvasMenuLabel"><?php _e('Menu', 'smarty_magazine'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
