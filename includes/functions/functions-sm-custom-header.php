@@ -34,7 +34,7 @@ if (!function_exists('__smarty_magazine_header_style')) {
 	function __smarty_magazine_custom_header_setup() {
 		add_theme_support('custom-header', apply_filters('__smarty_magazine_custom_header_args', array(
 			'default-image'          => '',
-			'default-text-color'     => '000000',
+			'default-text-color'     => '212529',
 			'width'                  => 1600,
 			'height'                 => 250,
 			'flex-height'            => true,
