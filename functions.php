@@ -1076,12 +1076,12 @@ if (!function_exists('__smarty_magazine_display_faqs')) {
 
             if (!empty($faqs)) {
                 // Start Bootstrap 5 FAQ container
-                $faq_html = '<div class="container faq-container">';
+                $faq_html = '<div class="container faq-container px-0">';
 
                 // Styled FAQ Header
                 $faq_html .= '
                <div class="faq-header mb-4">
-                    <h2>' . (!empty($faq_section_title) ? esc_html($faq_section_title) : __('Frequently Asked Questions', 'smarty_magazine')) . '</h2>
+                    <h3>' . (!empty($faq_section_title) ? esc_html($faq_section_title) : __('Frequently Asked Questions', 'smarty_magazine')) . '</h3>
                     <p>' . __('Find answers to the most common questions below.', 'smarty_magazine') . '</p>
                 </div>';
 
@@ -1104,11 +1104,11 @@ if (!function_exists('__smarty_magazine_display_faqs')) {
                         // Bootstrap 5 Accordion Item with Custom Colors
                         $faq_html .= '
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="' . esc_attr($question_id) . '">
+                            <h4 class="accordion-header" id="' . esc_attr($question_id) . '">
                                 <button class="accordion-button fw-semibold shadow-sm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#' . esc_attr($answer_id) . '" aria-expanded="false" aria-controls="' . esc_attr($answer_id) . '">
-                                    <span><i class="bi bi-dot fs-1"></i></span>' . esc_html($faq['question']) . '
+                                    <span><i class="bi bi-dot"></i></span>' . esc_html($faq['question']) . '
                                 </button>
-                            </h2>
+                            </h4>
                             <div id="' . esc_attr($answer_id) . '" class="accordion-collapse collapse" aria-labelledby="' . esc_attr($question_id) . '" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
                                     <p class="mb-0">' . wp_kses_post($faq['answer']) . '</p>

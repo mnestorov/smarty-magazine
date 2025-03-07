@@ -116,239 +116,11 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			'settings' => '__smarty_magazine_hide_date_setting'
 		));
 
-		// Header Background Color Setting
-		$wp_customize->add_setting('__smarty_magazine_header_bg_color', array(
-			'default'              => '#ffffff',
-			'capability'           => 'edit_theme_options',
-			'sanitize_callback'    => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize',
-			'transport'            => 'postMessage',
-		));
-
-		// Header Background Color Control
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_header_bg_color_control', array(
-			'label'    => __('Header Background Color', 'smarty_magazine'),
-			'section'  => 'colors', // Attach directly to the Colors section
-			'settings' => '__smarty_magazine_header_bg_color',
-		)));
-
-		// Header Text Logo Color Setting
-		$wp_customize->add_setting('__smarty_magazine_header_text_color', array(
-			'default'              => '#212529',
-			'capability'           => 'edit_theme_options',
-			'sanitize_callback'    => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize',
-			'transport'            => 'postMessage',
-		));
-
-		// Header Text Logo Color Control
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_header_text_color_control', array(
-			'label'    => __('Header Text Logo Color', 'smarty_magazine'),
-			'section'  => 'colors', // Attach directly to the Colors section
-			'settings' => '__smarty_magazine_header_text_color',
-		)));
-
-		// Main Menu Color
-		$wp_customize->add_section('__smarty_magazine_menu_color_section', array(
-			'priority' => 3,
-			'title'    => __('Menu Color', 'smarty_magazine'),
-			'panel'	   => 'colors'
-		));
-
-		$wp_customize->add_setting('__smarty_magazine_menu_color', array(
-			'priority' 			   => 6,
-			'default' 			   => '#ffffff',
-			'capability' 		   => 'edit_theme_options',
-			'sanitize_callback'	   => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize'
-		));
-
-		// Menu Text Color
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_menu_color_picker', array(
-			'label'    => __('Menu Text Color', 'smarty_magazine'),
-			'section'  => 'colors',
-			'settings' => '__smarty_magazine_menu_color'
-		)));
-
-		$wp_customize->add_setting('__smarty_magazine_menu_bg_color', array(
-			'priority' 			   => 7,
-			'default' 			   => '#cf4141',
-			'capability' 		   => 'edit_theme_options',
-			'sanitize_callback'	   => '__smarty_magazine_color_sanitize',
-			'sanitize_js_callback' => '__smarty_magazine_color_escaping_sanitize'
-		));
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_menu_bg_color_picker',
-				array(
-					'label' 	=> __('Menu Background', 'smarty_magazine'),
-					'section' 	=> 'colors',
-					'settings' 	=> '__smarty_magazine_menu_bg_color'
-				)
-			)
-		);
-
-		$wp_customize->add_setting(
-			'__smarty_magazine_menu_color_hover',
-			array(
-				'priority' 			    => 8,
-				'default' 			    => '#ffffff',
-				'capability' 			=> 'edit_theme_options',
-				'sanitize_callback'		=> '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'  => '__smarty_magazine_color_escaping_sanitize'
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_menu_hover_color_picker',
-				array(
-					'label' 	=> __('Menu Text Hover Color', 'smarty_magazine'),
-					'section' 	=> 'colors',
-					'settings' 	=> '__smarty_magazine_menu_color_hover'
-				)
-			)
-		);
-
-		$wp_customize->add_setting(
-			'__smarty_magazine_menu_hover_bg_color',
-			array(
-				'priority' 				=> 9,
-				'default' 				=> '#be3434',
-				'capability' 			=> 'edit_theme_options',
-				'sanitize_callback'		=> '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'  => '__smarty_magazine_color_escaping_sanitize'
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_menu_hover_bg_color_picker',
-				array(
-					'label' 	=> __('Menu Hover Background', 'smarty_magazine'),
-					'section' 	=> 'colors',
-					'settings' 	=> '__smarty_magazine_menu_hover_bg_color'
-				)
-			)
-		);
-
-		// News Ticker Background Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_bg', array(
-			'default'           => '#212529',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_bg', array(
-			'label'    => __('News Ticker Background', 'smarty_magazine'),
-			'section'  => 'colors',
-			'settings' => '__smarty_magazine_news_ticker_bg',
-		)));
-	
-		// News Ticker Border Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_border', array(
-			'default'           => '#ffffff',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_border', array(
-			'label'    => __('News Ticker Border', 'smarty_magazine'),
-			'section'  => 'colors',
-			'settings' => '__smarty_magazine_news_ticker_border',
-		)));
-	
-		// News Ticker Tag Background Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_tag_bg', array(
-			'default'           => '#212529',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_tag_bg', array(
-			'label'    => __('News Ticker Tag Background', 'smarty_magazine'),
-			'section'  => 'colors',
-			'settings' => '__smarty_magazine_news_ticker_tag_bg',
-		)));
-
-		// News Ticker Tag Icon Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_icon', array(
-			'default'           => '#be3434',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_icon', array(
-			'label'    => __('News Ticker Icon Color', 'smarty_magazine'),
-			'section'  => 'colors', 
-			'settings' => '__smarty_magazine_news_ticker_icon',
-		)));
-	
-		// News Ticker Tag Text Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_tag_text', array(
-			'default'           => '#ffffff',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-		
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_tag_text', array(
-			'label'    => __('News Ticker Tag Text Color', 'smarty_magazine'),
-			'section'  => 'colors', 
-			'settings' => '__smarty_magazine_news_ticker_tag_text',
-		)));
-	
-		// News Ticker Tag Arrow Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_arrow', array(
-			'default'           => '#212529',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_arrow', array(
-			'label'    => __('News Ticker Tag Arrow Color', 'smarty_magazine'),
-			'section'  => 'colors',
-			'settings' => '__smarty_magazine_news_ticker_arrow',
-		)));
-	
-		// News Ticker Text Color
-		$wp_customize->add_setting('__smarty_magazine_news_ticker_text', array(
-			'default'           => '#ffffff',
-			'sanitize_callback' => '__smarty_magazine_color_sanitize',
-		));
-
-		$wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, '__smarty_magazine_news_ticker_text', array(
-			'label'    => __('News Ticker Text Color', 'smarty_magazine'),
-			'section'  => 'colors',  // Directly under Colors
-			'settings' => '__smarty_magazine_news_ticker_text',
-		)));
-
-		// Footer backgounr color
-		$wp_customize->add_setting(
-			'__smarty_magazine_footer_bg_color',
-			array(
-				'priority' 				 => 9,
-				'default' 				 => '#212529',
-				'capability' 			 => 'edit_theme_options',
-				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_footer_bg_color',
-				array(
-					'label' 			=> __('Footer Main Background', 'smarty_magazine'),
-					'section' 			=> 'colors',
-					'settings' 			=> '__smarty_magazine_footer_bg_color'
-				)
-			)
-		);
-
 		$wp_customize->add_setting(
 			'__smarty_magazine_footer_text_color',
 			array(
 				'priority' 				 => 9,
-				'default' 				 => '#ffffff',
+				'default' 				 => '#f9f9f9',
 				'capability' 			 => 'edit_theme_options',
 				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
 				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
@@ -360,7 +132,7 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				$wp_customize,
 				'__smarty_magazine_footer_text_color',
 				array(
-					'label' 			=> __('Footer Text Color', 'smarty_magazine'),
+					'label' 			=> __('Footer Links', 'smarty_magazine'),
 					'section' 			=> 'colors',
 					'settings' 			=> '__smarty_magazine_footer_text_color'
 				)
@@ -370,7 +142,7 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 			'__smarty_magazine_footer_text_hover_color',
 			array(
 				'priority' 				 => 9,
-				'default' 				 => '#cc2936',
+				'default' 				 => '#ffc107',
 				'capability' 			 => 'edit_theme_options',
 				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
 				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
@@ -382,7 +154,7 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				$wp_customize,
 				'__smarty_magazine_footer_text_hover_color',
 				array(
-					'label' 			=> __('Footer Text Hover Color', 'smarty_magazine'),
+					'label' 			=> __('Footer Links (Hover)', 'smarty_magazine'),
 					'section' 			=> 'colors',
 					'settings' 			=> '__smarty_magazine_footer_text_hover_color'
 				)
@@ -544,52 +316,6 @@ if (!function_exists('__smarty_magazine_customize_register')) {
 				'label' 			=> __('Set Default Font Size', 'smarty_magazine'),
 				'section'			=> '__smarty_magazine_font_size_section',
 				'settings' 			=> '__smarty_magazine_font_size'
-			)
-		);
-		
-		// Primary Color
-		$wp_customize->add_setting(
-			'__smarty_magazine_primary_color',
-			array(
-				'default' 			     => '#cc2936',
-				'capability' 			 => 'edit_theme_options',
-				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_primary_color',
-				array(
-					'label' 		=> __('Global Primary Color', 'smarty_magazine'),
-					'section' 		=> 'colors',
-					'settings' 		=> '__smarty_magazine_primary_color'
-				)
-			)
-		);
-
-		// Secondary Color
-		$wp_customize->add_setting(
-			'__smarty_magazine_secondary_color',
-			array(
-				'default' 			     => '#212529',
-				'capability' 			 => 'edit_theme_options',
-				'sanitize_callback'		 => '__smarty_magazine_color_sanitize',
-				'sanitize_js_callback'   => '__smarty_magazine_color_escaping_sanitize'
-			)
-		);
-
-		$wp_customize->add_control(
-			new WP_Customize_Color_Control(
-				$wp_customize,
-				'__smarty_magazine_secondary_color',
-				array(
-					'label' 		=> __('Global Secondary Color', 'smarty_magazine'),
-					'section' 		=> 'colors',
-					'settings' 		=> '__smarty_magazine_secondary_color'
-				)
 			)
 		);
 

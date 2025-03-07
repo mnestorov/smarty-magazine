@@ -2,7 +2,7 @@
 # :root Variables
 --------------------------------------------------------------*/
 :root {
-	--color-primary: #cc2936;
+	--color-primary: #ffc107;
 	--color-dark:    #212529;
 	--color-white:   #f9f9f9;
 	--color-border:  #e5e5e5;
@@ -26,7 +26,14 @@ html {
 }
 
 body {
+	color: var(--color-dark);
 	background: var(--color-white);
+}
+
+h1 a:hover,
+h2 a:hover,
+h3 a:hover {
+	text-decoration: underline !important;
 }
 
 blockquote:before,
@@ -42,7 +49,7 @@ q {
 }
 
 hr {
-	background-color: #ccc;
+	background-color: var(--color-border);
 	border: 0;
 	height: 1px;
 	margin-bottom: 1.5em;
@@ -169,7 +176,7 @@ textarea {
 .screen-reader-text:focus {
 	background-color: var(--color-lighter);
 	border-radius: 3px;
-	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.5);
 	clip: auto !important;
 	color: #21759b;
 	display: block;
@@ -255,8 +262,7 @@ textarea {
 --------------------------------------------------------------*/
 .sticky {
 	display: block;
-	border: 2px solid !important;
-	border-color: var(--color-primary) !important;
+	border: 2px solid var(--color-primary) !important;
 	padding: 20px;
 }
 
@@ -623,6 +629,12 @@ ol {
 	color: var(--color-dark);
 }
 
+.sm-sec-menu li a:hover,
+.sm-sec-menu li a:active,
+.sm-sec-menu li a:focus {
+	color: var(--color-dark);
+}
+
 .sm-sec-nav {
 	font-size: 24px;
 	margin-right: 15px;
@@ -806,6 +818,7 @@ button.sm-sec-nav:hover {
 --------------------------------------------------------------*/
 .sm-header {
 	padding: 0;
+	background-color: var(--color-white);
 }
 
 .sm-logo {
@@ -820,6 +833,10 @@ button.sm-sec-nav:hover {
 	margin: 0 0 2px ;
 }
 
+.sm-logo > h1.site-title > a {
+	color: var(--color-dark);
+}
+
 .sm-logo p {
 	margin-bottom: 0;
 	opacity: .8;
@@ -829,6 +846,10 @@ button.sm-sec-nav:hover {
 	font-size: 20px;
 	font-weight: 400;
 	padding-top: 8px;
+}
+
+.sm-logo-md a {
+	color: var(--color-dark);
 }
 
 /*--------------------------------------------------------------
@@ -870,16 +891,26 @@ button.sm-sec-nav:hover {
 
 .sm-main-menu li {
 	font-size: 16px;
+	font-weight: bold;
 	line-height: 1.6em;
 	position: relative;
 	display: inline-block;
 }
 
 .sm-main-menu li a {
+	color: var(--color-primary);
 	display: block;
 	padding: 7px 18px 8px;
 	text-decoration: none;
+	text-transform: uppercase;
 	margin-bottom: -1px;
+}
+
+.sm-main-menu li:hover,
+.sm-main-menu li:hover a,
+.sm-main-menu li.current-menu-item > a:hover {
+	color: var(--color-dark);
+	background: var(--color-primary);
 }
 
 .sm-main-menu li ul.sub-menu {
@@ -903,15 +934,17 @@ button.sm-sec-nav:hover {
 }
 
 .menu-item-has-children:after {
+	color: var(--color-primary);
 	font-family: 'bootstrap-icons';
-	font-size: 16px;
 	position: absolute;
-	top: 8px;
-	right: 14px;
+    top: 7px;
+    right: 5px;
 	content: '\F22C';
 }
 
+.menu-item-has-children:hover:after,
 .menu-item-has-children .menu-item-has-children:after {
+	color: var(--color-dark);
 	content: '\F22C';
 }
 
@@ -927,9 +960,11 @@ button.sm-sec-nav:hover {
 
 .sm-main-menu li ul.sub-menu li {
 	display: block;
+	background: var(--color-primary);
 }
 
 .sm-nav-md-trigger {
+	color: var(--color-white);
 	text-align: right;
 }
 
@@ -944,7 +979,7 @@ button.sm-sec-nav:hover {
 	height: 41px;
 	padding-top: 10px;
 	text-align: center;
-	background: rgba(0,0,0,.15);
+	background: rgba(0, 0, 0, .15);
 }
 
 .sm-main-menu-md {
@@ -981,8 +1016,13 @@ button.sm-sec-nav:hover {
 }
 
 .sm-nav-md li a {
+	color: var(--color-white);
 	display: block;
 	padding: 5px 15px;
+}
+
+.sm-nav-md li a:hover {
+	color: var(--color-dark);
 }
 
 .sm-nav-md .menu-item-has-children:after {
@@ -1015,14 +1055,17 @@ button.sm-sec-nav:hover {
 .bt-news-ticker {
 	overflow: hidden;
 	height: 42px;
-	border-width: 1px;
-	border-style: solid;
+	background-color: var(--color-dark);
+	border: 1px solid var(--color-primary);
 	border-radius: 5px;
 	margin-bottom: 10px;
 }
 
 .bt-news-ticker-tag {
+	color: var(--color-dark);
+	background-color: var(--color-primary);
     font-size: 16px;
+	font-weight: bold;
     line-height: 1em;
     position: relative;
     float: left;
@@ -1030,6 +1073,10 @@ button.sm-sec-nav:hover {
     margin-right: 20px;
     padding: 12px 20px 12px 10px;
     text-transform: uppercase;
+}
+
+.bt-news-ticker-tag .bi.bi-fire {
+	color: var(--color-dark);
 }
 
 .bt-news-ticker-tag:after {
@@ -1045,6 +1092,7 @@ button.sm-sec-nav:hover {
     border: solid transparent;
     border-width: 20px;
     border-left-width: 10px;
+	border-left-color: var(--color-primary);
 }
 
 .bt-news-ticker ul {
@@ -1068,7 +1116,8 @@ button.sm-sec-nav:hover {
 }
 
 .bt-news-ticker li a {
-	font-weight: 500;
+	color: var(--color-primary);
+	font-weight: bold;
 	text-decoration: none;
 }
 
@@ -1313,11 +1362,14 @@ button.sm-sec-nav:hover {
 }
 
 .sm-highlighted-news-cat a {
+	color: var(--color-dark);
+	background: var(--color-primary);
+	border-top-right-radius: 5px;
 	display: block;
-	padding: 1px 15px 2px;
+	padding: 0 5px;
 	text-decoration: none;
 	outline: none;
-	font-weight: bold;;
+	font-weight: bold;
 }
 
 /*--------------------------------------------------------------
@@ -1776,9 +1828,9 @@ button.sm-sec-nav:hover {
 	padding-top: 15px;
 	text-align: center;
 	opacity: 0;
-	color: var(--color-white);
+	color: var(--color-dark);
 	border-radius: 50%;
-	background: rgba(0,0,0,.5);
+	background: var(--color-primary)
 }
 
 .sm-news-layout1 .sm-news-post-img:hover .bi,
@@ -2137,8 +2189,12 @@ button.sm-sec-nav:hover {
 	opacity: 0;
 	color: var(--color-white);
     border-radius: 50%;
-    background: var(--color-dark);
+    background: var(--color-primary);
 	filter: alpha(opacity=0);
+}
+
+#sm-back-to-top:hover {
+	background: var(--color-dark);
 }
 
 #sm-back-to-top.show {
@@ -2267,6 +2323,8 @@ button.sm-sec-nav:hover {
 
 .sm-pagination-nav .current,
 .sm-pagination-nav a:hover {
+	color: var(--color-dark);
+	border-color: var(--color-dark);
 	background: var(--color-light);
 }
 
@@ -2323,6 +2381,10 @@ button.sm-sec-nav:hover {
 .sm-sidebar input[type='search'],
 .sm-sidebar input textarea {
 	margin: 10px 12px;
+}
+
+input[type='search']::placeholder {
+	color: var(--color-dark);
 }
 
 .sm-sidebar select,
@@ -2444,10 +2506,6 @@ button.sm-sec-nav:hover {
 
 .sm-sidebar .tagcloud a {
 	margin: 5px;
-}
-
-.sm-sidebar .tagcloud a:hover {
-	text-decoration: none;
 }
 
 .sm-sidebar .textwidget {
@@ -2771,13 +2829,18 @@ button.sm-sec-nav:hover {
 .tagcloud a {
 	margin: 0 4px 8px 0;
 	padding: 1px 15px 0;
-
 	background: rgba(39,48,57,.6);
 	border-radius: 30px;
 	display: inline-block;
 	color: var(--color-white);
 	font-size: 13px !important;
 	font-weight: 400;
+}
+
+.tagcloud a:hover {
+    color: var(--color-dark);
+    background: var(--color-primary);
+    text-decoration: none;
 }
 
 /*--------------------------------------------------------------
@@ -3589,7 +3652,6 @@ h3.card-title  {
 }
 
 .faq-header p {
-    font-size: 1.1rem;
     color: var(--color-white);
 }
 
@@ -3608,7 +3670,7 @@ h3.card-title  {
     background: var(--color-white); 
     color: var(--color-dark);
     font-weight: 600;
-    padding: 15px;
+	padding: 15px 20px 15px 5px;
     transition: background 0.3s ease, transform 0.2s ease-in-out;
     border-radius: 8px;
 }
@@ -3623,20 +3685,25 @@ h3.card-title  {
 .accordion-body {
     background: var(--color-white);
     color: var(--color-dark);
-    border-left: 4px solid #ffc107;
+    border-left: 5px solid #ffc107;
     padding: 15px;
-    font-size: 1rem;
     line-height: 1.6;
 }
 
 /* FAQ Icon (Inside Question Button) */
 .accordion-button span {
     color: #ffc107;
-    font-size: 1.2rem;
-    margin-right: 8px;
+    font-size: 2.5rem;
 }
 
 /* Remove default Bootstrap focus outline on button */
 .accordion-button:focus {
     box-shadow: none;
+}
+
+/*--------------------------------------------------------------
+# BADGES Styling
+--------------------------------------------------------------*/
+.badge {
+	font-size: 15px;
 }
