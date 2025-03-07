@@ -3576,14 +3576,17 @@ h3.card-title  {
 
 .btn.btn-primary {
 	color: var(--color-dark);
+	text-transform: uppercase;
 	background-color: var(--color-primary);
-	border-color: inherit;
+	border-color: var(--color-primary);
 	text-shadow: none;
 }
 
 .btn.btn-primary:hover {
 	color: var(--color-primary);
+	text-decoration: none;
 	background-color: var(--color-dark);
+	border-color: var(--color-dark);
 }
 
 /*--------------------------------------------------------------
