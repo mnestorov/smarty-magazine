@@ -67,10 +67,8 @@ $word_count = str_word_count(strip_tags(get_the_content()));
             </div>
         <?php endif; ?>
 
-        <?php if ($disclaimer) : ?>
+        <?php if ($disclaimer) : // Disclaimer text ?>
             <div class="alert alert-warning mt-4" role="alert">
-                <h4 class="alert-heading"><?php _e('Disclaimer', 'smarty_magazine'); ?></h4>
-                <hr>
                 <p class="mb-0" itemprop="disclaimer"><?php echo esc_html($disclaimer); ?></p>
             </div>
         <?php endif; ?>

@@ -16,56 +16,64 @@
 	  *
 	  * @return void
 	  */
-	function __smarty_magazine_posted_on() {
-		// Prepare the time string with published and modified dates
-		$time_string = '<time class="entry-date published" datetime="%1$s" itemprop="datePublished">%2$s</time>';
-		if (get_the_time('U') !== get_the_modified_time('U')) {
-			$time_string .= '<time class="updated d-none" datetime="%3$s" itemprop="dateModified">%4$s</time>';
+	  function __smarty_magazine_posted_on($post_id = null) {
+		// Get post ID if not passed
+		if (!$post_id) {
+			global $post;
+			$post_id = $post->ID;
 		}
 	
-		$time_string = sprintf(
-			$time_string,
-			esc_attr(get_the_date('c')), // ISO 8601 format for Schema.org
-			esc_html(get_the_date()),
-			esc_attr(get_the_modified_date('c')),
-			esc_html(get_the_modified_date())
-		);
+		// Get the published and modified timestamps
+		$published_timestamp = get_the_time('U', $post_id);
+		$modified_timestamp = get_the_modified_time('U', $post_id);
 	
-		// Posted on markup with Bootstrap styling
-		$posted_on = $time_string;
+		// Get the formatted dates
+		$published_date = get_the_date('d.m.y', $post_id);
+		$modified_date = get_the_modified_date('d.m.y', $post_id);
 	
-		// Author markup with Schema.org Person
+		// Check if the post has been updated
+		$is_updated = ($published_timestamp !== $modified_timestamp);
+	
+		// Construct the published date output
+		$posted_on = '<span class="published me-3">
+			<i class="bi bi-calendar me-1"></i>' . 
+			sprintf(
+				esc_html__('Posted on %s', 'smarty_magazine'),
+				'<time datetime="' . esc_attr(get_the_date('c', $post_id)) . '" itemprop="datePublished">' . esc_html($published_date) . '</time>'
+			) . '</span>';
+	
+		// Construct the updated date output (always show if different)
+		$updated_on = '';
+		if ($is_updated) {
+			$updated_on = '<span class="updated ms-3 text-warning">
+				<i class="bi bi-pencil me-1"></i>' . 
+				sprintf(
+					esc_html__('Updated on %s', 'smarty_magazine'),
+					'<time datetime="' . esc_attr(get_the_modified_date('c', $post_id)) . '" itemprop="dateModified">' . esc_html($modified_date) . '</time>'
+				) . '</span>';
+		}
+	
+		// Construct the author byline
 		$byline = sprintf(
 			esc_html_x('by %s', 'post author', 'smarty_magazine'),
-			'<span class="author vcard" itemprop="author" itemscope itemtype="https://schema.org/Person">' .
-				'<a class="url fn n text-decoration-none" href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '" itemprop="url">' .
-					'<span itemprop="name">' . esc_html(get_the_author()) . '</span>' .
-				'</a>' .
-			'</span>'
+			'<span class="author vcard" itemprop="author" itemscope itemtype="https://schema.org/Person">
+				<a class="url fn n text-decoration-none" href="' . esc_url(get_author_posts_url(get_the_author_meta('ID', $post_id))) . '" itemprop="url">
+					<span itemprop="name">' . esc_html(get_the_author_meta('display_name', get_post_field('post_author', $post_id))) . '</span>
+				</a>
+			</span>'
 		);
 	
-		// Output without hardcoding a specific itemtype
+		// Output the final post meta with Bootstrap styling
 		?>
 		<div class="sm-post-meta text-muted px-2 my-2">
-			<span class="posted-on me-3">
-				<i class="bi bi-calendar me-1"></i><?php echo $posted_on; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</span>
-			<span class="byline me-3">
-				<i class="bi bi-person me-1"></i><?php echo $byline; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</span>
-			<?php if (comments_open() || get_comments_number()) : ?>
-				<span class="comments-link">
-					<i class="bi bi-chat me-1"></i>
-					<?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?>
-				</span>
-			<?php endif; ?>
-			<!-- Publisher as a nested Organization -->
-			<span itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-				<meta itemprop="name" content="<?php bloginfo('name'); ?>">
+			<?php echo $posted_on; // Display the posted date ?>
+			<?php echo $updated_on; // Display the updated date if applicable ?>
+			<span class="byline ms-3">
+				<i class="bi bi-person me-1"></i><?php echo $byline; // Display the author ?>
 			</span>
 		</div>
 		<?php
-	}
+	}	
 }
 
 if (!function_exists('__smarty_magazine_entry_footer')) {

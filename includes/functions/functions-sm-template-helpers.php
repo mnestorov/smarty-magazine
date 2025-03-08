@@ -101,7 +101,7 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
      */
     function __smarty_magazine_render_news_post($post, $status = null) {
         $post_id = is_object($post) ? $post->ID : $post; // Handle both WP_Post object and ID
-        $button_class = $status === 'breaking' ? 'danger' : ($status === 'featured' ? 'warning' : 'primary');
+        $button_class = $status === 'breaking' ? 'danger' : ($status === 'featured' ? 'warning' : 'primary-default');
         ?>
         <article id="post-<?php echo esc_attr($post_id); ?>" <?php post_class("card h-100 p-0 news-$status"); ?> itemscope itemtype="https://schema.org/NewsArticle">
             <figure class="sm-news-post-img">
@@ -151,4 +151,38 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
         </article>
         <?php
     }
+}
+
+if (!function_exists('__smarty_magazine_clean_archive_titles')) {
+    /**
+     * Clean archive titles.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $title
+     * 
+     * @return string
+     */
+    function __smarty_magazine_clean_archive_titles($title) {
+        // Remove "Archive:" for custom post type "news"
+        if (is_post_type_archive('news')) {
+            return __('News', 'smarty_magazine'); // Change to your desired title
+        }
+
+        // Remove "Tag:" or other labels for custom taxonomies related to News
+        if (is_tax()) {
+            return single_term_title('', false);
+        }
+
+        // Remove "Category:" for category archives
+        if (is_category()) {
+            return single_cat_title('', false); // Returns only the category name
+        }
+
+        // Remove default "Archive:" prefix from all archive pages
+        $title = preg_replace('/^\s*'.__('Archive:', 'default').'\s*/', '', $title);
+        
+        return $title;
+    }
+    add_filter('get_the_archive_title', '__smarty_magazine_clean_archive_titles');
 }

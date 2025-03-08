@@ -29,7 +29,7 @@ if (!function_exists('__smarty_magazine_setup')) {
         // Custom Image Sizes
         add_image_size('sm-highlighted-post', 414, 279, true);
         add_image_size('sm-featured-image', 556, 380, true);
-        add_image_size('sm-featured-post-extra-large', 1200, 800, true);
+        add_image_size('sm-featured-post-extra-large', 1792, 1024, true);
         add_image_size('sm-featured-post-large', 870, 600, true);
         add_image_size('sm-featured-post-medium', 410, 260, true);
         add_image_size('sm-featured-post-medium-small', 230, 150, true);
