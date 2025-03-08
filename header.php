@@ -27,7 +27,7 @@
 								
                                 <!-- Date (Always Visible if Enabled) -->
                                 <?php if (!get_theme_mod('__smarty_magazine_hide_date_setting', 1)) : ?>
-                                    <div class="sm-date bg-dark text-white rounded-1 px-2 me-3 d-none d-sm-block">
+                                    <div class="sm-date bg-dark text-white rounded-1 px-2 d-lg-none">
                                         <p><?php echo date_i18n('l, j F Y', time()); ?></p>
                                     </div>
                                 <?php endif; ?>

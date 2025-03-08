@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="container my-5">
+<div class="container my-2 my-lg-5">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-10">
             <!-- Title / Help Text -->
