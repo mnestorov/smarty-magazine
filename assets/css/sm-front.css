@@ -2,7 +2,7 @@
 # :root Variables
 --------------------------------------------------------------*/
 :root {
-	--color-primary: #ffc107;
+	--color-primary: #f5ba07;
 	--color-dark:    #212529;
 	--color-white:   #ffffff;
 	--color-border:  #ccc;
@@ -945,6 +945,10 @@ button.sm-sec-nav:hover {
 .sm-main-menu li li ul.sub-menu {
 	top: 50%;
 	left: 100%;
+}
+
+.sm-main-menu li ul.sub-menu li:hover {
+    text-decoration: underline;
 }
 
 .menu-item-has-children {
@@ -2205,13 +2209,14 @@ button.sm-sec-nav:hover {
 	text-align: center;
 	text-decoration: none;
 	opacity: 0;
-	color: var(--color-white);
+	color: var(--color-dark);
     border-radius: 50%;
     background: var(--color-primary);
 	filter: alpha(opacity=0);
 }
 
 #sm-back-to-top:hover {
+	color: var(--color-primary);
 	background: var(--color-dark);
 }
 
@@ -2604,12 +2609,13 @@ input[type='search']::placeholder {
 
 .sm-footer h2 {
 	font-size: 16px;
-	font-weight: 300;
+	font-weight: bold;
 	position: relative;
-	margin: 0 0 25px;
 	padding: 5px 0 15px;
 	text-transform: uppercase;
 	color: var(--color-white);
+	border-bottom: 3px solid var(--color-primary);
+	width: 20%;
 }
 
 .sm-footer-cont {
@@ -2622,7 +2628,7 @@ input[type='search']::placeholder {
 }
 
 .sm-footer-cont aside {
-	padding: 0 15px;
+	padding: 0 10px;
 }
 
 .sm-footer h2:after {
@@ -2634,11 +2640,16 @@ input[type='search']::placeholder {
 	content: '';
 }
 
+.sm-footer-cont p {
+	color: rgba(255,255,255,.8);
+}
+
 .sm-footer-cont ul {
 	margin-left: 0;
 	padding-left: 15px;
 }
 
+.sm-footer-cont p,
 .sm-footer-cont li {
 	padding: 8px 0;
 }
@@ -3602,6 +3613,15 @@ h3.card-title  {
 
 .btn:hover {
     text-decoration: none;
+}
+
+.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+    color: var(--color-dark);
+    pointer-events: none;
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    opacity: 0.65;
+	text-shadow: none;
 }
 
 .nav-pills-container ul.nav.nav-underline a,
