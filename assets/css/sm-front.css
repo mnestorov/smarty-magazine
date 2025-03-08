@@ -3589,15 +3589,32 @@ h3.card-title  {
 
 .btn.btn-primary:hover {
 	color: var(--color-primary);
-	text-decoration: none;
 	background-color: var(--color-dark);
 	border-color: var(--color-dark);
+}
+
+.btn:hover {
+    text-decoration: none;
 }
 
 .nav-pills-container ul.nav.nav-underline a,
 .nav-pills-container ul.nav.nav-underline a:hover {
 	text-decoration: none !important;
 }
+
+.nav-link {
+	color: var(--color-dark);
+	font-weight: bold;
+}
+
+.nav-link:focus, 
+.nav-link:hover,
+.nav-link.active {
+	color: var(--color-primary) !important;
+	font-weight: bold;
+	border-bottom-color: currentcolor;
+}
+
 
 /*--------------------------------------------------------------
 # Post Archive
