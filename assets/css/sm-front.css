@@ -3499,7 +3499,7 @@ input[type='search']::placeholder {
 
 /* Mobile Menu Items */
 #mobile-primary-menu .menu-item {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: none;
 }
 
 #mobile-primary-menu .menu-item:last-of-type {
@@ -3520,6 +3520,7 @@ input[type='search']::placeholder {
 /* Hover Effect */
 #mobile-primary-menu .menu-item a:hover {
     background: #ffc000;
+	border-radius: 5px;
     color: var(--color-dark);
 }
 
@@ -3564,6 +3565,12 @@ input[type='search']::placeholder {
 /* Rotate Arrow When Open */
 #mobile-primary-menu .menu-item-has-children.open > a::after {
     transform: translateY(-50%) rotate(180deg);
+}
+
+@media all and (max-width: 768px) {
+	.menu-item-has-children:after {
+		display: none;
+	}
 }
 
 /*--------------------------------------------------------------
