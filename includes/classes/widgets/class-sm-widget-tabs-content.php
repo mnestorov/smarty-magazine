@@ -286,10 +286,15 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
                     <?php if (has_post_thumbnail()) : ?>
-                        <?php the_post_thumbnail('sm-featured-post-large'); ?>
+                        <?php 
+                        the_post_thumbnail('sm-featured-post-large', array(
+                            'title' => esc_attr(get_the_title()),
+                            'alt'   => esc_attr(get_the_title()),
+                        ));
+                        ?>
                     <?php endif; ?>
                     <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark">
-                        <span><i class="bi bi-search"></i></span>
+                        <span class="search-icon"></span>
                     </a>
                 </figure>
                 <div class="sm-news-post-content">
@@ -425,9 +430,14 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
             <div class="sm-news-post">
                 <figure class="sm-news-post-img">
                     <?php if (has_post_thumbnail()) : ?>
-                        <?php the_post_thumbnail('sm-featured-post-large'); ?>
+                        <?php
+                        the_post_thumbnail('sm-featured-post-large', array(
+                            'title' => esc_attr(get_the_title()),
+                            'alt'   => esc_attr(get_the_title()),
+                        ));
+                        ?>
                     <?php endif; ?>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"> <span class="search-icon"></span></a>
                 </figure>
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
@@ -503,7 +513,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                         echo $image;
                     endif;
                     ?>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"><span><i class="bi bi-search"></i></span></a>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" rel="bookmark"> <span class="search-icon"></span></a>
                 </figure>
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">

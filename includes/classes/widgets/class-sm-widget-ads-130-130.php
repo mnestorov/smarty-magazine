@@ -53,7 +53,7 @@ class __Smarty_Magazine_Ads_130_130 extends WP_Widget {
         if ($ads_image_path) {
             echo sprintf(
                 '<a href="%s" title="%s" rel="%s" target="_blank">
-                    <img src="%s" alt="%s" />
+                    <img src="%s" alt="%s" width="130" height="130" />
                  </a>',
                 $ads_link,
                 $title,

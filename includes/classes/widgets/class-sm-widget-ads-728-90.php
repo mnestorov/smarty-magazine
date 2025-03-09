@@ -55,7 +55,7 @@ class __Smarty_Magazine_Ads_728_90 extends WP_Widget {
         if (!empty($ads_image_path)) : ?>
             <div class="<?php echo esc_attr($alignment_class . ($add_spacing ? ' my-5' : '')); ?>">
                 <a href="<?php echo esc_url($ads_link); ?>" title="<?php echo esc_attr($title); ?>" rel="<?php echo esc_attr($ads_link_type); ?>" target="_blank">
-                    <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>">
+                    <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>" width="728" height="90" />
                 </a>
             </div>
         <?php endif;

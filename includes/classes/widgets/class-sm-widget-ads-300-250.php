@@ -56,9 +56,7 @@ class __Smarty_Magazine_Ads_300_250 extends WP_Widget {
                 rel="<?php echo esc_attr($ads_link_type); ?>" 
                 target="_blank">
                     <!-- d-block to make image block-level and mx-auto to center it -->
-                    <img class="d-block mx-auto mt-4" 
-                        src="<?php echo esc_url($ads_image_path); ?>" 
-                        alt="<?php echo esc_attr($title); ?>">
+                    <img class="d-block mx-auto mt-4" src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>" width="300" height="250" />
                 </a>
             </div>
         <?php endif;

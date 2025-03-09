@@ -83,6 +83,27 @@ if (!function_exists('__smarty_magazine_setup')) {
 	add_action('after_setup_theme', '__smarty_magazine_setup');
 }
 
+if (!function_exists('__smarty_magazine_enable_lazy_loading_images')) {
+    /**
+     * Enable lazy loading for images in content.
+     * 
+     * @since 1.0.0
+     *
+     * @param string $content The post content.
+     * 
+     * @return string Modified post content.
+     */
+    function __smarty_magazine_enable_lazy_loading_images($content) {
+        if (is_admin()) return $content;
+
+        // Add loading="lazy" to all images in content
+        $content = preg_replace('/<img(?![^>]+loading=)/', '<img loading="lazy"', $content);
+
+        return $content;
+    }
+    add_filter('the_content', '__smarty_magazine_enable_lazy_loading_images', 99);
+}
+
 if (!function_exists('__smarty_magazine_content_width')) {
 	/**
 	 * Set the content width in pixels, based on the theme's design and stylesheet.
@@ -146,6 +167,30 @@ if (!function_exists('__smarty_magazine_customizer_preview')) {
 	add_action('customize_preview_init', '__smarty_magazine_customizer_preview');
 }
 
+if (!function_exists('__smarty_magazine_preload_front_styles')) {
+    /**
+     * Preload front-end styles for faster loading.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_preload_front_styles() {
+        // Define an array of styles to preload
+        $preload_styles = array(
+            'bootstrap'       => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css',
+            'bootstrap-icons' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css',
+            'swiper'          => 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css',
+        );
+
+        // Loop through and print the preload links
+        foreach ($preload_styles as $key => $url) {
+            echo '<link rel="preload" as="style" href="' . esc_url($url) . '" onload="this.rel=\'stylesheet\';">' . "\n";
+        }
+    }
+    add_action('wp_head', '__smarty_magazine_preload_front_styles', 5);
+}
+
 if (!function_exists('__smarty_magazine_front_scripts')) {
     /**
      * Enqueue scripts and styles.
@@ -157,23 +202,53 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
 	 * @link https://developer.wordpress.org/reference/hooks/wp_enqueue_scripts/
      */
     function __smarty_magazine_enqueue_front_scripts() {
-		wp_enqueue_style('sm-style', get_stylesheet_uri(), array(), null, 'all');
-		wp_enqueue_style('sm-front-fonts', '//fonts.googleapis.com/css?family=Roboto:400,300,500,700,900');
-		wp_enqueue_style('bootstrap-icons', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
-		wp_enqueue_style('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css', array(), '5.3.3', 'all');
-		wp_enqueue_script('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js', array('jquery'), '5.3.3', true);
-		wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js', array('jquery'), '11.0.5', true);
-		wp_enqueue_style('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css', array(), '11.0.5', 'all');
-		wp_enqueue_script('news-ticker', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-advanced-news-ticker/1.0.1/js/newsTicker.min.js', array('jquery'), '1.0.1', true);
-		wp_enqueue_style('sm-front-css', get_template_directory_uri() . '/assets/css/sm-front.css', array(), null, 'all');
-		wp_enqueue_script('sm-front-js', get_template_directory_uri() . '/assets/js/sm-front.js', array('jquery'), null, true);
-
+        wp_enqueue_style('sm-style', get_stylesheet_uri(), array(), null, 'all');
+    
+        // Preload Fonts to Load Faster
+        echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+        echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+        echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900&display=swap" media="print" onload="this.media=\'all\'">';
+    
+        // Defer non-essential JavaScript
+        function defer_scripts($tag, $handle, $src) {
+            // List of scripts to defer
+            $scripts_to_defer = array(
+                'bootstrap-5',
+                'swiper-js',
+                'news-ticker',
+                'sm-front-js'
+            );
+    
+            if (in_array($handle, $scripts_to_defer)) {
+                return '<script src="' . esc_url($src) . '" defer></script>';
+            }
+    
+            return $tag;
+        }
+        add_filter('script_loader_tag', 'defer_scripts', 10, 3);
+    
+        // Load Bootstrap CSS asynchronously
+        wp_enqueue_style('bootstrap-icons', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
+        wp_enqueue_style('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css', array(), '5.3.3', 'all');
+        wp_enqueue_script('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js', array('jquery'), '5.3.3', true);
+        
+        // Load Swiper (Only defer JS, keep CSS async)
+        wp_enqueue_style('swiper-css', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css', array(), '11.0.5', 'all');
+        wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js', array('jquery'), '11.0.5', true);
+        
+        // Load News Ticker
+        wp_enqueue_script('news-ticker', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-advanced-news-ticker/1.0.1/js/newsTicker.min.js', array('jquery'), '1.0.1', true);
+        
+        // Load Local Styles
+        wp_enqueue_style('sm-front-css', get_template_directory_uri() . '/assets/css/sm-front.css', array(), null, 'all');
+        wp_enqueue_script('sm-front-js', get_template_directory_uri() . '/assets/js/sm-front.js', array('jquery'), null, true);
+    
         // Comment reply script for threaded comments
         if (is_singular() && comments_open() && get_option('thread_comments')) {
             wp_enqueue_script('comment-reply');
         }
     }
-    add_action('wp_enqueue_scripts', '__smarty_magazine_enqueue_front_scripts');
+    add_action('wp_enqueue_scripts', '__smarty_magazine_enqueue_front_scripts');    
 }
 
 /**

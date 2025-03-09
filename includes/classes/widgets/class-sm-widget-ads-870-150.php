@@ -54,7 +54,7 @@ class __Smarty_Magazine_Ads_870_150 extends WP_Widget {
                title="<?php echo esc_attr($title); ?>" 
                rel="<?php echo esc_attr($ads_link_type); ?>" 
                target="_blank">
-                <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>">
+                <img src="<?php echo esc_url($ads_image_path); ?>" alt="<?php echo esc_attr($title); ?>" width="870" height="150" />
             </a>
         <?php endif;
     }

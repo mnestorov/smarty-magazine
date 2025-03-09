@@ -138,7 +138,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                     <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
                         <?php if (has_post_thumbnail()) : ?>
                             <?php 
-                                the_post_thumbnail('sm-featured-post-large', array(
+                                the_post_thumbnail('sm-featured-image', array(
                                     'title' => esc_attr(get_the_title()),
                                     'alt'   => esc_attr(get_the_title()),
                                 ));

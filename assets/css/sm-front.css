@@ -2803,6 +2803,33 @@ input[type='search']::placeholder {
 	width: 100%;
 }
 
+.sm-news-post-img a .search-icon::before {
+    content: "\F52A"; /* Bootstrap Icons - Search */
+    font-family: 'bootstrap-icons';
+    font-size: 18px;
+    color: var(--color-white);
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+	transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Show the icon on hover */
+.sm-news-post-img:hover a .search-icon::before {
+	color: var(--color-dark);
+	background-color: var(--color-primary);
+    opacity: 1;
+}
+
 .sm-footer .sm-news-list-2 h2,
 .sm-footer .sm-news-list-3 h2,
 .sm-footer .sm-news-layout-wrap h2 {

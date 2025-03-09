@@ -88,4 +88,9 @@ jQuery(document).ready(function($) {
             }, 600);
         });
     }
+
+    // Lazy load images
+    $('img:not([loading])').each(function() {
+        $(this).attr('loading', 'lazy');
+    });
 });
