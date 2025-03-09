@@ -43,7 +43,6 @@ q:after {
 	content: "";
 }
 
-blockquote,
 q {
 	quotes: "" "";
 }
@@ -308,6 +307,13 @@ textarea {
 	margin: 1.5em 0 0;
 }
 
+article .entry-content h2,
+article .entry-content h3,
+article .entry-content h4:not(.faq-container h4),
+article .entry-content h5 {
+	margin: 1.5rem 0;
+}
+
 .page-links {
 	clear: both;
 	margin: 0 0 1.5em;
@@ -543,7 +549,8 @@ figure.sm-news-post-img {
 	margin: 0;
 }
 
-article.sm-single-news figure img {
+article.sm-single-post figure.sm-single-post-img.post-thumbnail img,
+article.sm-single-news figure.sm-single-news-img img {
 	border-radius: 5px;
 	border: 3px solid var(--color-border);
 }
@@ -559,10 +566,74 @@ p {
 	margin-bottom: 15px;
 }
 
-ul,
-ol {
+ul, ol {
 	margin: 0;
-	padding-left: 24px;
+	padding-left: 25px;
+}
+
+/* Style unordered lists, but exclude the ToC lists */
+article.sm-single-post .entry-content ul:not(.toc-container ul),
+article.sm-single-news .entry-content ul:not(.toc-container ul) {
+    list-style: none;
+}
+
+/* List items with custom Bootstrap check icon, but exclude ToC lists */
+article.sm-single-post .entry-content ul:not(.toc-container ul) li,
+article.sm-single-news .entry-content ul:not(.toc-container ul) li {
+    position: relative;
+    padding-left: 25px;
+    line-height: 1.6;
+    color: var(--color-dark);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Adding Bootstrap check icon before list items, but exclude ToC lists */
+article.sm-single-post .entry-content ul:not(.toc-container ul) li::before,
+article.sm-single-news .entry-content ul:not(.toc-container ul) li::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a0ce8b' class='bi bi-check-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 8 0a8 8 0 0 1 8 8zM6.97 10.97a.75.75 0 0 0 1.08 0l3.536-3.536a.75.75 0 1 0-1.06-1.06L7.5 9.44l-1.47-1.47a.75.75 0 1 0-1.06 1.06l2 2z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+    top: 4px;
+}
+
+/* Hover effect, but exclude ToC lists */
+article.sm-single-post .entry-content ul:not(.toc-container ul) li:hover,
+article.sm-single-news .entry-content ul:not(.toc-container ul) li:hover {
+    transform: translateX(5px);
+}
+
+/* Style UL inside the Accordion Body */
+article.sm-single-post .accordion-body ul,
+article.sm-single-news .accordion-body ul {
+    list-style: none;
+	padding-left: 25px;
+}
+
+/* Add '-' before each list item inside the accordion */
+article.sm-single-post .accordion-body ul li,
+article.sm-single-news .accordion-body ul li {
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.6;
+    color: var(--color-dark);
+	transition: all 0.3s ease-in-out;
+}
+
+/* Custom dash before each list item */
+article.sm-single-post .accordion-body ul li::before,
+article.sm-single-news .accordion-body ul li::before {
+    content: "-"; /* Dash symbol */
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--color-dark); /* Same color as text */
+    font-weight: bold;
 }
 
 .sm-post-nav {
@@ -2794,7 +2865,7 @@ input[type='search']::placeholder {
 }
 
 .sm-footer .widget_text img {
-	margin: 15px 0;
+	margin: 0 0 15px;
 }
 
 .sm-footer .sm-news-layout4 .sm-news-post h3 {
@@ -3665,6 +3736,42 @@ h3.card-title  {
     border-color: var(--bs-btn-hover-border-color);
 }
 
+blockquote {
+	position: relative;
+    font-size: 1.2rem;
+    font-style: italic;
+    background: #f9f9f9;
+    padding: 1.5rem 3.5rem;
+    border-left: 5px solid var(--color-primary);
+    margin: 2.5rem 0 2.7rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+blockquote p {
+    margin-bottom: 0;
+    color: #212529;
+}
+
+blockquote::before {
+    content: "\201C";
+    font-size: 4rem;
+    color: var(--color-primary);
+    font-weight: bold;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+
+cite {
+    display: block;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-top: 0.5rem;
+}
+
 /*--------------------------------------------------------------
 # Post Archive
 --------------------------------------------------------------*/
@@ -3732,7 +3839,7 @@ h3.card-title  {
 }
 
 .sm-news-archive .news-featured .card { 
-	border: 1px solid #ffc107;
+	border: 1px solid var(--color-primary);
 }
 
 .sm-news-archive .news-sponsored .card { 
@@ -3777,7 +3884,7 @@ h3.card-title  {
 }
 
 .sm-news-archive .text-breaking { color: #dc3545; border-color: #dc3545; }
-.sm-news-archive .text-featured { color: #ffc107; border-color: #ffc107; }
+.sm-news-archive .text-featured { color: var(--color-primary); border-color: var(--color-primary); }
 .sm-news-archive .text-sponsored { color: #0d6efd; border-color: #0d6efd; }
 
 /* Tab content styling */
@@ -3791,7 +3898,7 @@ h3.card-title  {
 ## Status Badges
 --------------------------------------------------------------*/
 .bg-breaking { background-color: #dc3545 !important; }
-.bg-featured { background-color: #ffc107 !important; }
+.bg-featured { background-color: var(--color-primary) !important; }
 .bg-sponsored { background-color: #0d6efd !important; }
 
 /* Cool Status Effects */
@@ -3802,7 +3909,7 @@ h3.card-title  {
 }
 
 .status-featured {
-	background: linear-gradient(45deg, #ffc107, #ffeb3b);
+	background: linear-gradient(45deg, var(--color-primary), #ffeb3b);
 	color: #222;
 	font-weight: bold;
 }
@@ -3824,7 +3931,7 @@ h3.card-title  {
 /* FAQ Header */
 .faq-header {
 	background: var(--color-dark);
-    color: #ffc107;
+    color: var(--color-primary);
     text-align: center;
     padding: 20px;
     border-radius: 8px;
@@ -3869,14 +3976,14 @@ h3.card-title  {
 .accordion-body {
     background: var(--color-white);
     color: var(--color-dark);
-    border-left: 5px solid #ffc107;
+    border-left: 5px solid var(--color-primary);
     padding: 15px;
     line-height: 1.6;
 }
 
 /* FAQ Icon (Inside Question Button) */
 .accordion-button span {
-    color: #ffc107;
+    color: var(--color-primary);
     font-size: 2.5rem;
 }
 

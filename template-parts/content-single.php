@@ -13,7 +13,7 @@ $thumbnail_alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
 $word_count = str_word_count(strip_tags(get_the_content()));
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> itemscope itemtype="https://schema.org/Article">
+<article id="post-<?php the_ID(); ?>" <?php post_class('sm-single-post'); ?> itemscope itemtype="https://schema.org/Article">
     <header class="entry-header">
         <?php the_title('<h1 class="entry-title" itemprop="headline">', '</h1>'); ?>
         <div class="entry-meta mt-4">
@@ -26,8 +26,8 @@ $word_count = str_word_count(strip_tags(get_the_content()));
 
     <div class="entry-content">
         <?php if (has_post_thumbnail()) : ?>
-            <figure class="post-thumbnail mb-4" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                <?php the_post_thumbnail('large', array('class' => 'img-fluid')); ?>
+            <figure class="sm-single-post-img post-thumbnail mb-4" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                <?php the_post_thumbnail('extra-large', array('class' => 'img-fluid')); ?>
                 <meta itemprop="url" content="<?php echo esc_url($thumbnail_url); ?>">
                 <meta itemprop="width" content="<?php echo esc_attr(getimagesize($thumbnail_url)[0]); ?>">
                 <meta itemprop="height" content="<?php echo esc_attr(getimagesize($thumbnail_url)[1]); ?>">

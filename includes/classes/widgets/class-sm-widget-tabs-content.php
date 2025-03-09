@@ -295,7 +295,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
                         <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php echo esc_html(get_the_date()); ?></span>
-                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>
+                        <!--<span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php //comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span> -->
                     </div>
                     <h3>
                         <a href="<?php echo esc_url(get_permalink()); ?>"><?php echo esc_html(wp_trim_words(get_the_title(), 15, '...')); ?></a>
@@ -432,7 +432,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
                         <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time(get_option('date_format')); ?></span>
-                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>
+                        <!--<span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php //comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>-->
                     </div>
                     <h3>
                         <a href="<?php esc_url(the_permalink()); ?>" title="<?php the_title_attribute(); ?>">
@@ -508,7 +508,7 @@ class __Smarty_Magazine_Tabs_Content extends WP_Widget {
                 <div class="sm-news-post-content">
                     <div class="sm-news-post-meta">
                         <span class="sm-news-post-date"><i class="bi bi-calendar"></i> <?php the_time(get_option('date_format')); ?></span>
-                        <span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>
+                        <!--<span class="sm-news-post-comments"><i class="bi bi-chat"></i> <?php //comments_number(__('No Responses', 'smarty_magazine'), __('One Response', 'smarty_magazine'), __('% Responses', 'smarty_magazine')); ?></span>-->
                     </div>
                     <h3><a href="<?php esc_url(the_permalink()); ?>" title="<?php the_title_attribute(); ?>"> <?php echo wp_trim_words(get_the_title(), 10, '...'); ?></a></h3>
                 </div>

@@ -36,31 +36,34 @@
 	
 		// Construct the published date output
 		$posted_on = '<span class="published me-3">
-			<i class="bi bi-calendar me-1"></i>' . 
+			<i class="bi bi-calendar me-1"></i><span class="d-none d-md-inline">' . 
 			sprintf(
-				esc_html__('Posted on %s', 'smarty_magazine'),
-				'<time datetime="' . esc_attr(get_the_date('c', $post_id)) . '" itemprop="datePublished">' . esc_html($published_date) . '</time>'
+				esc_html__('Posted on: %s', 'smarty_magazine'),
+				'</span><time datetime="' . esc_attr(get_the_date('c', $post_id)) . '" itemprop="datePublished">' . esc_html($published_date) . '</time>'
 			) . '</span>';
 	
 		// Construct the updated date output (always show if different)
 		$updated_on = '';
 		if ($is_updated) {
 			$updated_on = '<span class="updated ms-3 text-warning">
-				<i class="bi bi-pencil me-1"></i>' . 
+				<i class="bi bi-pencil me-1"></i><span class="d-none d-md-inline">' . 
 				sprintf(
-					esc_html__('Updated on %s', 'smarty_magazine'),
-					'<time datetime="' . esc_attr(get_the_modified_date('c', $post_id)) . '" itemprop="dateModified">' . esc_html($modified_date) . '</time>'
+					esc_html__('Updated on: %s', 'smarty_magazine'),
+					'</span><time datetime="' . esc_attr(get_the_modified_date('c', $post_id)) . '" itemprop="dateModified">' . esc_html($modified_date) . '</time>'
 				) . '</span>';
 		}
 	
 		// Construct the author byline
-		$byline = sprintf(
-			esc_html_x('by %s', 'post author', 'smarty_magazine'),
+		$byline = 
+		'<i class="bi bi-person me-1"></i><span class="d-none d-md-inline">' . esc_html__('Author:', 'smarty_magazine') . '</span> ' .
+		sprintf(
 			'<span class="author vcard" itemprop="author" itemscope itemtype="https://schema.org/Person">
-				<a class="url fn n text-decoration-none" href="' . esc_url(get_author_posts_url(get_the_author_meta('ID', $post_id))) . '" itemprop="url">
-					<span itemprop="name">' . esc_html(get_the_author_meta('display_name', get_post_field('post_author', $post_id))) . '</span>
+				<a class="url fn n text-decoration-none" href="%s" itemprop="url">
+					<span itemprop="name">%s</span>
 				</a>
-			</span>'
+			</span>',
+			esc_url(get_author_posts_url(get_post_field('post_author', $post_id))),
+			esc_html(get_the_author_meta('display_name', get_post_field('post_author', $post_id)))
 		);
 	
 		// Output the final post meta with Bootstrap styling
@@ -69,7 +72,7 @@
 			<?php echo $posted_on; // Display the posted date ?>
 			<?php echo $updated_on; // Display the updated date if applicable ?>
 			<span class="byline ms-3">
-				<i class="bi bi-person me-1"></i><?php echo $byline; // Display the author ?>
+				<?php echo $byline; // Display the author ?>
 			</span>
 		</div>
 		<?php
@@ -96,8 +99,8 @@ if (!function_exists('__smarty_magazine_entry_footer')) {
 
 				if ($categories_list && __smarty_magazine_categorized_blog()) {
 					echo '<div class="cat-links mb-2 d-flex align-items-center">';
-					echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i>' 
-						 . esc_html__('Posted in:', 'smarty_magazine') . '</span>';
+					echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i><span class="d-none d-md-inline">' 
+						 . esc_html__('Posted in:', 'smarty_magazine') . '</span></span>';
 					printf(
 						'<span class="badge text-bg-light">%s</span>',
 						$categories_list // Already escaped by get_the_category_list()
@@ -111,8 +114,8 @@ if (!function_exists('__smarty_magazine_entry_footer')) {
 
 				if ($categories_list) {
 					echo '<div class="cat-links mb-2 d-flex align-items-center">';
-					echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i>' 
-						 . esc_html__('Posted in:', 'smarty_magazine') . '</span>';
+					echo '<span class="fw-bold me-2"><i class="bi bi-folder me-1"></i><span class="d-none d-md-inline">' 
+						 . esc_html__('Posted in:', 'smarty_magazine') . '</span></span>';
 					printf(
 						'<span class="badge text-bg-light">%s</span>',
 						$categories_list // Already escaped by get_the_term_list()
@@ -131,8 +134,8 @@ if (!function_exists('__smarty_magazine_entry_footer')) {
 
 				if ($tags_list) {
 					echo '<div class="tags-links mb-2 d-flex align-items-center">';
-					echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i>' 
-						 . esc_html__('Tagged:', 'smarty_magazine') . '</span>';
+					echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i><span class="d-none d-md-inline">' 
+						 . esc_html__('Tagged:', 'smarty_magazine') . '</span></span>';
 					printf(
 						'<span class="badge text-bg-light">%s</span>',
 						$tags_list // Already escaped by get_the_tag_list()
@@ -146,8 +149,8 @@ if (!function_exists('__smarty_magazine_entry_footer')) {
 
 				if ($tags_list) {
 					echo '<div class="tags-links mb-2 d-flex align-items-center">';
-					echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i>' 
-						 . esc_html__('Tagged:', 'smarty_magazine') . '</span>';
+					echo '<span class="fw-bold me-2"><i class="bi bi-tags me-1"></i><span class="d-none d-md-inline">' 
+						 . esc_html__('Tagged:', 'smarty_magazine') . '</span></span>';
 					printf(
 						'<span class="badge text-bg-light">%s</span>',
 						$tags_list // Already escaped by get_the_term_list()

@@ -7,30 +7,35 @@
  * @package SmartyMagazine
  */
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
-		<?php the_title('<h1 class="entry-title">', '</h1>'); ?>
-		<?php if ('post' === get_post_type()) : ?>
-			<div class="entry-meta">
-				<?php __smarty_magazine_posted_on(); ?>
+
+<div class="container mb-5 px-0">
+	<div class="card shadow-lg p-4">
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+			<header class="entry-header">
+				<?php the_title('<h1 class="entry-title">', '</h1>'); ?>
+				<?php if ('post' === get_post_type()) : ?>
+					<div class="entry-meta">
+						<?php __smarty_magazine_posted_on(); ?>
+					</div>
+				<?php endif; ?>
+			</header>
+			<div class="entry-content">
+				<?php
+				the_content(sprintf(
+					wp_kses(__('Continue reading %s <span class="meta-nav">&rarr;</span>', 'smarty_magazine'), array('span' => array('class' => array()))),
+					the_title('<span class="screen-reader-text">"', '"</span>', false)
+				));
+				?>
+				<?php
+				wp_link_pages(array(
+					'before' => '<div class="page-links">' . esc_html__('Pages:', 'smarty_magazine'),
+					'after'  => '</div>',
+				));
+				?>
 			</div>
-		<?php endif; ?>
-	</header>
-	<div class="entry-content">
-		<?php
-		the_content(sprintf(
-			wp_kses(__('Continue reading %s <span class="meta-nav">&rarr;</span>', 'smarty_magazine'), array('span' => array('class' => array()))),
-			the_title('<span class="screen-reader-text">"', '"</span>', false)
-		));
-		?>
-		<?php
-		wp_link_pages(array(
-			'before' => '<div class="page-links">' . esc_html__('Pages:', 'smarty_magazine'),
-			'after'  => '</div>',
-		));
-		?>
+			<footer class="entry-footer text-center fw-bold my-4">
+				<?php __smarty_magazine_entry_footer(); ?>
+			</footer>
+		</article>
 	</div>
-	<footer class="entry-footer text-center fw-bold my-4">
-		<?php __smarty_magazine_entry_footer(); ?>
-	</footer>
-</article>
+</div>

@@ -190,6 +190,7 @@ require get_template_directory() . '/includes/functions/functions-sm-template-he
 require get_template_directory() . '/includes/functions/functions-sm-template-tags.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer-styles.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer.php';
+require get_template_directory() . '/includes/functions/functions-sm-meta-tags.php';
 
 /**
  * Load widget classes.
@@ -303,8 +304,19 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         echo '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Home', 'smarty_magazine') . '</a></li>';
 
         if (is_category()) {
-            // Standard post category archive
+            // Get the current category
             $category = get_queried_object();
+        
+            // Get parent categories if they exist
+            $parents = get_ancestors($category->term_id, 'category');
+            $parents = array_reverse($parents); // Reverse to display hierarchy in correct order
+        
+            foreach ($parents as $parent_id) {
+                $parent = get_term($parent_id, 'category');
+                echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($parent->term_id)) . '">' . esc_html($parent->name) . '</a></li>';
+            }
+        
+            // Display current category
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html($category->name) . '</li>';
         } elseif (is_tag()) {
             // Detect if it's a tag for "news"
@@ -342,9 +354,24 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
             // Single standard post
             if (has_category()) {
                 $categories = get_the_category();
-                $primary_cat = !empty($categories) ? $categories[0] : null;
-                if ($primary_cat) {
-                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($primary_cat->term_id)) . '">' . esc_html($primary_cat->name) . '</a></li>';
+                if (!empty($categories)) {
+                    // Find the primary category (Yoast SEO method)
+                    $primary_cat = get_post_meta($post->ID, '_yoast_wpseo_primary_category', true);
+                    
+                    // If Yoast is not set, use the first category
+                    $category = $primary_cat ? get_term($primary_cat, 'category') : $categories[0];
+            
+                    // Get parent categories if they exist
+                    $parents = get_ancestors($category->term_id, 'category');
+                    $parents = array_reverse($parents);
+                    
+                    foreach ($parents as $parent_id) {
+                        $parent = get_term($parent_id, 'category');
+                        echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($parent->term_id)) . '">' . esc_html($parent->name) . '</a></li>';
+                    }
+            
+                    // Print the current category
+                    echo '<li class="breadcrumb-item"><a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a></li>';
                 }
             }
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(get_the_title()) . '</li>';
@@ -371,6 +398,24 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         echo '</ol>';
         echo '</nav>';
     }
+}
+
+if (!function_exists('__smarty_magazine_include_news_in_author_archive')) {
+    /**
+     * Include 'news' post type in author archive.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The main query.
+     * 
+     * @return void
+     */
+    function __smarty_magazine_include_news_in_author_archive($query) {
+        if (!is_admin() && $query->is_author() && $query->is_main_query()) {
+            $query->set('post_type', array('post', 'news')); // Include both posts and news
+        }
+    }
+    add_action('pre_get_posts', '__smarty_magazine_include_news_in_author_archive');
 }
 
 if (!function_exists('__smarty_magazine_news_post_navigation')) {
@@ -980,14 +1025,14 @@ if (!function_exists('__smarty_magazine_add_toc_to_post')) {
                 $toc_html .= '
                 <div class="accordion shadow-lg rounded" id="tocAccordion">
                     <div class="accordion-item">
-                        <h3 class="accordion-header" id="tocHeading">
+                        <div class="accordion-header" id="tocHeading">
                             <button class="accordion-button fw-semibold shadow-sm collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tocContent" aria-expanded="false" aria-controls="tocContent">
                                 <span><i class="bi bi-dot"></i></span>' . esc_html__('Table of Contents', 'smarty_magazine') . '
                             </button>
-                        </h3>
+                        </div>
                         <div id="tocContent" class="accordion-collapse collapse" aria-labelledby="tocHeading" data-bs-parent="#tocAccordion">
                             <div class="accordion-body">
-                                <ul class="ps-3">';
+                                <ul>';
                                     // Add each heading as a link
                                     foreach ($headings as $index => $heading) {
                                         $heading_text = strip_tags($heading[0]);
@@ -1078,7 +1123,17 @@ if (!function_exists('__smarty_magazine_faq_meta_box_callback')) {
 						</p>
 						<p>
 							<label><?php _e('Answer', 'smarty_magazine'); ?></label><br>
-							<textarea name="_smarty_magazine_faqs[<?php echo $index; ?>][answer]" style="width: 100%;"><?php echo esc_textarea($faq['answer']); ?></textarea>
+							<?php 
+                            $editor_id = '_smarty_magazine_faqs_' . $index . '_answer';
+                            $editor_settings = array(
+                                'textarea_name' => "_smarty_magazine_faqs[{$index}][answer]",
+                                'media_buttons' => true, // Enable media upload button
+                                'textarea_rows' => 5,    // Set height
+                                'tinymce'       => true, // Enable TinyMCE editor
+                                'quicktags'     => true  // Enable Quicktags (HTML mode)
+                            );
+                            wp_editor( $faq['answer'], $editor_id, $editor_settings );
+                            ?>
 						</p>
 						<input type="hidden" name="_smarty_magazine_faqs[<?php echo $index; ?>][delete]" value="0" class="sm-magazine-delete-input">
 						<button type="button" class="button button-secondary sm-magazine-remove-faq-button"><?php _e('Remove FAQ', 'smarty_magazine'); ?></button>
