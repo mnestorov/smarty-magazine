@@ -64,7 +64,7 @@
                         } else {
                             echo sprintf(
                                 esc_html__('Designed by %1$s', 'smarty_magazine'),
-                                '<a href="' . esc_url('https://smartystudio.eu') . '" target="_blank" rel="designer">' . esc_html__('Smarty Studio', 'smarty_magazine') . '</a>'
+                                '<a href="' . esc_url('https://smartystudio.net') . '" target="_blank" rel="designer">' . esc_html__('Smarty Studio', 'smarty_magazine') . '</a>'
                             );
                         }
                         ?>

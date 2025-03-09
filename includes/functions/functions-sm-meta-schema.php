@@ -1,0 +1,132 @@
+<?php
+/**
+ * Meta Tags & Schema Functions
+ * 
+ * This file contains functions for:
+ * - JSON-LD Schema for Homepage
+ * - OpenGraph Meta Tags for Posts
+ * - Twitter Meta Tags
+ * 
+ * @since 1.0.0
+ * 
+ * @package SmartyMagazine
+ */
+
+if (!function_exists('__smarty_magazine_homepage_schema_markup')) {
+    /**
+     * Add JSON-LD Schema markup to the homepage.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_homepage_schema_markup() {
+        if (!is_front_page() && !is_home()) {
+            return; // Stop execution if not on the homepage
+        }
+
+        // Get site details dynamically
+        $site_name = get_bloginfo('name');
+        $site_url = home_url();
+        $site_description = get_bloginfo('description');
+
+        // Get custom logo
+        $logo_id = get_theme_mod('custom_logo');
+        $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
+
+        // Construct Schema
+        $schema = [
+            "@context" => "https://schema.org",
+            "@type" => "WebSite",
+            "name" => $site_name,
+            "url" => $site_url,
+            "description" => $site_description,
+            "publisher" => [
+                "@type" => "Organization",
+                "name" => $site_name
+            ]
+        ];
+
+        // Add logo only if it exists
+        if (!empty($logo_url)) {
+            $schema["publisher"]["logo"] = [
+                "@type" => "ImageObject",
+                "url" => $logo_url,
+                "width" => 250,
+                "height" => 60
+            ];
+        }
+
+        // Add search action
+        $schema["potentialAction"] = [
+            "@type" => "SearchAction",
+            "target" => $site_url . "/?s={search_term_string}",
+            "query-input" => "required name=search_term_string"
+        ];
+
+        // Output JSON-LD Schema only if the array has data
+        if (!empty($schema)) {
+            echo '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+        }
+    }
+
+    // Hook into wp_head (runs only on homepage)
+    add_action('wp_head', '__smarty_magazine_homepage_schema_markup');
+}
+
+if (!function_exists('__smarty_magazine_add_social_meta_tags')) {
+    /**
+     * Add OpenGraph and Twitter meta tags for homepage, posts, and news.
+     * 
+     * @since 1.0.0
+     */
+    function __smarty_magazine_add_social_meta_tags() {
+        // Default values for homepage
+        $meta_title = get_bloginfo('name');
+        $meta_url = home_url();
+        $meta_description = get_bloginfo('description');
+        
+        // Get custom logo or fallback image
+        $logo_id = get_theme_mod('custom_logo');
+        $meta_image = $logo_id ? wp_get_attachment_url($logo_id) : esc_url(get_template_directory_uri() . '/assets/default-image.jpg');
+
+        // If viewing a single post or news article, override with post-specific values
+        if (is_single() || is_singular('news')) {
+            global $post;
+
+            $meta_title = esc_html(get_the_title($post->ID));
+            $meta_url = esc_url(get_permalink($post->ID));
+            $meta_image = get_the_post_thumbnail_url($post->ID, 'full') ?: $meta_image; // Use featured image or fallback
+            $meta_description = get_the_excerpt($post->ID);
+
+            // If excerpt is empty, generate one from content
+            if (empty($meta_description)) {
+                $meta_description = wp_trim_words(strip_shortcodes(get_the_content($post->ID)), 30, '...');
+            }
+        }
+
+        ?>
+        <!-- OpenGraph Meta Tags -->
+        <meta property="og:type" content="<?php echo is_singular() ? 'article' : 'website'; ?>" />
+        <meta property="og:title" content="<?php echo esc_attr($meta_title); ?>" />
+        <meta property="og:description" content="<?php echo esc_attr(wp_strip_all_tags($meta_description)); ?>" />
+        <meta property="og:url" content="<?php echo esc_url($meta_url); ?>" />
+        <meta property="og:site_name" content="<?php bloginfo('name'); ?>" />
+        
+        <?php if ($meta_image) : ?>
+            <meta property="og:image" content="<?php echo esc_url($meta_image); ?>" />
+            <meta property="og:image:alt" content="<?php echo esc_attr($meta_title); ?>" />
+        <?php endif; ?>
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="<?php echo esc_attr($meta_title); ?>" />
+        <meta name="twitter:description" content="<?php echo esc_attr(wp_strip_all_tags($meta_description)); ?>" />
+        <meta name="twitter:image" content="<?php echo esc_url($meta_image); ?>" />
+        <meta name="twitter:image:alt" content="<?php echo esc_attr($meta_title); ?>" />
+        <?php
+    }
+
+    // Hook into wp_head to output the meta tags
+    add_action('wp_head', '__smarty_magazine_add_social_meta_tags');
+}

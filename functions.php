@@ -265,7 +265,7 @@ require get_template_directory() . '/includes/functions/functions-sm-template-he
 require get_template_directory() . '/includes/functions/functions-sm-template-tags.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer-styles.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer.php';
-require get_template_directory() . '/includes/functions/functions-sm-meta-tags.php';
+require get_template_directory() . '/includes/functions/functions-sm-meta-schema.php';
 
 /**
  * Load widget classes.
@@ -1081,7 +1081,9 @@ if (!function_exists('__smarty_magazine_add_toc_to_post')) {
      * Adds a dynamic Table of Contents (ToC) to posts.
      *
      * @since 1.0.0
+     * 
      * @param string $content The post content
+     * 
      * @return string The modified content with ToC
      */
     function __smarty_magazine_add_toc_to_post($content) {
@@ -1095,7 +1097,7 @@ if (!function_exists('__smarty_magazine_add_toc_to_post')) {
             if (!empty($headings)) {
                 // Start Bootstrap 5 TOC container
                 $toc_html = '<div class="container toc-container mb-5 px-0">';
-                
+
                 // TOC Header
                 $toc_html .= '
                 <div class="accordion shadow-lg rounded" id="tocAccordion">
@@ -1111,13 +1113,18 @@ if (!function_exists('__smarty_magazine_add_toc_to_post')) {
                                     // Add each heading as a link
                                     foreach ($headings as $index => $heading) {
                                         $heading_text = strip_tags($heading[0]);
+
+                                        // Generate an anchor ID (keeping original heading in content)
                                         $anchor_id = 'sm-magazine-toc-heading-' . $index;
 
-                                        // Replace heading in content with an anchor
-                                        $content = str_replace($heading[0], '<h' . $matches[1][$index][0] . ' id="' . esc_attr($anchor_id) . '">' . $heading_text . '</h' . $matches[1][$index][0] . '>', $content);
+                                        // **Remove emojis only from the ToC version**
+                                        $heading_text_toc = preg_replace('/[\x{1F300}-\x{1FAD6}\x{1F600}-\x{1F64F}\x{2600}-\x{26FF}]/u', '', $heading_text);
 
-                                        // Add ToC entry
-                                        $toc_html .= '<li><a href="#' . esc_attr($anchor_id) . '" class="sm-magazine-toc-link d-block py-1">' . esc_html($heading_text) . '</a></li>';
+                                        // Add ToC entry without emojis
+                                        $toc_html .= '<li><a href="#' . esc_attr($anchor_id) . '" class="sm-magazine-toc-link d-block py-1">' . esc_html($heading_text_toc) . '</a></li>';
+
+                                        // Replace heading in content with an anchor (original text kept intact)
+                                        $content = str_replace($heading[0], '<h' . $matches[1][$index][0] . ' id="' . esc_attr($anchor_id) . '">' . $heading_text . '</h' . $matches[1][$index][0] . '>', $content);
                                     }
 
                                     $toc_html .= '
