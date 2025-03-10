@@ -17,9 +17,6 @@ jQuery(document).ready(function($) {
      * Initializes a media uploader for elements with the specified button class.
      */
     function mediaUploader(buttonClass) {
-        var _custom_media = true,
-            _orig_send_attachment = wp.media.editor.send.attachment;
-
         $('body').on('click', buttonClass, function(e) {
             e.preventDefault();
             var button = $(this);
