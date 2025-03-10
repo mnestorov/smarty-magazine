@@ -582,6 +582,7 @@ article.sm-single-post .entry-content ul:not(.toc-container ul) li,
 article.sm-single-news .entry-content ul:not(.toc-container ul) li {
     position: relative;
     padding-left: 25px;
+	margin-bottom: 15px;
     line-height: 1.6;
     color: var(--color-dark);
     transition: all 0.3s ease-in-out;
@@ -634,6 +635,18 @@ article.sm-single-news .accordion-body ul li::before {
     top: 4px;
     color: var(--color-dark); /* Same color as text */
     font-weight: bold;
+}
+
+article.sm-single-post .entry-content a:not(.toc-container a),
+article.sm-single-news .entry-content a:not(.toc-container a) {
+    border-bottom: 3px solid var(--color-primary);
+}
+
+article.sm-single-post .entry-content a:hover:not(.toc-container a),
+article.sm-single-news .entry-content a:hover:not(.toc-container a) {
+	color: var(--color-primary);
+	text-decoration: none;
+    border-bottom: 3px solid var(--color-primary);
 }
 
 .sm-post-nav {
