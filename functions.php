@@ -1475,72 +1475,70 @@ if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
         if (!wp_attachment_is_image($attachment_id)) {
             return $metadata;
         }
-
-        // Define the watermark
-        $watermark_text = "CRYPTOPOINT.BG"; // Watermark text
-        // Path to your OTF font in the theme folder (e.g., wp-content/themes/your-theme/assets/fonts/your-font.otf)
-        $font = get_template_directory() . '/assets/fonts/Bicubik.OTF';
-        $font_size = 20;
-        $opacity = 50; // 0-100
-
-        // Check if Imagick is available
+    
+        // Define watermark settings
+        $watermark_text = "CRYPTOPOINT.BG";
+        $font = get_template_directory() . '/assets/fonts/Bicubik.OTF'; // Replace with your OTF font filename
+        $font_size = 30;
+        $opacity = 70; // 0-100
+        $min_width = 1000; // Minimum width to apply watermark (adjust as needed)
+    
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
             error_log('Imagick is not installed. Watermarking skipped.');
             return $metadata;
         }
-
-        // Verify the font file exists
+    
         if (!file_exists($font)) {
             error_log('Font file not found at: ' . $font);
             return $metadata;
         }
-
+    
         $upload_dir = wp_upload_dir();
         $image_path = $upload_dir['basedir'] . '/' . $metadata['file'];
-
-        // Load the image with Imagick
+    
+        // Process full-size image if it meets the size threshold
         $image = new Imagick($image_path);
-        $draw = new ImagickDraw();
-
-        // Set font properties
-        $draw->setFont($font); // Using the OTF font from your theme folder
-        $draw->setFontSize($font_size);
-        $draw->setFillColor('white');
-        $draw->setFillOpacity($opacity / 100);
-
-        // Calculate position (bottom-right with padding)
-        $metrics = $image->queryFontMetrics($draw, $watermark_text);
-        $x = $image->getImageWidth() - $metrics['textWidth'] - 10;
-        $y = $image->getImageHeight() - $metrics['textHeight'] + $metrics['ascender'] - 10;
-
-        // Add the watermark
-        $image->annotateImage($draw, $x, $y, 0, $watermark_text);
-
-        // Save the image
-        $image->writeImage($image_path);
+        if ($image->getImageWidth() >= $min_width) {
+            $draw = new ImagickDraw();
+            $draw->setFont($font);
+            $draw->setFontSize($font_size);
+            $draw->setFillColor('white');
+            $draw->setFillOpacity($opacity / 100);
+    
+            $metrics = $image->queryFontMetrics($draw, $watermark_text);
+            $x = $image->getImageWidth() - $metrics['textWidth'] - 10;
+            $y = $image->getImageHeight() - $metrics['textHeight'] + $metrics['ascender'] - 10;
+    
+            $image->annotateImage($draw, $x, $y, 0, $watermark_text);
+            $image->writeImage($image_path);
+        }
         $image->destroy();
-
-        // Apply to all generated sizes
+    
+        // Apply to generated sizes, but only if they exceed the threshold
         if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size => $size_info) {
                 $size_path = $upload_dir['basedir'] . '/' . dirname($metadata['file']) . '/' . $size_info['file'];
                 $size_image = new Imagick($size_path);
-                $size_draw = new ImagickDraw();
-                $size_draw->setFont($font);
-                $size_draw->setFontSize($font_size);
-                $size_draw->setFillColor('white');
-                $size_draw->setFillOpacity($opacity / 100);
-
-                $size_metrics = $size_image->queryFontMetrics($size_draw, $watermark_text);
-                $size_x = $size_image->getImageWidth() - $size_metrics['textWidth'] - 10;
-                $size_y = $size_image->getImageHeight() - $size_metrics['textHeight'] + $size_metrics['ascender'] - 10;
-
-                $size_image->annotateImage($size_draw, $size_x, $size_y, 0, $watermark_text);
-                $size_image->writeImage($size_path);
+    
+                // Check size before applying watermark
+                if ($size_image->getImageWidth() >= $min_width) {
+                    $size_draw = new ImagickDraw();
+                    $size_draw->setFont($font);
+                    $size_draw->setFontSize($font_size);
+                    $size_draw->setFillColor('white');
+                    $size_draw->setFillOpacity($opacity / 100);
+    
+                    $size_metrics = $size_image->queryFontMetrics($size_draw, $watermark_text);
+                    $size_x = $size_image->getImageWidth() - $size_metrics['textWidth'] - 10;
+                    $size_y = $size_image->getImageHeight() - $size_metrics['textHeight'] + $size_metrics['ascender'] - 10;
+    
+                    $size_image->annotateImage($size_draw, $size_x, $size_y, 0, $watermark_text);
+                    $size_image->writeImage($size_path);
+                }
                 $size_image->destroy();
             }
         }
-
+    
         return $metadata;
     }
     add_filter('wp_generate_attachment_metadata', '__smarty_magazine_add_watermark_to_images', 10, 2);
