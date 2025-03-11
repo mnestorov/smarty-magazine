@@ -159,15 +159,6 @@ if (!function_exists('__smarty_magazine_add_news_meta_boxes')) {
             'side',
             'default'
         );
-
-        add_meta_box(
-            'news_related_meta_box',
-            'Related News',
-            '__smarty_magazine_news_related_callback',
-            'news',
-            'normal',
-            'default'
-        );
     }
     add_action('add_meta_boxes', '__smarty_magazine_add_news_meta_boxes');
 }
@@ -237,32 +228,6 @@ if (!function_exists('__smarty_magazine_news_details_callback')) {
     }
 }
 
-if (!function_exists('__smarty_magazine_news_related_callback')) {
-    /**
-     * Display the related news meta box.
-     * 
-     * @since 1.0.0
-     * 
-     * @param WP_Post $post The post object.
-     * 
-     * @return void
-     */
-    function __smarty_magazine_news_related_callback($post) {
-        wp_nonce_field(basename(__FILE__), 'news_related_nonce');
-        $related_ids = get_post_meta($post->ID, '_news_related', true) ?: array();
-        $news_items = get_posts(array('post_type' => 'news', 'posts_per_page' => -1, 'post__not_in' => array($post->ID)));
-        ?>
-        <p><strong><?php _e('Select Related News', 'smarty_magazine'); ?></strong></p>
-        <select name="news_related[]" id="news_related" class="widefat" multiple>
-            <?php foreach ($news_items as $news_item) : ?>
-                <option value="<?php echo esc_attr($news_item->ID); ?>" <?php selected(in_array($news_item->ID, $related_ids), true); ?>><?php echo esc_html($news_item->post_title); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <p><em><?php _e('Hold down the Ctrl (Windows) / Command (Mac) button to select multiple options.', 'smarty_magazine'); ?></em></p>
-        <?php
-    }
-}
-
 if (!function_exists('__smarty_magazine_save_news_meta')) {
     /**
      * Save news meta data.
@@ -303,17 +268,6 @@ if (!function_exists('__smarty_magazine_save_news_meta')) {
     
             if (isset($_POST['news_details'])) {
                 update_post_meta($post_id, '_news_details', sanitize_textarea_field($_POST['news_details']));
-            }
-        }
-    
-        // Save related news
-        if (isset($_POST['news_related_nonce']) && wp_verify_nonce($_POST['news_related_nonce'], basename(__FILE__))) {
-            if (isset($_POST['news_related'])) {
-                $related_ids = array_map('intval', (array)$_POST['news_related']);
-                update_post_meta($post_id, '_news_related', $related_ids);
-            } else {
-                // If nothing is selected, save an empty array
-                update_post_meta($post_id, '_news_related', array());
             }
         }
     }
@@ -397,28 +351,69 @@ if (!function_exists('__smarty_magazine_get_news_related')) {
 
 if (!function_exists('__smarty_magazine_get_related_news')) {
     /**
-     * Get related news.
-     * 
+     * Get posts automatically related by categories or tags.
+     *
      * @since 1.0.0
      * 
      * @param int $post_id The post ID.
      * 
-     * @return array
+     * @return array Array of WP_Post objects
      */
     function __smarty_magazine_get_related_news($post_id) {
-        $related_ids = __smarty_magazine_get_news_related($post_id);
-        $related_news = array();
+        // Fetch category IDs
+        $news_cats = wp_get_post_terms($post_id, 'news_category', array('fields' => 'ids'));
+        // Fetch tag IDs
+        $news_tags = wp_get_post_terms($post_id, 'news_tag', array('fields' => 'ids'));
 
-        // Shuffle the related IDs to randomize the order
-        shuffle($related_ids);
-
-        // Get only the first 4 related news items
-        $related_ids = array_slice($related_ids, 0, 4);
-
-        foreach ($related_ids as $related_id) {
-            $related_news[] = get_post($related_id);
+        if (empty($news_cats) && empty($news_tags)) {
+            return array(); 
         }
 
-        return $related_news;
+        // Query latest 4 news items matching any (category OR tag)
+        $args = array(
+            'post_type'      => 'news',
+            'post__not_in'   => array($post_id),
+            'posts_per_page' => 4,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'tax_query'      => array(
+                'relation' => 'OR',
+                array(
+                    'taxonomy' => 'news_category',
+                    'field'    => 'term_id',
+                    'terms'    => $news_cats,
+                ),
+                array(
+                    'taxonomy' => 'news_tag',
+                    'field'    => 'term_id',
+                    'terms'    => $news_tags,
+                ),
+            ),
+        );
+
+        return get_posts($args);
     }
 }
+
+if (!function_exists('__smarty_magazine_sort_news_by_date')) {
+    /**
+     * Sort news by date in the admin area.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The WP_Query object.
+     * 
+     * @return void
+     */
+    function __smarty_magazine_sort_news_by_date($query) {
+        if (!is_admin()) {
+            return;
+        }
+        $screen = get_current_screen();
+        if ($screen && 'edit-news' === $screen->id) {
+            $query->set('orderby', 'date');
+            $query->set('order', 'DESC');
+        }
+    }
+}
+add_action('pre_get_posts', '__smarty_magazine_sort_news_by_date');

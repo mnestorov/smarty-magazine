@@ -8,7 +8,7 @@
  * @package SmartyMagazine
  */
 
-if (!function_exists('__smarty_magazine_sm-magazine-info')) {
+if (!function_exists('__smarty_magazine_theme_info')) {
     /**
      * Hook into the 'admin_menu' action to add the theme dashboard page.
      * 
@@ -47,15 +47,19 @@ if (!function_exists('__smarty_magazine_admin_scripts')) {
      * 
      * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
      */
-    function __smarty_magazine_admin_scripts($hook) {
+    function __smarty_magazine_theme_admin_scripts($hook) {
         if ($hook === 'widgets.php' || $hook === 'appearance_page_smarty_magazine') {
             wp_enqueue_style('sm-admin-css', get_template_directory_uri() . '/assets/css/sm-admin.css');
+            wp_enqueue_style('slick-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
+            wp_enqueue_style('slick-theme-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
+            wp_enqueue_script('slick-js', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js', array('jquery'), null, true);
+            wp_enqueue_script('sm-admin-js', get_template_directory_uri() . '/assets/js/sm-admin.js', array('jquery', 'slick-js'), null, true);
         }
     }
-    add_action('admin_enqueue_scripts', '__smarty_magazine_admin_scripts');
+    add_action('admin_enqueue_scripts', '__smarty_magazine_theme_admin_scripts');
 }
 
-if (!function_exists('__smarty_magazine_sm-magazine-info_page')) {
+if (!function_exists('__smarty_magazine_theme_info_page')) {
     /**
      * Render the theme info page content.
      *
@@ -74,7 +78,7 @@ if (!function_exists('__smarty_magazine_sm-magazine-info_page')) {
         <div class="wrap about-wrap sm-magazine-info-wrapper">
             <h1><?php printf(esc_html__('%1$s - Version %2$s', 'smarty_magazine'), esc_html($theme_data->Name), esc_html($theme_data->Version)); ?></h1>
             <div class="about-text">
-                <?php esc_html_e('Smarty Magazine is a professional WordPress News and Magazine theme built with Bootstrap. It is fully responsive, customizable via the theme customizer, and includes multiple layouts, widgets, and advertisement support.', 'smarty_magazine'); ?>
+                <?php esc_html_e('Smarty Magazine is a professional WordPress News and Magazine theme built with Bootstrap 5. It is fully responsive, customizable via the theme customizer, and includes multiple layouts, widgets, and advertisement support.', 'smarty_magazine'); ?>
             </div>
             <a target="_blank" href="#" class="sm-magazine-badge wp-badge">
                 <span>Smarty Studio</span>
@@ -110,11 +114,26 @@ if (!function_exists('__smarty_magazine_sm-magazine-info_page')) {
                             </div>
                         </div>
                         <div class="sm-magazine-info-right">
-                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/no-image.png'); ?>" alt="<?php esc_attr_e('Theme Screenshot', 'smarty_magazine'); ?>" />
+                            <div class="sm-magazine-slider">
+                                <div><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/image1.png'); ?>" alt="<?php esc_attr_e('Image 1', 'smarty_magazine'); ?>" /></div>
+                                <div><img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/image2.png'); ?>" alt="<?php esc_attr_e('Image 2', 'smarty_magazine'); ?>" /></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             <?php endif; ?>
-        </div><?php
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('.sm-magazine-slider').slick({
+                    dots: true,
+                    infinite: true,
+                    speed: 300,
+                    slidesToShow: 1,
+                    adaptiveHeight: true
+                });
+            });
+        </script>
+        <?php
     }
 }

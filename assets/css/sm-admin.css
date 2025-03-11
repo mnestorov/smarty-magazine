@@ -357,3 +357,20 @@ input:checked + .smarty-slider:before {
 .sm-magazine-faq-answer {
     margin-top: 10px;
 }
+
+/*--------------------------------------------------------------
+    SLICK SLIDER - Customise the arrows
+--------------------------------------------------------------*/
+.slick-next:before, .slick-prev:before {
+    color: #004aad !important;
+}
+
+.slick-dots li.slick-active button:before {
+    opacity: .75;
+    color: #004aad !important;
+}
+
+.slick-dots li button:before {
+    font-size: 10px !important;
+    color: #004aad !important;
+}
