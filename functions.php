@@ -1459,3 +1459,89 @@ if (!function_exists('__smarty_magazine_twitter_embed_shortcode')) {
     }
     add_shortcode('sm_magazine_twitter_embed', '__smarty_magazine_twitter_embed_shortcode');
 }
+
+if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
+    /**
+     * Add a watermark to uploaded images
+     * 
+     * @since 1.0.0
+     * 
+     * @param array $metadata The attachment metadata
+     * @param int $attachment_id The attachment ID
+     * 
+     * @return array The modified attachment metadata
+     */
+    function __smarty_magazine_add_watermark_to_images($metadata, $attachment_id) {
+        if (!wp_attachment_is_image($attachment_id)) {
+            return $metadata;
+        }
+
+        // Define the watermark
+        $watermark_text = "CRYPTOPOINT.BG"; // Watermark text
+        // Path to your OTF font in the theme folder (e.g., wp-content/themes/your-theme/assets/fonts/your-font.otf)
+        $font = get_template_directory() . '/assets/fonts/Bicubik.OTF';
+        $font_size = 20;
+        $opacity = 50; // 0-100
+
+        // Check if Imagick is available
+        if (!extension_loaded('imagick') || !class_exists('Imagick')) {
+            error_log('Imagick is not installed. Watermarking skipped.');
+            return $metadata;
+        }
+
+        // Verify the font file exists
+        if (!file_exists($font)) {
+            error_log('Font file not found at: ' . $font);
+            return $metadata;
+        }
+
+        $upload_dir = wp_upload_dir();
+        $image_path = $upload_dir['basedir'] . '/' . $metadata['file'];
+
+        // Load the image with Imagick
+        $image = new Imagick($image_path);
+        $draw = new ImagickDraw();
+
+        // Set font properties
+        $draw->setFont($font); // Using the OTF font from your theme folder
+        $draw->setFontSize($font_size);
+        $draw->setFillColor('white');
+        $draw->setFillOpacity($opacity / 100);
+
+        // Calculate position (bottom-right with padding)
+        $metrics = $image->queryFontMetrics($draw, $watermark_text);
+        $x = $image->getImageWidth() - $metrics['textWidth'] - 10;
+        $y = $image->getImageHeight() - $metrics['textHeight'] + $metrics['ascender'] - 10;
+
+        // Add the watermark
+        $image->annotateImage($draw, $x, $y, 0, $watermark_text);
+
+        // Save the image
+        $image->writeImage($image_path);
+        $image->destroy();
+
+        // Apply to all generated sizes
+        if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
+            foreach ($metadata['sizes'] as $size => $size_info) {
+                $size_path = $upload_dir['basedir'] . '/' . dirname($metadata['file']) . '/' . $size_info['file'];
+                $size_image = new Imagick($size_path);
+                $size_draw = new ImagickDraw();
+                $size_draw->setFont($font);
+                $size_draw->setFontSize($font_size);
+                $size_draw->setFillColor('white');
+                $size_draw->setFillOpacity($opacity / 100);
+
+                $size_metrics = $size_image->queryFontMetrics($size_draw, $watermark_text);
+                $size_x = $size_image->getImageWidth() - $size_metrics['textWidth'] - 10;
+                $size_y = $size_image->getImageHeight() - $size_metrics['textHeight'] + $size_metrics['ascender'] - 10;
+
+                $size_image->annotateImage($size_draw, $size_x, $size_y, 0, $watermark_text);
+                $size_image->writeImage($size_path);
+                $size_image->destroy();
+            }
+        }
+
+        return $metadata;
+    }
+    add_filter('wp_generate_attachment_metadata', '__smarty_magazine_add_watermark_to_images', 10, 2);
+}
