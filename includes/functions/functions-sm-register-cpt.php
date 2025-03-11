@@ -7,6 +7,14 @@
  * @package Smarty_Magazine
  */
 
+/**
+ * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------
+ * -------------------- News - Post Type Functionality --------------------
+ * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------
+ */
+
 if (!function_exists('__smarty_magazine_register_widgets')) {
     /**
      * Register news post type for this theme.
@@ -406,14 +414,195 @@ if (!function_exists('__smarty_magazine_sort_news_by_date')) {
      * @return void
      */
     function __smarty_magazine_sort_news_by_date($query) {
-        if (!is_admin()) {
+        if (!is_admin() || !$query->is_main_query()) {
             return;
         }
-        $screen = get_current_screen();
-        if ($screen && 'edit-news' === $screen->id) {
+    
+        // Use post_type instead of screen ID to avoid early calls
+        if (isset($query->query['post_type']) && $query->query['post_type'] === 'news') {
             $query->set('orderby', 'date');
             $query->set('order', 'DESC');
         }
     }
+    add_action('pre_get_posts', '__smarty_magazine_sort_news_by_date');
 }
-add_action('pre_get_posts', '__smarty_magazine_sort_news_by_date');
+
+/**
+ * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------
+ * ---------------- Dictionary - Post Type Functionality ------------------
+ * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------
+ */
+
+/**
+ * Register Dictionary custom post type for this theme.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
+    function __smarty_magazine_register_dictionary_post_type() {
+        $labels = array(
+            'name'                  => _x('Dictionary', 'Post Type General Name', 'smarty_magazine'),
+            'singular_name'         => _x('Dictionary Item', 'Post Type Singular Name', 'smarty_magazine'),
+            'menu_name'             => __('Dictionary', 'smarty_magazine'),
+            'name_admin_bar'        => __('Dictionary Item', 'smarty_magazine'),
+            'archives'              => __('Dictionary Archives', 'smarty_magazine'),
+            'add_new'               => __('Add New', 'smarty_magazine'),
+            'add_new_item'          => __('Add New Dictionary Item', 'smarty_magazine'),
+            'new_item'              => __('New Dictionary Item', 'smarty_magazine'),
+            'edit_item'             => __('Edit Dictionary Item', 'smarty_magazine'),
+            'view_item'             => __('View Dictionary Item', 'smarty_magazine'),
+            'all_items'             => __('All Dictionary Items', 'smarty_magazine'),
+            'search_items'          => __('Search Dictionary', 'smarty_magazine'),
+            'not_found'             => __('No Dictionary Items found', 'smarty_magazine'),
+            'not_found_in_trash'    => __('No Dictionary Items found in Trash', 'smarty_magazine'),
+        );
+
+        $args = array(
+            'label'                => __('Dictionary', 'smarty_magazine'),
+            'labels'               => $labels,
+            'supports'             => array('title', 'editor'), // Only title and editor (textarea)
+            'public'               => true,
+            'show_ui'              => true,
+            'show_in_menu'         => true,
+            'menu_position'        => 6, // Below News (which is 5)
+            'menu_icon'            => 'dashicons-book-alt',
+            'show_in_admin_bar'    => true,
+            'can_export'           => true,
+            'has_archive'          => true,
+            'rewrite'              => array('slug' => 'dictionary'),
+            'exclude_from_search'  => false,
+            'publicly_queryable'   => true,
+            'capability_type'      => 'post',
+            'show_in_rest'         => true,
+            'taxonomies'           => array(), // No categories or tags
+        );
+
+        register_post_type('dictionary', $args);
+    }
+    add_action('init', '__smarty_magazine_register_dictionary_post_type');
+}
+
+/**
+ * Add meta box for Dictionary CPT to select a related article.
+ *
+ * @since 1.0.0
+ */
+if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
+    function __smarty_magazine_add_dictionary_meta_boxes() {
+        add_meta_box(
+            'dictionary_related_article_meta_box',
+            __('Related Article', 'smarty_magazine'),
+            '__smarty_magazine_dictionary_related_article_callback',
+            'dictionary',
+            'side',
+            'default'
+        );
+    }
+    add_action('add_meta_boxes', '__smarty_magazine_add_dictionary_meta_boxes');
+}
+
+/**
+ * Callback to display the related article meta box.
+ *
+ * @since 1.0.0
+ * @param WP_Post $post The post object.
+ */
+if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
+    function __smarty_magazine_dictionary_related_article_callback($post) {
+        wp_nonce_field('__smarty_magazine_dictionary_meta_box', 'dictionary_related_article_nonce');
+        $selected_article = get_post_meta($post->ID, '_dictionary_related_article', true);
+
+        // Get all posts (default 'post' type)
+        $args = array(
+            'post_type'      => 'post',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+        );
+        $articles = get_posts($args);
+        ?>
+        <p>
+            <label for="dictionary_related_article"><?php _e('Select an Article', 'smarty_magazine'); ?></label>
+            <select name="dictionary_related_article" id="dictionary_related_article" class="widefat">
+                <option value=""><?php _e('None', 'smarty_magazine'); ?></option>
+                <?php foreach ($articles as $article) : ?>
+                    <option value="<?php echo esc_attr($article->ID); ?>" <?php selected($selected_article, $article->ID); ?>>
+                        <?php echo esc_html($article->post_title); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </p>
+        <?php
+    }
+}
+
+/**
+ * Save the related article meta data.
+ *
+ * @since 1.0.0
+ * @param int $post_id The post ID.
+ */
+if (!function_exists('__smarty_magazine_save_dictionary_meta')) {
+    function __smarty_magazine_save_dictionary_meta($post_id) {
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        if (!isset($_POST['dictionary_related_article_nonce']) || !wp_verify_nonce($_POST['dictionary_related_article_nonce'], '__smarty_magazine_dictionary_meta_box')) {
+            return;
+        }
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+
+        if (isset($_POST['dictionary_related_article'])) {
+            update_post_meta($post_id, '_dictionary_related_article', sanitize_text_field($_POST['dictionary_related_article']));
+        } else {
+            delete_post_meta($post_id, '_dictionary_related_article');
+        }
+    }
+    add_action('save_post', '__smarty_magazine_save_dictionary_meta');
+}
+
+/**
+ * Customize Dictionary admin columns.
+ *
+ * @since 1.0.0
+ */
+if (!function_exists('__smarty_magazine_dictionary_columns')) {
+    function __smarty_magazine_dictionary_columns($columns) {
+        $columns = array(
+            'cb'           => '<input type="checkbox" />',
+            'title'        => __('Title', 'smarty_magazine'),
+            'related_article' => __('Related Article', 'smarty_magazine'),
+            'date'         => __('Date', 'smarty_magazine'),
+        );
+        return $columns;
+    }
+    add_filter('manage_dictionary_posts_columns', '__smarty_magazine_dictionary_columns');
+}
+
+/**
+ * Populate custom columns in Dictionary admin table.
+ *
+ * @since 1.0.0
+ */
+if (!function_exists('__smarty_magazine_dictionary_custom_column')) {
+    function __smarty_magazine_dictionary_custom_column($column, $post_id) {
+        if ($column === 'related_article') {
+            $article_id = get_post_meta($post_id, '_dictionary_related_article', true);
+            if ($article_id) {
+                $article_title = get_the_title($article_id);
+                $article_link = get_edit_post_link($article_id);
+                echo '<a href="' . esc_url($article_link) . '">' . esc_html($article_title) . '</a>';
+            } else {
+                echo __('None', 'smarty_magazine');
+            }
+        }
+    }
+    add_action('manage_dictionary_posts_custom_column', '__smarty_magazine_dictionary_custom_column', 10, 2);
+}
