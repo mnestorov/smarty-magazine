@@ -1478,7 +1478,7 @@ if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
     
         // Define watermark settings
         $watermark_text = "CRYPTOPOINT.BG";
-        $font = get_template_directory() . '/assets/fonts/Bicubik.OTF'; // Replace with your OTF font filename
+        $font = get_template_directory() . '/assets/fonts/Bicubik.OTF';
         $font_size = 30;
         $opacity = 70; // 0-100
         $min_width = 1000; // Minimum width to apply watermark (adjust as needed)

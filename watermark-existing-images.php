@@ -18,8 +18,8 @@ if (!extension_loaded('imagick')) {
 }
 
 // Define watermark settings
-$watermark_text = "© MyWebsite 2025";
-$font = get_template_directory() . '/assets/fonts/your-font.otf'; // Replace with your OTF font filename
+$watermark_text = "CRYPTOPOINT.BG";
+$font = get_template_directory() . '/assets/fonts/Bicubik.OTF';
 $font_size = 20;
 $opacity = 50; // 0-100
 $min_width = 1000; // Minimum width to apply watermark (adjust as needed)
