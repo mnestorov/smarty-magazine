@@ -992,14 +992,16 @@ button.sm-sec-nav:hover {
 	padding: 7px 18px 8px;
 	text-decoration: none;
 	text-transform: uppercase;
-	margin-bottom: -1px;
 }
 
 .sm-main-menu li.current-menu-item,
 .sm-main-menu li.current-menu-item > a,
 .sm-main-menu li.current_page_parent,
 .sm-main-menu li.current_page_parent > a,
-.sm-main-menu li.current_page_parent:after {
+.sm-main-menu li.current_page_parent:after,
+.sm-main-menu li.current_page_item,
+.sm-main-menu li.current_page_item > a,
+.sm-main-menu li.current_page_item:after {
 	color: var(--color-dark);
 	background: var(--color-primary);
 }
