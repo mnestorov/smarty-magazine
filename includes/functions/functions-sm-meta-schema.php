@@ -153,7 +153,7 @@ if (!function_exists('__smarty_magazine_add_dictionary_schema')) {
             foreach ($dictionary_items as $item) {
                 $title = get_the_title($item->ID);
                 $first_letter = mb_strtoupper(mb_substr($title, 0, 1, 'UTF-8'), 'UTF-8'); // Get first letter
-                $anchor_url = get_permalink(get_the_ID()) . '#letter-' . esc_attr($first_letter); // Correct anchor-based URL
+                $anchor_url = get_permalink(get_the_ID()) . '#letter-' . esc_attr($first_letter); // Anchor-based URL
     
                 $terms[] = array(
                     "@type"       => "DefinedTerm",
