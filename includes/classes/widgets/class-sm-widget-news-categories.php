@@ -56,12 +56,12 @@ class __Smarty_magazine_News_Categories extends WP_Widget {
         ));
 
         if (!empty($categories) && !is_wp_error($categories)) {
-            echo '<ul class="list-group">';
+            echo '<ul class="list-group p-0">';
             foreach ($categories as $category) {
                 echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
                 echo '<a href="' . esc_url(get_term_link($category)) . '">' . esc_html($category->name) . '</a>';
                 if ($show_post_count) {
-                    echo '<span class="badge bg-primary rounded-pill">' . esc_html($category->count) . '</span>';
+                    echo '<span class="badge bg-featured rounded-pill">' . esc_html($category->count) . '</span>';
                 }
                 echo '</li>';
             }

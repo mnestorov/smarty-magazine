@@ -3582,6 +3582,9 @@ input[type='search']::placeholder {
 /* Use the same structure as Bootstrap's .input-group, 
    plus your custom class, to gain higher specificity. */
 .input-group .sm-searchform {
+	height: 55px;
+    font-size: 20px;
+    padding: 12px 20px;
     border-top-left-radius: 0.5rem !important;
     border-bottom-left-radius: 0.5rem !important;
     border-top-right-radius: 0 !important;
@@ -3591,6 +3594,9 @@ input[type='search']::placeholder {
 /* Prevent the button from having left-radius, 
    ensuring it stays flush with the input. */
 .input-group .btn {
+	height: 55px;
+    font-size: 20px;
+    padding: 0 20px;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
 }
@@ -3962,6 +3968,10 @@ cite {
 	font-weight: bold;
 }
 
+.badge.bg-featured {
+	color: var(--color-dark);
+}
+
 /*--------------------------------------------------------------
 # FAQ Section Styling
 --------------------------------------------------------------*/
@@ -4069,8 +4079,24 @@ cite {
 # DICTIONARY Styling
 --------------------------------------------------------------*/
 .sm-dictionary-search .input-group {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
+}
+
+#sm-dictionary-search-input {
+    height: 55px;
+    font-size: 20px;
+    padding: 12px 20px;
+	border-top-left-radius: 0.5rem !important;
+    border-bottom-left-radius: 0.5rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.sm-dictionary-search .btn {
+    height: 55px;
+    font-size: 20px;
+    padding: 0 20px;
 }
 
 /* Style for the dictionary alphabet navigation */
@@ -4110,6 +4136,20 @@ cite {
     .sm-dictionary-alphabet .nav-pills .nav-link {
         font-size: 16px;
         padding: 8px 12px;
+    }
+
+	.sm-dictionary-search .input-group {
+        max-width: 90%;
+    }
+
+	#sm-dictionary-search-input {
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .sm-dictionary-search .btn {
+        height: 50px;
+        font-size: 18px;
     }
 }
 

@@ -54,7 +54,7 @@ get_header(); ?>
         }
     }
     ?>
-    <nav class="sm-dictionary-alphabet mb-5 text-center">
+    <nav class="sm-dictionary-alphabet pt-0 mb-5 text-center">
         <ul class="nav nav-pills justify-content-center flex-wrap gap-2">
             <?php foreach ($letters as $index => $letter) : ?>
                 <li class="nav-item">
