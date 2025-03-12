@@ -273,6 +273,7 @@ if (!function_exists('__smarty_magazine_defer_scripts')) {
         $scripts_to_defer = array(
             'bootstrap-5',
             'swiper-js',
+            'news-ticker',
             'sm-front-js'
         );
 
