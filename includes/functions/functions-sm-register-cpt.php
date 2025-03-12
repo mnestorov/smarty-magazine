@@ -152,7 +152,7 @@ if (!function_exists('__smarty_magazine_add_news_meta_boxes')) {
     function __smarty_magazine_add_news_meta_boxes() {
         add_meta_box(
             'news_disclaimer_meta_box',
-            'Disclaimer',
+            __('Disclaimer', 'smarty_magazine'),
             '__smarty_magazine_news_disclaimer_callback',
             'news',
             'normal',
@@ -161,7 +161,7 @@ if (!function_exists('__smarty_magazine_add_news_meta_boxes')) {
 
         add_meta_box(
             'news_details_meta_box',
-            'News Details',
+            __('News Details', 'smarty_magazine'),
             '__smarty_magazine_news_details_callback',
             'news',
             'side',
@@ -185,8 +185,8 @@ if (!function_exists('__smarty_magazine_news_disclaimer_callback')) {
         wp_nonce_field(basename(__FILE__), 'news_disclaimer_nonce');
         $disclaimer = get_post_meta($post->ID, '_news_disclaimer', true);
         ?>
-        <p><strong><?php _e('Write Disclaimer Text', 'smarty_magazine'); ?></strong></p>
         <textarea name="news_disclaimer" id="news_disclaimer" class="widefat" rows="5"><?php echo esc_textarea($disclaimer); ?></textarea>
+        <p><?php _e('Write Disclaimer Text', 'smarty_magazine'); ?></p>
         <?php
     }
 }
@@ -218,11 +218,11 @@ if (!function_exists('__smarty_magazine_news_details_callback')) {
         $details = get_post_meta($post->ID, '_news_details', true);
         ?>
         <p>
-            <label for="news_image_source"><?php _e('Image Source', 'smarty_magazine'); ?></label>
+            <label for="news_image_source"><b><?php _e('Image Source', 'smarty_magazine'); ?></b></label>
             <input type="text" name="news_image_source" id="news_image_source" class="widefat" value="<?php echo esc_attr($image_source); ?>">
         </p>
         <p>
-            <label for="news_status"><?php _e('News Status', 'smarty_magazine'); ?></label>
+            <label for="news_status"><b><?php _e('News Status', 'smarty_magazine'); ?></b></label>
             <select name="news_status" id="news_status" class="widefat">
                 <option value=""><?php _e('Select a status', 'smarty_magazine'); ?></option>
                 <?php foreach ($statuses as $key => $value) : ?>
@@ -230,7 +230,7 @@ if (!function_exists('__smarty_magazine_news_details_callback')) {
                 <?php endforeach; ?>
             </select>
         </p>
-        <label for="news_details"><?php _e('Details', 'smarty_magazine'); ?></label>
+        <label for="news_details"><b><?php _e('Details', 'smarty_magazine'); ?></b></label>
         <textarea name="news_details" id="news_details" class="widefat" rows="5"><?php echo esc_attr($details); ?></textarea>
         <?php
     }
@@ -435,14 +435,14 @@ if (!function_exists('__smarty_magazine_sort_news_by_date')) {
  * ------------------------------------------------------------------------
  */
 
-/**
- * Register Dictionary custom post type for this theme.
- *
- * @since 1.0.0
- *
- * @return void
- */
 if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
+    /**
+     * Register Dictionary custom post type for this theme.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     function __smarty_magazine_register_dictionary_post_type() {
         $labels = array(
             'name'                  => _x('Dictionary', 'Post Type General Name', 'smarty_magazine'),
@@ -473,9 +473,9 @@ if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
             'show_in_admin_bar'    => true,
             'can_export'           => true,
             'has_archive'          => true,
-            'rewrite'              => array('slug' => 'dictionary'),
+            'rewrite'              => false,
             'exclude_from_search'  => false,
-            'publicly_queryable'   => true,
+            'publicly_queryable'   => false,
             'capability_type'      => 'post',
             'show_in_rest'         => true,
             'taxonomies'           => array(), // No categories or tags
@@ -486,12 +486,14 @@ if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
     add_action('init', '__smarty_magazine_register_dictionary_post_type');
 }
 
-/**
- * Add meta box for Dictionary CPT to select a related article.
- *
- * @since 1.0.0
- */
 if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
+    /**
+     * Add meta box for Dictionary CPT to select a related article.
+     *
+     * @since 1.0.0
+     * 
+     * @return void
+     */
     function __smarty_magazine_add_dictionary_meta_boxes() {
         add_meta_box(
             'dictionary_related_article_meta_box',
@@ -505,13 +507,16 @@ if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
     add_action('add_meta_boxes', '__smarty_magazine_add_dictionary_meta_boxes');
 }
 
-/**
- * Callback to display the related article meta box.
- *
- * @since 1.0.0
- * @param WP_Post $post The post object.
- */
 if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
+    /**
+     * Callback to display the related article meta box.
+     *
+     * @since 1.0.0
+     * 
+     * @param WP_Post $post The post object.
+     * 
+     * @return void
+     */
     function __smarty_magazine_dictionary_related_article_callback($post) {
         wp_nonce_field('__smarty_magazine_dictionary_meta_box', 'dictionary_related_article_nonce');
         $selected_article = get_post_meta($post->ID, '_dictionary_related_article', true);
@@ -527,9 +532,9 @@ if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
         $articles = get_posts($args);
         ?>
         <p>
-            <label for="dictionary_related_article"><?php _e('Select an Article', 'smarty_magazine'); ?></label>
-            <select name="dictionary_related_article" id="dictionary_related_article" class="widefat">
-                <option value=""><?php _e('None', 'smarty_magazine'); ?></option>
+            <label for="sm-dictionary-related-article"><b><?php _e('Select an Article', 'smarty_magazine'); ?></b></label>
+            <select name="sm-dictionary-related-article" id="sm-dictionary-related-article" class="widefat">
+                <option value=""><?php _e('Select a article', 'smarty_magazine'); ?></option>
                 <?php foreach ($articles as $article) : ?>
                     <option value="<?php echo esc_attr($article->ID); ?>" <?php selected($selected_article, $article->ID); ?>>
                         <?php echo esc_html($article->post_title); ?>
@@ -541,13 +546,16 @@ if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
     }
 }
 
-/**
- * Save the related article meta data.
- *
- * @since 1.0.0
- * @param int $post_id The post ID.
- */
 if (!function_exists('__smarty_magazine_save_dictionary_meta')) {
+    /**
+     * Save the related article meta data.
+     *
+     * @since 1.0.0
+     * 
+     * @param int $post_id The post ID.
+     * 
+     * @return void
+     */
     function __smarty_magazine_save_dictionary_meta($post_id) {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
@@ -568,31 +576,46 @@ if (!function_exists('__smarty_magazine_save_dictionary_meta')) {
     add_action('save_post', '__smarty_magazine_save_dictionary_meta');
 }
 
-/**
- * Customize Dictionary admin columns.
- *
- * @since 1.0.0
- */
 if (!function_exists('__smarty_magazine_dictionary_columns')) {
+    /**
+     * Customize Dictionary admin columns.
+     *
+     * @since 1.0.0
+     * 
+     * @param array $columns The existing columns.
+     * 
+     * @return array The modified columns.
+     */
     function __smarty_magazine_dictionary_columns($columns) {
         $columns = array(
-            'cb'           => '<input type="checkbox" />',
-            'title'        => __('Title', 'smarty_magazine'),
+            'cb'              => '<input type="checkbox" />',
+            'title'           => __('Title', 'smarty_magazine'),
+            'first_letter'    => __('First Letter', 'smarty_magazine'),
             'related_article' => __('Related Article', 'smarty_magazine'),
-            'date'         => __('Date', 'smarty_magazine'),
+            'date'            => __('Date', 'smarty_magazine'),
         );
         return $columns;
     }
     add_filter('manage_dictionary_posts_columns', '__smarty_magazine_dictionary_columns');
 }
 
-/**
- * Populate custom columns in Dictionary admin table.
- *
- * @since 1.0.0
- */
 if (!function_exists('__smarty_magazine_dictionary_custom_column')) {
+    /**
+     * Populate custom columns in Dictionary admin table.
+     *
+     * @since 1.0.0
+     * 
+     * @param string $column  The column name.
+     * @param int    $post_id The post ID.
+     * 
+     * @return void
+     */
     function __smarty_magazine_dictionary_custom_column($column, $post_id) {
+        if ($column === 'first_letter') {
+            $title = get_the_title($post_id);
+            echo esc_html(mb_strtoupper(mb_substr($title, 0, 1, 'UTF-8')));
+        }
+    
         if ($column === 'related_article') {
             $article_id = get_post_meta($post_id, '_dictionary_related_article', true);
             if ($article_id) {
@@ -603,6 +626,138 @@ if (!function_exists('__smarty_magazine_dictionary_custom_column')) {
                 echo __('None', 'smarty_magazine');
             }
         }
-    }
+    } 
     add_action('manage_dictionary_posts_custom_column', '__smarty_magazine_dictionary_custom_column', 10, 2);
+}
+
+if (!function_exists('__smarty_magazine_dictionary_sortable_columns')) {
+    /**
+     * Make the first letter column sortable.
+     *
+     * @since 1.0.0
+     * 
+     * @param array $columns The existing columns.
+     * 
+     * @return array The modified columns.
+     */
+    function __smarty_magazine_dictionary_sortable_columns($columns) {
+        $columns['first_letter'] = 'first_letter';
+        return $columns;
+    }
+    add_filter('manage_edit-dictionary_sortable_columns', '__smarty_magazine_dictionary_sortable_columns');
+}
+
+if (!function_exists('__smarty_magazine_sort_dictionary_by_first_letter')) {
+    /**
+     * Sort Dictionary by first letter.
+     *
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The WP_Query object.
+     * 
+     * @return void
+     */
+    function __smarty_magazine_sort_dictionary_by_first_letter($query) {
+        if (!is_admin() || !$query->is_main_query()) {
+            return;
+        }
+
+        if ($query->get('post_type') === 'dictionary' && $query->get('orderby') === 'first_letter') {
+            $query->set('orderby', 'title');
+            $query->set('order', 'ASC');
+        }
+    }
+    add_action('pre_get_posts', '__smarty_magazine_sort_dictionary_by_first_letter');
+}
+
+if (!function_exists('__smarty_magazine_default_sort_dictionary')) {
+    /**
+     * Sort Dictionary by title in the admin area.
+     * 
+     * @since 1.0.0
+     * 
+     * @param WP_Query $query The WP_Query object.
+     * 
+     * @return void
+     */
+    function __smarty_magazine_default_sort_dictionary($query) {
+        if (!is_admin() || !$query->is_main_query()) {
+            return;
+        }
+
+        // Check if it's the Dictionary post type
+        if ($query->get('post_type') === 'dictionary') {
+            // Only apply default sorting if no orderby parameter is set
+            if (!$query->get('orderby')) {
+                $query->set('orderby', 'title');
+                $query->set('order', 'ASC'); // Sort A → Z
+            }
+        }
+    }
+    add_action('pre_get_posts', '__smarty_magazine_default_sort_dictionary');
+}
+
+if (!function_exists('__smarty_magazine_dictionary_search')) {
+    /**
+     * Add a custom dictionary post type
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_dictionary_search() {
+        check_ajax_referer('smarty_magazine_nonce', 'nonce');
+
+        $search_query = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $args = array(
+            'post_type'      => 'dictionary',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            's'              => $search_query,
+        );
+
+        $items = get_posts($args);
+        $grouped_items = array();
+        foreach ($items as $item) {
+            $first_letter = mb_strtoupper(mb_substr($item->post_title, 0, 1, 'UTF-8'), 'UTF-8');
+            $grouped_items[$first_letter][] = $item;
+        }
+
+        ob_start();
+        foreach ($grouped_items as $letter => $items) : ?>
+            <section id="letter-<?php echo esc_attr($letter); ?>" class="sm-dictionary-section mb-5">
+                <h2 class="mb-3"><?php echo esc_html($letter); ?></h2>
+                <div class="accordion" id="accordion-<?php echo esc_attr($letter); ?>">
+                    <?php foreach ($items as $index => $item) : ?>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="heading-<?php echo esc_attr($item->ID); ?>">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo esc_attr($item->ID); ?>" aria-expanded="false" aria-controls="collapse-<?php echo esc_attr($item->ID); ?>">
+                                    <?php echo esc_html($item->post_title); ?>
+                                </button>
+                            </h3>
+                            <div id="collapse-<?php echo esc_attr($item->ID); ?>" class="accordion-collapse collapse" aria-labelledby="heading-<?php echo esc_attr($item->ID); ?>" data-bs-parent="#accordion-<?php echo esc_attr($letter); ?>">
+                                <div class="accordion-body">
+                                    <?php
+                                    echo wpautop(get_the_content(null, false, $item->ID));
+                                    $article_id = get_post_meta($item->ID, '_dictionary_related_article', true);
+                                    if ($article_id) {
+                                        $article_link = get_permalink($article_id);
+                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link sm-dictionary-read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endforeach;
+        $output = ob_get_clean();
+
+        wp_send_json_success($output);
+    }
+    add_action('wp_ajax_dictionary_search', '__smarty_magazine_dictionary_search');
+    add_action('wp_ajax_nopriv_dictionary_search', '__smarty_magazine_dictionary_search');
 }

@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
     });
 
     // Dictionary page search
-    $('#dictionary-search-input').on('keyup', function() {
+    $('#sm-dictionary-search-input').on('keyup', function() {
         var search = $(this).val();
         $.ajax({
             url: smartyMagazine.ajaxUrl,
@@ -109,7 +109,7 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 if (response.success) {
-                    $('#dictionary-results').html(response.data);
+                    $('#sm-dictionary-results').html(response.data);
                     // Bootstrap accordion handles itself, no need to reinitialize
                 }
             }

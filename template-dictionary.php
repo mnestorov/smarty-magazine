@@ -17,30 +17,34 @@ get_header(); ?>
     <header class="entry-header">
         <?php the_title('<h1 class="entry-title">', '</h1>'); ?>
     </header>
-    <div class="entry-content">
-        <?php the_content(); ?>
-        <?php
-        wp_link_pages(array(
-            'before' => '<div class="page-links">' . esc_html__('Pages:', 'smarty_magazine'),
-            'after'  => '</div>',
-        ));
-        ?>
+    <div class="container border-bottom pb-4">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 px-0 entry-content">
+                <?php the_content(); ?>
+                 <?php
+                wp_link_pages(array(
+                    'before' => '<div class="page-links">' . esc_html__('Pages:', 'smarty_magazine'),
+                    'after'  => '</div>',
+                ));
+                ?>
+            </div>
+        </div>
     </div>
     <!-- Search Field -->
-    <div class="dictionary-search mb-4">
+    <div class="sm-dictionary-search my-5">
         <div class="input-group">
-            <input type="text" id="dictionary-search-input" class="form-control" placeholder="<?php _e('Search dictionary...', 'smarty_magazine'); ?>" aria-label="Search dictionary">
-            <span class="input-group-text"><i class="bi bi-search"></i></span> <!-- Bootstrap Icons, optional -->
+            <input type="text" id="sm-dictionary-search-input" class="form-control" placeholder="<?php _e('Search dictionary...', 'smarty_magazine'); ?>" aria-label="Search dictionary">
+            <button class="btn btn-primary"><i class="bi bi-search"></i></button>
         </div>
     </div>
     <!-- Alphabet Navigation -->
     <?php
     $dictionary_items = get_posts(array(
-        'post_type' => 'dictionary',
+        'post_type'      => 'dictionary',
         'posts_per_page' => -1,
-        'post_status' => 'publish',
-        'orderby' => 'title',
-        'order' => 'ASC',
+        'post_status'    => 'publish',
+        'orderby'        => 'title',
+        'order'          => 'ASC',
     ));
     $letters = array();
     foreach ($dictionary_items as $item) {
@@ -50,17 +54,20 @@ get_header(); ?>
         }
     }
     ?>
-    <nav class="dictionary-alphabet mb-4">
-        <ul class="nav nav-pills flex-wrap">
+    <nav class="sm-dictionary-alphabet mb-5 text-center">
+        <ul class="nav nav-pills justify-content-center flex-wrap gap-2">
             <?php foreach ($letters as $index => $letter) : ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="#letter-<?php echo esc_attr($letter); ?>"><?php echo esc_html($letter); ?></a>
+                    <a class="nav-link btn btn-primary fw-bold shadow-sm px-3 py-2" 
+                    href="#letter-<?php echo esc_attr($letter); ?>">
+                        <?php echo esc_html($letter); ?>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </nav>
     <!-- Dictionary Items -->
-    <div id="dictionary-results">
+    <div id="sm-dictionary-results">
         <?php
         $grouped_items = array();
         foreach ($dictionary_items as $item) {
@@ -68,7 +75,7 @@ get_header(); ?>
             $grouped_items[$first_letter][] = $item;
         }
         foreach ($grouped_items as $letter => $items) : ?>
-            <section id="letter-<?php echo esc_attr($letter); ?>" class="dictionary-section mb-5">
+            <section id="letter-<?php echo esc_attr($letter); ?>" class="sm-dictionary-section mb-5">
                 <h2 class="mb-3"><?php echo esc_html($letter); ?></h2>
                 <div class="accordion" id="accordion-<?php echo esc_attr($letter); ?>">
                     <?php foreach ($items as $index => $item) : ?>
@@ -85,7 +92,7 @@ get_header(); ?>
                                     $article_id = get_post_meta($item->ID, '_dictionary_related_article', true);
                                     if ($article_id) {
                                         $article_link = get_permalink($article_id);
-                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
+                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link sm-dictionary-read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
                                     }
                                     ?>
                                 </div>
