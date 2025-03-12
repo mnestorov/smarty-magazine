@@ -4114,9 +4114,10 @@ cite {
 }
 
 .sm-dictionary-section h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     border-bottom: 2px solid var(--color-border);
     padding-bottom: 10px;
+	text-shadow: 3px 2px var(--color-primary);
 }
 
 .sm-dictionary-read-more {

@@ -130,3 +130,50 @@ if (!function_exists('__smarty_magazine_add_social_meta_tags')) {
     // Hook into wp_head to output the meta tags
     add_action('wp_head', '__smarty_magazine_add_social_meta_tags');
 }
+
+if (!function_exists('__smarty_magazine_add_dictionary_schema')) {
+    /**
+     * Add JSON-LD Schema markup to the dictionary page.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_add_dictionary_schema() {
+        if (is_page_template('template-dictionary.php')) { // template-dictionary.php is the template file for the dictionary page
+            $dictionary_items = get_posts(array(
+                'post_type'      => 'dictionary',
+                'posts_per_page' => -1,
+                'post_status'    => 'publish',
+                'orderby'        => 'title',
+                'order'          => 'ASC',
+            ));
+    
+            $terms = array();
+            foreach ($dictionary_items as $item) {
+                $title = get_the_title($item->ID);
+                $first_letter = mb_strtoupper(mb_substr($title, 0, 1, 'UTF-8'), 'UTF-8'); // Get first letter
+                $anchor_url = get_permalink(get_the_ID()) . '#letter-' . esc_attr($first_letter); // Correct anchor-based URL
+    
+                $terms[] = array(
+                    "@type"       => "DefinedTerm",
+                    "name"        => $title,
+                    "description" => wp_strip_all_tags(get_the_excerpt($item->ID)),
+                    "url"         => $anchor_url, // Anchor link instead of single page
+                );
+            }
+    
+            $schema_data = array(
+                "@context"       => "https://schema.org",
+                "@type"          => "DefinedTermSet",
+                "name"           => get_the_title(),
+                "description"    => get_the_excerpt(),
+                "url"            => get_permalink(), // The main dictionary page
+                "hasDefinedTerm" => $terms
+            );
+    
+            echo '<script type="application/ld+json">' . json_encode($schema_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+        }
+    }
+    add_action('wp_head', '__smarty_magazine_add_dictionary_schema');
+}
