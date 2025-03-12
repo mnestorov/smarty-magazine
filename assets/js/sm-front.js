@@ -93,4 +93,24 @@ jQuery(document).ready(function($) {
     $('img:not([loading])').each(function() {
         $(this).attr('loading', 'lazy');
     });
+
+    // Dictionary page search
+    $('#dictionary-search-input').on('keyup', function() {
+        var search = $(this).val();
+        $.ajax({
+            url: smartyMagazine.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'dictionary_search',
+                nonce: smartyMagazine.nonce,
+                search: search
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#dictionary-results').html(response.data);
+                    // Bootstrap accordion handles itself, no need to reinitialize
+                }
+            }
+        });
+    });
 });

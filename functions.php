@@ -204,10 +204,20 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
     function __smarty_magazine_enqueue_front_scripts() {
         wp_enqueue_style('sm-style', get_stylesheet_uri(), array(), null, 'all');
     
-        // Preload Fonts to Load Faster
-        echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
-        echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
-        echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900&display=swap" media="print" onload="this.media=\'all\'">';
+        // Preload Fonts (using wp_enqueue_style for better management)
+        wp_enqueue_style('google-fonts-preconnect', 'https://fonts.googleapis.com', array(), null, 'all');
+        wp_enqueue_style('google-fonts-preconnect-crossorigin', 'https://fonts.gstatic.com', array(), null, 'all');
+        wp_enqueue_style(
+            'google-fonts-roboto',
+            'https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900&display=swap',
+            array(),
+            null,
+            'print' // Loads as print, switches to all onload
+        );
+        wp_add_inline_script(
+            'google-fonts-roboto',
+            'document.getElementById("google-fonts-roboto-css").media="all";'
+        );
     
         // Defer non-essential JavaScript
         function defer_scripts($tag, $handle, $src) {
@@ -247,8 +257,37 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
         if (is_singular() && comments_open() && get_option('thread_comments')) {
             wp_enqueue_script('comment-reply');
         }
+
+        // Add nonce to sm-front-js (or any script needing AJAX)
+        wp_localize_script(
+            'sm-front-js',      // Attach to an enqueued script
+            'smartyMagazine',   // Object name in JS
+            array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('smarty_magazine_nonce'), // Nonce for front-end AJAX
+            )
+        );
     }
     add_action('wp_enqueue_scripts', '__smarty_magazine_enqueue_front_scripts');    
+}
+
+if (!function_exists('__smarty_magazine_handle_ajax')) {
+    /**
+     * Handle AJAX requests.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     * 
+     * @link https://developer.wordpress.org/reference/hooks/wp_ajax_action/
+     */
+    function __smarty_magazine_handle_ajax() {
+        check_ajax_referer('smarty_magazine_nonce', 'nonce');
+        // Your AJAX logic here
+        wp_send_json_success('Success!');
+    }
+    add_action('wp_ajax_some_action', '__smarty_magazine_handle_ajax');
+    add_action('wp_ajax_nopriv_some_action', '__smarty_magazine_handle_ajax');
 }
 
 /**
@@ -796,7 +835,7 @@ if (!function_exists('__smarty_magazine_full_width_tabs_metabox_callback')) {
 
         // Only show metabox for the specific template
         $template = get_post_meta($post->ID, '_wp_page_template', true);
-        if ($template !== 'full-width-nav.php') {
+        if ($template !== 'template-full-width-nav.php') {
             echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smarty_magazine') . '</p>';
             return;
         }
@@ -867,7 +906,7 @@ if (!function_exists('__smarty_magazine_save_full_width_tabs_meta')) {
 
         // Only save for the specific template
         $template = get_post_meta($post_id, '_wp_page_template', true);
-        if ($template !== 'full-width-nav.php') {
+        if ($template !== 'template-full-width-nav.php') {
             return;
         }
 
@@ -960,7 +999,7 @@ if (!function_exists('__smarty_magazine_two_column_tabs_metabox_callback')) {
 
         // Only show metabox for the specific template (assuming it's 'two-column.php' or similar)
         $template = get_post_meta($post->ID, '_wp_page_template', true);
-        if ($template !== 'full-width-nav.php') { // Adjust template name as needed
+        if ($template !== 'template-full-width-nav.php') { // Adjust template name as needed
             echo '<p>' . esc_html__('This metabox is only available for the "Full Width Nav" page template.', 'smarty_magazine') . '</p>';
             return;
         }
@@ -1038,7 +1077,7 @@ if (!function_exists('__smarty_magazine_save_two_column_tabs_meta')) {
 
         // Only save for the specific template
         $template = get_post_meta($post_id, '_wp_page_template', true);
-        if ($template !== 'full-width-nav.php') { // Adjust template name as needed
+        if ($template !== 'template-full-width-nav.php') { // Adjust template name as needed
             return;
         }
 
@@ -1458,6 +1497,71 @@ if (!function_exists('__smarty_magazine_twitter_embed_shortcode')) {
         return ''; // Return empty if no embed exists
     }
     add_shortcode('sm_magazine_twitter_embed', '__smarty_magazine_twitter_embed_shortcode');
+}
+
+if (!function_exists('__smarty_magazine_dictionary_search')) {
+    /**
+     * Add a custom dictionary post type
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     */
+    function __smarty_magazine_dictionary_search() {
+        check_ajax_referer('smarty_magazine_nonce', 'nonce');
+
+        $search_query = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        $args = array(
+            'post_type'      => 'dictionary',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            's'              => $search_query,
+        );
+
+        $items = get_posts($args);
+        $grouped_items = array();
+        foreach ($items as $item) {
+            $first_letter = mb_strtoupper(mb_substr($item->post_title, 0, 1, 'UTF-8'), 'UTF-8');
+            $grouped_items[$first_letter][] = $item;
+        }
+
+        ob_start();
+        foreach ($grouped_items as $letter => $items) : ?>
+            <section id="letter-<?php echo esc_attr($letter); ?>" class="dictionary-section mb-5">
+                <h2 class="mb-3"><?php echo esc_html($letter); ?></h2>
+                <div class="accordion" id="accordion-<?php echo esc_attr($letter); ?>">
+                    <?php foreach ($items as $index => $item) : ?>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="heading-<?php echo esc_attr($item->ID); ?>">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo esc_attr($item->ID); ?>" aria-expanded="false" aria-controls="collapse-<?php echo esc_attr($item->ID); ?>">
+                                    <?php echo esc_html($item->post_title); ?>
+                                </button>
+                            </h3>
+                            <div id="collapse-<?php echo esc_attr($item->ID); ?>" class="accordion-collapse collapse" aria-labelledby="heading-<?php echo esc_attr($item->ID); ?>" data-bs-parent="#accordion-<?php echo esc_attr($letter); ?>">
+                                <div class="accordion-body">
+                                    <?php
+                                    echo wpautop(get_the_content(null, false, $item->ID));
+                                    $article_id = get_post_meta($item->ID, '_dictionary_related_article', true);
+                                    if ($article_id) {
+                                        $article_link = get_permalink($article_id);
+                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endforeach;
+        $output = ob_get_clean();
+
+        wp_send_json_success($output);
+    }
+    add_action('wp_ajax_dictionary_search', '__smarty_magazine_dictionary_search');
+    add_action('wp_ajax_nopriv_dictionary_search', '__smarty_magazine_dictionary_search');
 }
 
 if (!function_exists('__smarty_magazine_add_watermark_to_images')) {

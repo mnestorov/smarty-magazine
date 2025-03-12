@@ -4064,3 +4064,29 @@ cite {
 .sm-magazine-twitter-embed script {
     display: none; /* Prevent script from affecting layout */
 }
+
+/*--------------------------------------------------------------
+# DICTIONARY Styling
+--------------------------------------------------------------*/
+.dictionary-search .input-group {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.dictionary-alphabet .nav-pills {
+    justify-content: center;
+}
+
+.dictionary-alphabet .nav-link {
+    margin: 0 5px;
+}
+
+.dictionary-section h2 {
+    font-size: 2rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.read-more {
+    margin-top: 10px;
+}

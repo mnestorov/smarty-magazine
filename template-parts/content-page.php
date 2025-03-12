@@ -20,16 +20,7 @@
 		));
 		?>
 	</div>
-	<footer class="entry-footer">
-		<?php
-		edit_post_link(
-			sprintf(
-				esc_html__('Edit %s', 'smarty_magazine'),
-				the_title('<span class="screen-reader-text">"', '"</span>', false)
-			),
-			'<span class="edit-link">',
-			'</span>'
-		);
-		?>
-	</footer>
+	<footer class="entry-footer text-center fw-bold my-4">
+        <?php __smarty_magazine_entry_footer(); ?>
+    </footer>
 </article>
