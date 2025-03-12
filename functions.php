@@ -191,7 +191,7 @@ if (!function_exists('__smarty_magazine_preload_front_styles')) {
     add_action('wp_head', '__smarty_magazine_preload_front_styles', 5);
 }
 
-if (!function_exists('__smarty_magazine_front_scripts')) {
+if (!function_exists('__smarty_magazine_enqueue_front_scripts')) {
     /**
      * Enqueue scripts and styles.
 	 * 
@@ -219,29 +219,14 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
             'document.getElementById("google-fonts-roboto-css").media="all";'
         );
     
-        // Defer non-essential JavaScript
-        function defer_scripts($tag, $handle, $src) {
-            // List of scripts to defer
-            $scripts_to_defer = array(
-                'bootstrap-5',
-                'swiper-js',
-                'news-ticker',
-                'sm-front-js'
-            );
-    
-            if (in_array($handle, $scripts_to_defer)) {
-                return '<script src="' . esc_url($src) . '" defer></script>';
-            }
-    
-            return $tag;
-        }
-        add_filter('script_loader_tag', 'defer_scripts', 10, 3);
-    
         // Load Bootstrap CSS asynchronously
         wp_enqueue_style('bootstrap-icons', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
         wp_enqueue_style('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css', array(), '5.3.3', 'all');
         wp_enqueue_script('bootstrap-5', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js', array('jquery'), '5.3.3', true);
-        
+
+        // Load jQuery
+        wp_enqueue_script('jquery');
+
         // Load Swiper (Only defer JS, keep CSS async)
         wp_enqueue_style('swiper-css', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css', array(), '11.0.5', 'all');
         wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js', array('jquery'), '11.0.5', true);
@@ -269,6 +254,35 @@ if (!function_exists('__smarty_magazine_front_scripts')) {
         );
     }
     add_action('wp_enqueue_scripts', '__smarty_magazine_enqueue_front_scripts');    
+}
+
+if (!function_exists('__smarty_magazine_defer_scripts')) {
+    /**
+     * Defer non-critical scripts.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $tag    The script tag.
+     * 
+     * @return string Modified script tag.
+     * 
+     * @link https://developer.wordpress.org/reference/hooks/script_loader_tag/
+     */
+    function __smarty_magazine_defer_scripts($tag, $handle, $src) {
+        // List of scripts to defer
+        $scripts_to_defer = array(
+            'bootstrap-5',
+            'swiper-js',
+            'sm-front-js'
+        );
+
+        if (in_array($handle, $scripts_to_defer)) {
+            return '<script src="' . esc_url($src) . '" defer></script>';
+        }
+
+        return $tag;
+    }
+    add_filter('script_loader_tag', '__smarty_magazine_defer_scripts', 10, 3);
 }
 
 if (!function_exists('__smarty_magazine_handle_ajax')) {

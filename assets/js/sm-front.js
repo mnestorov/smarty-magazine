@@ -33,15 +33,17 @@ jQuery(document).ready(function($) {
     }
 
     // News Ticker
-    $('.sm-newsticker').newsTicker({
-        row_height: 42,
-        max_rows: 1,
-        speed: 600,
-        direction: 'up',
-        duration: 3500,
-        autostart: 1,
-        pauseOnHover: 1
-    });
+    if ($('.sm-newsticker').length) {
+        $('.sm-newsticker').newsTicker({
+            row_height: 42,
+            max_rows: 1,
+            speed: 600,
+            direction: 'up',
+            duration: 3500,
+            autostart: 1,
+            pauseOnHover: 1
+        });
+    }
 
     // Initialize post slider
     new Swiper('.sm-featured-post-slider', {

@@ -1170,16 +1170,16 @@ button.sm-sec-nav:hover {
 }
 
 .bt-news-ticker-tag {
-	color: var(--color-dark);
-	background-color: var(--color-primary);
+    color: var(--color-dark);
+    background-color: var(--color-primary);
     font-size: 16px;
-	font-weight: bold;
+    font-weight: bold;
     line-height: 1em;
     position: relative;
     float: left;
     width: auto;
+    padding: 12px 10px 12px 10px;
     margin-right: 20px;
-    padding: 12px 20px 12px 10px;
     text-transform: uppercase;
 }
 
