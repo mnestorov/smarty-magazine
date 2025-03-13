@@ -488,7 +488,7 @@ if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
 
 if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
     /**
-     * Add meta box for Dictionary CPT to select a related article.
+     * Add meta box for Dictionary CPT to enter a related link.
      *
      * @since 1.0.0
      * 
@@ -496,9 +496,9 @@ if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
      */
     function __smarty_magazine_add_dictionary_meta_boxes() {
         add_meta_box(
-            'dictionary_related_article_meta_box',
-            __('Related Article', 'smarty_magazine'),
-            '__smarty_magazine_dictionary_related_article_callback',
+            'dictionary_related_link_meta_box',
+            __('Related Link', 'smarty_magazine'),
+            '__smarty_magazine_dictionary_related_link_callback',
             'dictionary',
             'side',
             'default'
@@ -507,9 +507,9 @@ if (!function_exists('__smarty_magazine_add_dictionary_meta_boxes')) {
     add_action('add_meta_boxes', '__smarty_magazine_add_dictionary_meta_boxes');
 }
 
-if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
+if (!function_exists('__smarty_magazine_dictionary_related_link_callback')) {
     /**
-     * Callback to display the related article meta box.
+     * Callback to display the related link meta box.
      *
      * @since 1.0.0
      * 
@@ -517,30 +517,14 @@ if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
      * 
      * @return void
      */
-    function __smarty_magazine_dictionary_related_article_callback($post) {
-        wp_nonce_field('__smarty_magazine_dictionary_meta_box', 'dictionary_related_article_nonce');
-        $selected_article = get_post_meta($post->ID, '_dictionary_related_article', true);
-
-        // Get all posts (default 'post' type)
-        $args = array(
-            'post_type'      => 'post',
-            'posts_per_page' => -1,
-            'post_status'    => 'publish',
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-        );
-        $articles = get_posts($args);
+    function __smarty_magazine_dictionary_related_link_callback($post) {
+        wp_nonce_field('__smarty_magazine_dictionary_meta_box', 'dictionary_related_link_nonce');
+        $related_link = get_post_meta($post->ID, '_dictionary_related_link', true);
         ?>
         <p>
-            <label for="sm-dictionary-related-article"><b><?php _e('Select an Article', 'smarty_magazine'); ?></b></label>
-            <select name="sm-dictionary-related-article" id="sm-dictionary-related-article" class="widefat">
-                <option value=""><?php _e('Select a article', 'smarty_magazine'); ?></option>
-                <?php foreach ($articles as $article) : ?>
-                    <option value="<?php echo esc_attr($article->ID); ?>" <?php selected($selected_article, $article->ID); ?>>
-                        <?php echo esc_html($article->post_title); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <label for="sm-dictionary-related-link"><b><?php _e('Enter a Related Link:', 'smarty_magazine'); ?></b></label>
+            <input type="url" name="sm-dictionary-related-link" id="sm-dictionary-related-link" class="widefat" 
+                   value="<?php echo esc_attr($related_link); ?>" placeholder="https://example.com">
         </p>
         <?php
     }
@@ -548,7 +532,7 @@ if (!function_exists('__smarty_magazine_dictionary_related_article_callback')) {
 
 if (!function_exists('__smarty_magazine_save_dictionary_meta')) {
     /**
-     * Save the related article meta data.
+     * Save the related link meta data.
      *
      * @since 1.0.0
      * 
@@ -560,17 +544,17 @@ if (!function_exists('__smarty_magazine_save_dictionary_meta')) {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
-        if (!isset($_POST['dictionary_related_article_nonce']) || !wp_verify_nonce($_POST['dictionary_related_article_nonce'], '__smarty_magazine_dictionary_meta_box')) {
+        if (!isset($_POST['dictionary_related_link_nonce']) || !wp_verify_nonce($_POST['dictionary_related_link_nonce'], '__smarty_magazine_dictionary_meta_box')) {
             return;
         }
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
 
-        if (isset($_POST['dictionary_related_article'])) {
-            update_post_meta($post_id, '_dictionary_related_article', sanitize_text_field($_POST['dictionary_related_article']));
+        if (!empty($_POST['sm-dictionary-related-link'])) {
+            update_post_meta($post_id, '_dictionary_related_link', esc_url($_POST['sm-dictionary-related-link']));
         } else {
-            delete_post_meta($post_id, '_dictionary_related_article');
+            delete_post_meta($post_id, '_dictionary_related_link');
         }
     }
     add_action('save_post', '__smarty_magazine_save_dictionary_meta');
@@ -591,7 +575,7 @@ if (!function_exists('__smarty_magazine_dictionary_columns')) {
             'cb'              => '<input type="checkbox" />',
             'title'           => __('Title', 'smarty_magazine'),
             'first_letter'    => __('First Letter', 'smarty_magazine'),
-            'related_article' => __('Related Article', 'smarty_magazine'),
+            'related_link'    => __('Related Link', 'smarty_magazine'),
             'date'            => __('Date', 'smarty_magazine'),
         );
         return $columns;
@@ -616,16 +600,15 @@ if (!function_exists('__smarty_magazine_dictionary_custom_column')) {
             echo esc_html(mb_strtoupper(mb_substr($title, 0, 1, 'UTF-8')));
         }
     
-        if ($column === 'related_article') {
-            $article_id = get_post_meta($post_id, '_dictionary_related_article', true);
-            if ($article_id) {
-                $article_title = get_the_title($article_id);
-                $article_link = get_edit_post_link($article_id);
-                echo '<a href="' . esc_url($article_link) . '">' . esc_html($article_title) . '</a>';
+        if ($column === 'related_link') {
+            $related_link = get_post_meta($post_id, '_dictionary_related_link', true);
+            if (!empty($related_link)) {
+                echo '<a href="' . esc_url($related_link) . '">'
+                     . esc_html($related_link) . '</a>';
             } else {
-                echo __('None', 'smarty_magazine');
+                echo '<span class="text-muted">' . __('None', 'smarty_magazine') . '</span>';
             }
-        }
+        }        
     } 
     add_action('manage_dictionary_posts_custom_column', '__smarty_magazine_dictionary_custom_column', 10, 2);
 }
@@ -741,10 +724,10 @@ if (!function_exists('__smarty_magazine_dictionary_search')) {
                                 <div class="accordion-body">
                                     <?php
                                     echo wpautop(get_the_content(null, false, $item->ID));
-                                    $article_id = get_post_meta($item->ID, '_dictionary_related_article', true);
-                                    if ($article_id) {
-                                        $article_link = get_permalink($article_id);
-                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link sm-dictionary-read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
+                                    $related_link = get_post_meta($item->ID, '_dictionary_related_link', true);
+                                    if (!empty($related_link)) {
+                                        echo '<p><a href="' . esc_url($related_link) . '" class="btn btn-primary sm-dictionary-read-more">'
+                                            . __('LEARN MORE', 'smarty_magazine') . '</a></p>';
                                     }
                                     ?>
                                 </div>

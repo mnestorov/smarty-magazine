@@ -572,12 +572,14 @@ ul, ol {
 }
 
 /* Style unordered lists, but exclude the ToC lists */
+.sm-taxonomy-description ul:not(.toc-container ul),
 article.sm-single-post .entry-content ul:not(.toc-container ul),
 article.sm-single-news .entry-content ul:not(.toc-container ul) {
     list-style: none;
 }
 
 /* List items with custom Bootstrap check icon, but exclude ToC lists */
+.sm-taxonomy-description ul li:not(.toc-container li),
 article.sm-single-post .entry-content ul:not(.toc-container ul) li,
 article.sm-single-news .entry-content ul:not(.toc-container ul) li {
     position: relative;
@@ -589,6 +591,7 @@ article.sm-single-news .entry-content ul:not(.toc-container ul) li {
 }
 
 /* Adding Bootstrap check icon before list items, but exclude ToC lists */
+.sm-taxonomy-description ul:not(.toc-container ul) li::before,
 article.sm-single-post .entry-content ul:not(.toc-container ul) li::before,
 article.sm-single-news .entry-content ul:not(.toc-container ul) li::before {
     content: "";
@@ -604,6 +607,7 @@ article.sm-single-news .entry-content ul:not(.toc-container ul) li::before {
 }
 
 /* Hover effect, but exclude ToC lists */
+.sm-taxonomy-description ul li:hover:not(.toc-container li),
 article.sm-single-post .entry-content ul:not(.toc-container ul) li:hover,
 article.sm-single-news .entry-content ul:not(.toc-container ul) li:hover {
     transform: translateX(5px);
@@ -637,11 +641,13 @@ article.sm-single-news .accordion-body ul li::before {
     font-weight: bold;
 }
 
+.sm-taxonomy-description a:not(.toc-container a),
 article.sm-single-post .entry-content a:not(.toc-container a),
 article.sm-single-news .entry-content a:not(.toc-container a) {
     border-bottom: 3px solid var(--color-primary);
 }
 
+.sm-taxonomy-description a:hover:not(.toc-container a),
 article.sm-single-post .entry-content a:hover:not(.toc-container a),
 article.sm-single-news .entry-content a:hover:not(.toc-container a) {
 	color: var(--color-primary);
@@ -2529,9 +2535,13 @@ input[type='search']::placeholder {
 	border-radius: 5px;
 }
 
+.sm-sidebar .widget:first-of-type {
+	margin-top: 0;
+}
+
 .sm-sidebar .widget,
 .sm-news-sidebar .widget {
-	margin-top: 3rem;
+	margin: 3rem 0;
 	border: 1px solid var(--color-border);
 	border-radius: 5px;
 }
@@ -4162,4 +4172,10 @@ cite {
 
 .sm-dictionary-read-more {
     margin-top: 10px;
+}
+
+.sm-taxonomy-description {
+	background: linear-gradient(135deg, #ffc10733, #ffeb3b33);
+	border-left: 5px solid #ffc107;
+	border-right: 1px solid #ffc107;
 }

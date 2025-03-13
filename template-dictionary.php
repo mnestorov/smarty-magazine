@@ -89,10 +89,10 @@ get_header(); ?>
                                 <div class="accordion-body">
                                     <?php
                                     echo wpautop(get_the_content(null, false, $item->ID)); // Short description
-                                    $article_id = get_post_meta($item->ID, '_dictionary_related_article', true);
-                                    if ($article_id) {
-                                        $article_link = get_permalink($article_id);
-                                        echo '<p><a href="' . esc_url($article_link) . '" class="btn btn-link sm-dictionary-read-more">' . __('Read More', 'smarty_magazine') . '</a></p>';
+                                    $related_link = get_post_meta($item->ID, '_dictionary_related_link', true);
+                                    if (!empty($related_link)) {
+                                        echo '<p><a href="' . esc_url($related_link) . '" class="btn btn-primary sm-dictionary-read-more">'
+                                            . __('LEARN MORE', 'smarty_magazine') . '</a></p>';
                                     }
                                     ?>
                                 </div>

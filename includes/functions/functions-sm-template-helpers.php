@@ -179,6 +179,11 @@ if (!function_exists('__smarty_magazine_clean_archive_titles')) {
             return single_cat_title('', false); // Returns only the category name
         }
 
+        // Remove "Tag:" for normal post types
+        if (is_tag()) {
+            return single_tag_title('', false); // Returns only the tag name
+        }
+
         // Remove default "Archive:" prefix from all archive pages
         $title = preg_replace('/^\s*'.__('Archive:', 'default').'\s*/', '', $title);
         
