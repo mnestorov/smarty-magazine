@@ -101,7 +101,11 @@ if (!function_exists('__smarty_magazine_register_news_taxonomies')) {
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
-            'rewrite'           => array('slug' => 'news-category'),
+            'rewrite'           => array(
+                'slug'         => 'news/c',
+                'with_front'   => false,
+                'hierarchical' => true,
+            ),
         );
 
         register_taxonomy('news_category', array('news'), $args);
@@ -131,12 +135,33 @@ if (!function_exists('__smarty_magazine_register_news_taxonomies')) {
             'show_admin_column'     => true,
             'update_count_callback' => '_update_post_term_count',
             'query_var'             => true,
-            'rewrite'               => array('slug' => 'news-tag'),
+            'rewrite'               => array(
+                'slug'         => 'news/t',
+                'with_front'   => false,
+                'hierarchical' => false,
+            ),
         );
 
         register_taxonomy('news_tag', array('news'), $args);
     }
     add_action('init', '__smarty_magazine_register_news_taxonomies');
+}
+
+if (!function_exists('__smarty_magazine_rewrite_rules')) {
+    /**
+     * Add rewrite rules for the news post type.
+     * 
+     * @since 1.0.0
+     * 
+     * @return void
+     * 
+     * @link https://developer.wordpress.org/reference/functions/add_rewrite_rule/
+     */
+    function __smarty_magazine_rewrite_rules() {
+        add_rewrite_rule('news/c/([^/]+)/?$', 'index.php?news_category=$matches[1]', 'top');
+        add_rewrite_rule('news/t/([^/]+)/?$', 'index.php?news_tag=$matches[1]', 'top');
+    }
+    add_action('init', '__smarty_magazine_rewrite_rules');
 }
 
 if (!function_exists('__smarty_magazine_add_news_meta_boxes')) {
