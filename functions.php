@@ -1615,3 +1615,35 @@ if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
     add_filter('wp_generate_attachment_metadata', '__smarty_magazine_add_watermark_to_images', 10, 2);
 }
 
+if (!function_exists('__smarty_magazine_fix_menu_classes')) {
+    /**
+     * Fix menu active class issues where 'News' is active when viewing categories, pages, or other custom post types.
+     *
+     * @since 1.0.0
+     *
+     * @param array $classes CSS classes for the menu item.
+     * @param WP_Post|stdClass $item Menu item object.
+     * @param stdClass $args Menu arguments.
+     *
+     * @return array Modified menu classes.
+     */
+    function __smarty_magazine_fix_menu_classes($classes, $item, $args) {
+        $news_archive_link = get_post_type_archive_link('news');
+        $item_url = !empty($item->url) ? trailingslashit($item->url) : '';
+    
+        // Highlight News menu item on News archive, single News, or News taxonomies
+        if ($item_url === trailingslashit($news_archive_link)) {
+            if (is_post_type_archive('news') || is_singular('news') || is_tax('news_category') || is_tax('news_tag')) {
+                $classes[] = 'current-menu-item';
+                $classes[] = 'current-menu-parent';
+                $classes[] = 'current-menu-ancestor';
+            } else {
+                // Remove highlight if not on a News-related page
+                $classes = array_diff($classes, ['current-menu-item', 'current-menu-parent', 'current_page_parent']);
+            }
+        }
+    
+        return array_unique($classes);
+    }
+    add_filter('nav_menu_css_class', '__smarty_magazine_fix_menu_classes', 10, 3);
+}
