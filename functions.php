@@ -85,20 +85,19 @@ if (!function_exists('__smarty_magazine_setup')) {
 
 if (!function_exists('__smarty_magazine_enable_lazy_loading_images')) {
     /**
-     * Enable lazy loading for images in content.
+     * Enable lazy loading for images in content, excluding slider images.
      * 
      * @since 1.0.0
-     *
+     * 
      * @param string $content The post content.
      * 
      * @return string Modified post content.
      */
     function __smarty_magazine_enable_lazy_loading_images($content) {
-        if (is_admin()) return $content;
-
-        // Add loading="lazy" to all images in content
-        $content = preg_replace('/<img(?![^>]+loading=)/', '<img loading="lazy"', $content);
-
+        if (is_admin() || is_feed() || strpos($content, 'sm-featured-posts-wrap') !== false || strpos($content, 'sm-highlighted-news-holder') !== false) return $content;
+        
+        $content = preg_replace('/<img(?![^>]+loading=)(?![^>]+class=["\']*[^"\']*(sm-featured-posts-wrap|sm-highlighted-news-img)[^"\']*["\'])/', '<img loading="lazy"', $content);
+        
         return $content;
     }
     add_filter('the_content', '__smarty_magazine_enable_lazy_loading_images', 99);
@@ -176,19 +175,17 @@ if (!function_exists('__smarty_magazine_preload_front_styles')) {
      * @return void
      */
     function __smarty_magazine_preload_front_styles() {
-        // Define an array of styles to preload
         $preload_styles = array(
             'bootstrap'       => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css',
             'bootstrap-icons' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css',
             'swiper'          => 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css',
         );
-
-        // Loop through and print the preload links
+    
         foreach ($preload_styles as $key => $url) {
-            echo '<link rel="preload" as="style" href="' . esc_url($url) . '" onload="this.rel=\'stylesheet\';">' . "\n";
+            echo '<link rel="preload" as="style" href="' . esc_url($url) . '" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n";
         }
     }
-    add_action('wp_head', '__smarty_magazine_preload_front_styles', 5);
+    add_action('wp_head', '__smarty_magazine_preload_front_styles', 5);    
 }
 
 if (!function_exists('__smarty_magazine_enqueue_front_scripts')) {
@@ -212,7 +209,7 @@ if (!function_exists('__smarty_magazine_enqueue_front_scripts')) {
             'https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900&display=swap',
             array(),
             null,
-            'print' // Loads as print, switches to all onload
+            'all'
         );
         wp_add_inline_script(
             'google-fonts-roboto',
@@ -286,6 +283,29 @@ if (!function_exists('__smarty_magazine_defer_scripts')) {
     add_filter('script_loader_tag', '__smarty_magazine_defer_scripts', 10, 3);
 }
 
+function __smarty_magazine_preload_slider_image() {
+    $query = new WP_Query(array('post_type' => 'post', 'posts_per_page' => 1, 'orderby' => 'date', 'order' => 'DESC'));
+    if ($query->have_posts()) {
+        $query->the_post();
+        if (has_post_thumbnail()) {
+            $image_src = wp_get_attachment_image_url(get_post_thumbnail_id(), wp_is_mobile() ? 'medium' : 'sm-featured-post-medium');
+            $image_webp = $image_src . '.webp';
+            echo '<link rel="preload" as="image" href="' . esc_url($image_webp) . '" type="image/webp" fetchpriority="high">';
+        }
+        wp_reset_postdata();
+    }
+}
+add_action('wp_head', '__smarty_magazine_preload_slider_image', 1);
+
+function __smarty_magazine_inline_critical_css() {
+    echo '<style>
+        .sm-featured-post-slider { position: relative; }
+        .swiper-slide { width: 556px; height: 380px; }
+        .sm-featured-post-img img { max-width: 100%; height: auto; }
+    </style>';
+}
+add_action('wp_head', '__smarty_magazine_inline_critical_css', 2);
+
 if (!function_exists('__smarty_magazine_handle_ajax')) {
     /**
      * Handle AJAX requests.
@@ -355,6 +375,23 @@ require get_template_directory() . '/includes/classes/widgets/class-sm-widget-ne
  */
 require get_template_directory() . '/includes/functions/functions-sm-register-cpt.php';
 require get_template_directory() . '/includes/functions/functions-sm-register-widgets.php';
+
+if (!function_exists('__smarty_magazine_clean_content')) {
+    /**
+     * Strips unnecessary wp-block divs from content to reduce DOM size.
+     *
+     * @since 1.0.0
+     * 
+     * @param string $content The post content.
+     * 
+     * @return string Modified content with stripped divs.
+     */
+    function __smarty_magazine_clean_content($content) {
+        $content = preg_replace('/<div class="wp-block-[^>]+>(.+?)<\/div>/', '$1', $content); // Strip wp-block divs
+        return $content;
+    }
+    add_filter('the_content', '__smarty_magazine_clean_content', 98);
+}
 
 if (!function_exists('__smarty_magazine_tinymce_init')) {
     /**
@@ -1724,3 +1761,63 @@ if (!function_exists('__smarty_magazine_fix_menu_classes')) {
     }
     add_filter('nav_menu_css_class', '__smarty_magazine_fix_menu_classes', 10, 3);
 }
+
+/**
+ * Move Google Tag Manager from Google Site Kit to the footer.
+ *
+ * @since 1.0.0
+ */
+function __smarty_magazine_move_gtm_to_footer() {
+    // Check if Site Kit is active and GTM is enabled
+    if (!class_exists('Google\Site_Kit\Context') || !function_exists('googlesitekit_gtag_opt')) {
+        return;
+    }
+
+    // Get the GTM container ID from Site Kit settings
+    $site_kit_context = new Google\Site_Kit\Context(WP_PLUGIN_DIR . '/google-site-kit');
+    $gtm_module = Google\Site_Kit\Modules\Tag_Manager::instance();
+    if ($gtm_module && $gtm_module->is_active()) {
+        $settings = $gtm_module->get_settings()->get();
+        $gtm_id = !empty($settings['accountID']) ? $settings['accountID'] : '';
+    }
+
+    if (empty($gtm_id)) {
+        return; // No GTM ID configured
+    }
+
+    // Remove default GTM script from head (Site Kit uses priority 10)
+    remove_action('wp_head', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_script'], 10);
+
+    // Add GTM script to footer
+    add_action('wp_footer', function() use ($gtm_id) {
+        ?>
+        <!-- Google Tag Manager (Moved to Footer by Smarty Magazine) -->
+        <script>
+            (function(w,d,s,l,i){
+                w[l]=w[l]||[];
+                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+                j.defer=true; // Use defer instead of async for better compatibility
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','<?php echo esc_js($gtm_id); ?>');
+        </script>
+        <!-- End Google Tag Manager -->
+        <?php
+    }, 20);
+
+    // Optional: Move noscript to footer (Site Kit adds it via wp_body_open by default)
+    remove_action('wp_body_open', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_noscript']);
+    add_action('wp_footer', function() use ($gtm_id) {
+        if (wp_is_mobile() && false) return; // Skip noscript on mobile if desired
+        ?>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <?php
+    }, 30);
+}
+add_action('wp_enqueue_scripts', '__smarty_magazine_move_gtm_to_footer');

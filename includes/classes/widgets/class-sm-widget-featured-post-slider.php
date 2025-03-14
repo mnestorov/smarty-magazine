@@ -97,20 +97,21 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
         //error_log('SQL Query: ' . $featured_posts->request);
         //error_log('Found Posts: ' . $featured_posts->found_posts);
 
-        if ($featured_posts->have_posts()) : ?>
+        if ($featured_posts->have_posts()) : 
+            $index = 0; // Initialize slide index ?>
             <div class="sm-featured-post-slider-wrap">
                 <div class="sm-featured-post-slider">
                     <div class="swiper-wrapper">
                         <?php while ($featured_posts->have_posts()) : $featured_posts->the_post(); ?>
-                            <?php //error_log('Rendering Post: ' . get_the_title()); // Debugging post titles ?>
                             <?php if (has_post_thumbnail()) : ?>
-                                <?php $this->render_post_slide(); ?>
+                                <?php $this->render_post_slide($index); ?>
                             <?php else : ?>
                                 <div class="swiper-slide">
                                     <h3><?php echo get_the_title(); ?></h3>
                                     <p><?php _e('No Thumbnail.', 'smarty_magazine'); ?></p>
                                 </div>
                             <?php endif; ?>
+                            <?php $index++; // Increment index ?>
                         <?php endwhile; ?>
                     </div><!-- .swiper-wrapper -->
                     <!-- Navigation arrows -->
@@ -131,18 +132,30 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
      * 
      * @return void
      */
-    private function render_post_slide() { ?>
+    private function render_post_slide($index) { ?>
         <div class="swiper-slide">
             <div class="sm-featured-posts-wrap">
                 <figure class="sm-featured-post-img">
                     <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
-                        <?php if (has_post_thumbnail()) : ?>
-                            <?php 
-                                the_post_thumbnail('sm-featured-image', array(
-                                    'title' => esc_attr(get_the_title()),
-                                    'alt'   => esc_attr(get_the_title()),
-                                ));
+                        <?php if (has_post_thumbnail()) :
+                            $image_id = get_post_thumbnail_id();
+                            $image_src = wp_get_attachment_image_url($image_id, 'sm-featured-image');
+                            $image_srcset = wp_get_attachment_image_srcset($image_id, 'sm-featured-image');
+                            $image_sizes = wp_get_attachment_image_sizes($image_id, 'sm-featured-image');
                             ?>
+                            <img 
+                                width="556" 
+                                height="380" 
+                                src="<?php echo esc_url($image_src); ?>"
+                                srcset="<?php echo esc_attr($image_srcset); ?>"
+                                sizes="<?php echo esc_attr($image_sizes); ?>"
+                                class="attachment-sm-featured-image size-sm-featured-image wp-post-image"
+                                alt="<?php the_title_attribute(); ?>"
+                                title="<?php the_title_attribute(); ?>"
+                                decoding="async"
+                                loading="<?php echo ($index === 0) ? 'eager' : 'lazy'; ?>"
+                                <?php echo ($index === 0) ? 'fetchpriority="high"' : ''; ?>
+                            >
                         <?php else : ?>
                             <p><?php _e('No Thumbnail.', 'smarty_magazine'); ?></p>
                         <?php endif; ?>
@@ -162,7 +175,7 @@ class __Smarty_Magazine_Featured_Post_Slider extends WP_Widget {
                 </h2>
             </div>
         </div>
-        <?php
+        <?php 
     }
 
     /**

@@ -3103,11 +3103,9 @@ input[type='search']::placeholder {
 	.sm-news-layout1 .sm-news-post h3,
 	.sm-news-layout3 .sm-news-post-list h3 {
 		font-size: 16px;
-		font-weight: 500;
 		margin: 2px 0;
 	}
 }
-
 
 @media all and (max-width: 1200px) and (min-width: 768px) {
 	.sm-news-layout2 .sm-news-post h3 {

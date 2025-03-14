@@ -106,14 +106,14 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
     }
 
     /**
-     * Render the post HTML structure.
-     * 
+     * Render the post HTML structure with <img>, eager loading, and modern attributes.
+     *
      * @since 1.0.0
-     * 
+     *
      * @param int    $category_id Category ID.
      * @param string $rgba        RGBA color value.
      * @param string $taxonomy    Taxonomy name.
-     * 
+     *
      * @return void
      */
     private function render_post($category_id, $rgba, $taxonomy) {
@@ -121,12 +121,25 @@ class __Smarty_Magazine_Highlighted_News extends WP_Widget {
         ?>
         <div class="sm-highlighted-news-holder">
             <figure class="sm-highlighted-news-img">
-                <?php if (has_post_thumbnail()) : ?>
+                <?php if (has_post_thumbnail()) :
+                    $image_id = get_post_thumbnail_id($post->ID);
+                    // Use 'sm-featured-post' size, assuming it's .webp
+                    $image_src = wp_get_attachment_image_url($image_id, 'sm-featured-post');
+                    // Dynamic loading: eager if above the fold, lazy otherwise (adjust logic as needed)
+                    $loading = (is_front_page() || is_single()) ? 'eager' : 'lazy'; // Example condition
+                ?>
                     <a href="<?php echo esc_url(get_permalink()); ?>" title="<?php the_title_attribute(); ?>">
-                        <?php echo get_the_post_thumbnail($post->ID, 'sm-featured-post-medium', array(
-                            'title' => esc_attr(get_the_title($post->ID)),
-                            'alt'   => esc_attr(get_the_title($post->ID)),
-                        )); ?>
+                        <img 
+                            src="<?php echo esc_url($image_src); ?>"
+                            width="556" 
+                            height="380"
+                            class="attachment-sm-featured-post size-sm-featured-post wp-post-image"
+                            alt="<?php echo esc_attr(get_the_title($post->ID)); ?>"
+                            title="<?php echo esc_attr(get_the_title($post->ID)); ?>"
+                            decoding="async"
+                            loading="<?php echo esc_attr($loading); ?>"
+                            <?php echo ($loading === 'eager') ? 'fetchpriority="high"' : ''; ?>
+                        >
                     </a>
                 <?php endif; ?>
             </figure>
