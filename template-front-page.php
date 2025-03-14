@@ -73,7 +73,7 @@
 					<?php endif; ?>
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-3 mt-5">
+			<div class="col-lg-3 col-md-3 mt-lg-5 mt-0">
 				<?php get_sidebar(); ?>
 			</div>
 		</div>
