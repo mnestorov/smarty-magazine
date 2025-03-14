@@ -175,13 +175,5 @@
             </div>
         <?php elseif (!is_front_page() && !is_home()) : ?>
             <!-- Breadcrumbs -->
-            <div class="sm-breadcrumbs">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <?php __smarty_magazine_breadcrumb(); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php __smarty_magazine_breadcrumb(); ?>
         <?php endif; ?>

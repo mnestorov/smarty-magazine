@@ -410,6 +410,38 @@ if (!function_exists('__smarty_excerpt_more')) {
 	add_filter('excerpt_more', '__smarty_excerpt_more');
 }
 
+if (!function_exists('__smarty_magazine_translate_slug')) {
+    /**
+     * Translate dynamic slugs into human-readable names.
+     * 
+     * @since 1.0.0
+     * 
+     * @param string $slug The dynamic slug.
+     * 
+     * @return array Translated name and URL.
+     * 
+     * @see __smarty_magazine_breadcrumb()
+     */
+    function __smarty_magazine_translate_slug($slug) {
+        $translations = [
+            /* translators: %1$s will be replaced with the dynamic page name (e.g., "My Page"). %2$s is an optional URL for this category. */
+            'dynamic_page' => __('%1$s||%2$s', 'smarty_magazine'),
+        ];
+
+        $translated_string = $translations['dynamic_page'];
+        
+        // Split the translation into name and optional URL (default to home_url)
+        $parts = explode('||', $translated_string);
+        $translated_name = sprintf($parts[0], ucfirst(str_replace('-', ' ', $slug)));
+        $translated_url = isset($parts[1]) && !empty($parts[1]) ? esc_url($parts[1]) : esc_url(home_url('/' . $slug . '/'));
+
+        return [
+            'name' => $translated_name,
+            'url' => $translated_url
+        ];
+    }
+}
+
 if (!function_exists('__smarty_magazine_breadcrumb')) {
     /**
      * Breadcrumb Navigation with Bootstrap 5 styling, supporting all post types including 'news'.
@@ -417,6 +449,8 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
      * @since 1.0.0
      * 
      * @return void
+     * 
+     * @see __smarty_magazine_translate_slug()
      */
     function __smarty_magazine_breadcrumb() {
         global $post;
@@ -426,11 +460,15 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
             return;
         }
 
+        echo '<div class="sm-breadcrumbs"><div class="container"><div class="row"><div class="col-lg-12 col-md-12">';
         echo '<nav aria-label="' . esc_attr__('Breadcrumb', 'smarty_magazine') . '">';
         echo '<ol class="breadcrumb">';
 
         // Home link
         echo '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Home', 'smarty_magazine') . '</a></li>';
+
+        $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $segments = explode('/', $request_uri);
 
         if (is_404()) {
             // 404 Page
@@ -525,10 +563,47 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {
             // Paged blog archive
             echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('Blog Archive', 'smarty_magazine') . '</li>';
+        } else {
+            $known_slugs = [];
+        
+            // Get all public post types (excluding standard pages & posts)
+            $post_types = get_post_types(['public' => true], 'objects');
+            foreach ($post_types as $post_type) {
+                if (!empty($post_type->rewrite['slug'])) {
+                    $known_slugs[] = trim($post_type->rewrite['slug'], '/');
+                }
+            }
+        
+            // Get all public taxonomies
+            $taxonomies = get_taxonomies(['public' => true], 'objects');
+            foreach ($taxonomies as $taxonomy) {
+                if (!empty($taxonomy->rewrite['slug'])) {
+                    $known_slugs[] = trim($taxonomy->rewrite['slug'], '/');
+                }
+            }
+        
+            // Add common paths (like categories, tags, author, search)
+            $known_slugs = array_merge($known_slugs, ['category', 'tag', 'author', 'search', 'page']);
+        
+            // Check if the first segment is dynamic (not in known paths)
+            if (!empty($segments) && !in_array($segments[0], $known_slugs)) {
+                $translated_data = __smarty_magazine_translate_slug($segments[0]);
+                
+                // **First breadcrumb: Translated dynamic category name with optional URL**
+                echo '<li class="breadcrumb-item"><a href="' . esc_url($translated_data['url']) . '">' . 
+                    esc_html($translated_data['name']) . 
+                '</a></li>';
+                
+                // **Second breadcrumb: Raw dynamic value (e.g., "Some Name")**
+                if (isset($segments[1])) {
+                    echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html(ucwords(str_replace('-', ' ', $segments[1]))) . '</li>';
+                }
+            }
         }
 
         echo '</ol>';
         echo '</nav>';
+        echo '</div></div></div></div>';
     }
 }
 
@@ -1626,6 +1701,8 @@ if (!function_exists('__smarty_magazine_fix_menu_classes')) {
      * @param stdClass $args Menu arguments.
      *
      * @return array Modified menu classes.
+     * 
+     * @see https://developer.wordpress.org/reference/hooks/nav_menu_css_class/
      */
     function __smarty_magazine_fix_menu_classes($classes, $item, $args) {
         $news_archive_link = get_post_type_archive_link('news');
