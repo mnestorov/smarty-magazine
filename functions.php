@@ -432,7 +432,10 @@ if (!function_exists('__smarty_magazine_breadcrumb')) {
         // Home link
         echo '<li class="breadcrumb-item"><a href="' . esc_url(home_url('/')) . '">' . esc_html__('Home', 'smarty_magazine') . '</a></li>';
 
-        if (is_category()) {
+        if (is_404()) {
+            // 404 Page
+            echo '<li class="breadcrumb-item active" aria-current="page">' . esc_html__('404 - Page Not Found', 'smarty_magazine') . '</li>';
+        } elseif (is_category()) {
             // Get the current category
             $category = get_queried_object();
         
@@ -1516,40 +1519,40 @@ if (!function_exists('__smarty_magazine_twitter_embed_shortcode')) {
 
 if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
     /**
-     * Add a watermark to uploaded images
-     * 
+     * Add watermarks to uploaded images
+     *
      * @since 1.0.0
-     * 
+     *
      * @param array $metadata The attachment metadata
      * @param int $attachment_id The attachment ID
-     * 
+     *
      * @return array The modified attachment metadata
      */
     function __smarty_magazine_add_watermark_to_images($metadata, $attachment_id) {
         if (!wp_attachment_is_image($attachment_id)) {
             return $metadata;
         }
-    
+
         // Define watermark settings
         $watermark_text = "CRYPTOPOINT.BG";
         $font = get_template_directory() . '/assets/fonts/Bicubik.OTF';
-        $font_size = 30;
+        $font_size = 34;
         $opacity = 70; // 0-100
-        $min_width = 1000; // Minimum width to apply watermark (adjust as needed)
-    
+        $min_width = 1000; // Minimum width to apply watermark
+
         if (!extension_loaded('imagick') || !class_exists('Imagick')) {
             error_log('Imagick is not installed. Watermarking skipped.');
             return $metadata;
         }
-    
+
         if (!file_exists($font)) {
             error_log('Font file not found at: ' . $font);
             return $metadata;
         }
-    
+
         $upload_dir = wp_upload_dir();
         $image_path = $upload_dir['basedir'] . '/' . $metadata['file'];
-    
+
         // Process full-size image if it meets the size threshold
         $image = new Imagick($image_path);
         if ($image->getImageWidth() >= $min_width) {
@@ -1558,22 +1561,29 @@ if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
             $draw->setFontSize($font_size);
             $draw->setFillColor('white');
             $draw->setFillOpacity($opacity / 100);
-    
+
             $metrics = $image->queryFontMetrics($draw, $watermark_text);
-            $x = $image->getImageWidth() - $metrics['textWidth'] - 10;
-            $y = $image->getImageHeight() - $metrics['textHeight'] + $metrics['ascender'] - 10;
-    
-            $image->annotateImage($draw, $x, $y, 0, $watermark_text);
+            
+            // First Watermark (Bottom-Right)
+            $x1 = $image->getImageWidth() - $metrics['textWidth'] - 10;
+            $y1 = $image->getImageHeight() - $metrics['textHeight'] + $metrics['ascender'] - 10;
+            $image->annotateImage($draw, $x1, $y1, 0, $watermark_text);
+
+            // Second Watermark (Left-Center)
+            $x2 = 10; // Margin from the left
+            $y2 = ($image->getImageHeight() / 2) + ($metrics['textHeight'] / 2) - 10; // Centered vertically
+            $image->annotateImage($draw, $x2, $y2, 0, $watermark_text);
+
             $image->writeImage($image_path);
         }
         $image->destroy();
-    
+
         // Apply to generated sizes, but only if they exceed the threshold
         if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size => $size_info) {
                 $size_path = $upload_dir['basedir'] . '/' . dirname($metadata['file']) . '/' . $size_info['file'];
                 $size_image = new Imagick($size_path);
-    
+
                 // Check size before applying watermark
                 if ($size_image->getImageWidth() >= $min_width) {
                     $size_draw = new ImagickDraw();
@@ -1581,19 +1591,27 @@ if (!function_exists('__smarty_magazine_add_watermark_to_images')) {
                     $size_draw->setFontSize($font_size);
                     $size_draw->setFillColor('white');
                     $size_draw->setFillOpacity($opacity / 100);
-    
+
                     $size_metrics = $size_image->queryFontMetrics($size_draw, $watermark_text);
-                    $size_x = $size_image->getImageWidth() - $size_metrics['textWidth'] - 10;
-                    $size_y = $size_image->getImageHeight() - $size_metrics['textHeight'] + $size_metrics['ascender'] - 10;
-    
-                    $size_image->annotateImage($size_draw, $size_x, $size_y, 0, $watermark_text);
+
+                    // First Watermark (Bottom-Right)
+                    $size_x1 = $size_image->getImageWidth() - $size_metrics['textWidth'] - 10;
+                    $size_y1 = $size_image->getImageHeight() - $size_metrics['textHeight'] + $size_metrics['ascender'] - 10;
+                    $size_image->annotateImage($size_draw, $size_x1, $size_y1, 0, $watermark_text);
+
+                    // Second Watermark (Left-Center)
+                    $size_x2 = 10; // Margin from the left
+                    $size_y2 = ($size_image->getImageHeight() / 2) + ($size_metrics['textHeight'] / 2) - 10;
+                    $size_image->annotateImage($size_draw, $size_x2, $size_y2, 0, $watermark_text);
+
                     $size_image->writeImage($size_path);
                 }
                 $size_image->destroy();
             }
         }
-    
+
         return $metadata;
     }
     add_filter('wp_generate_attachment_metadata', '__smarty_magazine_add_watermark_to_images', 10, 2);
 }
+
