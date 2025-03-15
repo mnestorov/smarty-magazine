@@ -3792,6 +3792,10 @@ h3.card-title  {
     border-color: var(--bs-btn-hover-border-color);
 }
 
+.border-primary-default {
+	border-color: var(--color-primary) !important;
+}
+
 blockquote {
 	position: relative;
     font-size: 1.2rem;
@@ -3826,6 +3830,13 @@ cite {
     font-weight: bold;
     color: var(--color-primary);
     margin-top: 0.5rem;
+}
+
+.author-box {
+	border-left: 5px solid #ffc107;
+    border-right: 1px solid #ffc107;
+	border-top: 0;
+	border-bottom: 0;
 }
 
 /*--------------------------------------------------------------

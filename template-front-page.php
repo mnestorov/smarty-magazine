@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-3 mt-lg-5 mt-0">
-				<?php get_sidebar(); ?>
+				<?php get_sidebar('home'); ?>
 			</div>
 		</div>
 	</div>
@@ -114,7 +114,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-3">
-				<?php get_sidebar(); ?>
+				<?php get_sidebar('home'); ?>
 			</div>
 		</div>
 	</div>

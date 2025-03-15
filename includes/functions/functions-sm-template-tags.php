@@ -43,9 +43,8 @@
 			) . '</span>';
 	
 		// Construct the updated date output (always show if different)
-		$updated_on = '';
 		if ($is_updated) {
-			$updated_on = '<span class="updated ms-3 text-warning">
+			$updated_on = '<span class="updated me-3">
 				<i class="bi bi-pencil me-1"></i><span class="d-none d-md-inline">' . 
 				sprintf(
 					esc_html__('Updated on: %s', 'smarty_magazine'),
@@ -58,7 +57,7 @@
 		'<i class="bi bi-person me-1"></i><span class="d-none d-md-inline">' . esc_html__('Author:', 'smarty_magazine') . '</span> ' .
 		sprintf(
 			'<span class="author vcard" itemprop="author" itemscope itemtype="https://schema.org/Person">
-				<a class="url fn n text-decoration-none" href="%s" itemprop="url">
+				<a class="url fn n text-decoration-none" href="%s" itemprop="url" rel="author">
 					<span itemprop="name">%s</span>
 				</a>
 			</span>',
@@ -68,10 +67,10 @@
 	
 		// Output the final post meta with Bootstrap styling
 		?>
-		<div class="sm-post-meta text-muted px-2 my-2">
+		<div class="sm-post-meta text-muted py-3">
 			<?php echo $posted_on; // Display the posted date ?>
 			<?php echo $updated_on; // Display the updated date if applicable ?>
-			<span class="byline ms-3">
+			<span class="byline me-3">
 				<?php echo $byline; // Display the author ?>
 			</span>
 		</div>

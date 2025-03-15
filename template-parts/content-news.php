@@ -37,7 +37,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
         <?php endif; ?>
     </header>
     
-    <div class="entry-content">
+    <div class="entry-content mt-0">
         <?php if (has_post_thumbnail()) : ?>
             <figure class="sm-single-news-img mb-4 position-relative" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
                 <?php the_post_thumbnail('sm-featured-post-extra-large', array('class' => 'img-fluid')); ?>

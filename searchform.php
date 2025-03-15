@@ -15,7 +15,7 @@
             <h2 class="mb-3 text-center">
                 <?php esc_html_e('Looking for Something?', 'smarty_magazine'); ?>
             </h2>
-            <p class="text-center text-muted mb-4">
+            <p class="lead text-center text-muted mb-4">
                 <?php esc_html_e('Type your query below and click "Search" to find what you need!', 'smarty_magazine'); ?>
             </p>
 

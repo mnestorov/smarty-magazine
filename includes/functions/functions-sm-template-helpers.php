@@ -45,7 +45,7 @@ if (!function_exists('__smarty_magazine_render_news_carousel')) {
     function __smarty_magazine_render_news_carousel($posts, $status, $items_per_slide = '') {
         $carousel_id = "news-$status-carousel";
         ?>
-        <section class="news-section news-<?php echo esc_attr($status); ?> mb-5">
+        <section class="news-section news-<?php echo esc_attr($status); ?> mb-5 shadow-lg">
             <div class="d-flex justify-content-between align-items-center px-2">
                 <h2 class="section-title <?php echo esc_attr("text-$status"); ?>"><?php echo esc_html(__smarty_magazine_translate_news_status($status)); ?></h2>
                 <?php if (count($posts) > 1) : ?>
@@ -101,13 +101,14 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
      */
     function __smarty_magazine_render_news_post($post, $status = null) {
         $post_id = is_object($post) ? $post->ID : $post; // Handle both WP_Post object and ID
-        $button_class = $status === 'breaking' ? 'danger' : ($status === 'featured' ? 'warning' : 'primary-default');
+        $button_class = $status === 'breaking' ? 'danger text-uppercase' : ($status === 'featured' ? 'warning text-uppercase' : 'primary-default text-uppercase');
+        $border_class = $status === 'breaking' ? 'danger' : ($status === 'featured' ? 'warning' : 'primary');
         ?>
-        <article id="post-<?php echo esc_attr($post_id); ?>" <?php post_class("card h-100 p-0 news-$status"); ?> itemscope itemtype="https://schema.org/NewsArticle">
+        <article id="post-<?php echo esc_attr($post_id); ?>" <?php post_class($status ? "card h-100 news-$status" : 'card h-100 border-0 shadow-lg'); ?> itemscope itemtype="https://schema.org/NewsArticle">
             <figure class="sm-news-post-img">
                 <?php if (has_post_thumbnail($post_id)) : ?>
                     <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="card-img-top">
-                        <?php echo get_the_post_thumbnail($post_id, 'sm-featured-post-large', array('class' => 'img-fluid', 'itemprop' => 'image')); ?>
+                        <?php echo get_the_post_thumbnail($post_id, 'sm-featured-post-large', array('class' => 'img-fluid rounded-top', 'itemprop' => 'image')); ?>
                     </a>
                 <?php else : ?>
                     <div class="card-img-top">
@@ -116,33 +117,35 @@ if (!function_exists('__smarty_magazine_render_news_post')) {
                 <?php endif; ?>
             </figure>
 
-            <?php __smarty_magazine_posted_on($post_id); ?>
-
-            <div class="card-body p-2">
+            <div class="card-body px-0">
                 <?php if ($status) : ?>
                     <h2 class="card-title" itemprop="headline">
                         <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
                             <?php echo esc_html(get_the_title($post_id)); ?>
                         </a>
                     </h2>
+                    <div class="card-text" itemprop="description">
+                        <?php __smarty_magazine_posted_on($post_id); ?>
+                        <?php //the_excerpt($post_id); ?>
+                    </div>
                 <?php else : ?>
                     <h3 class="card-title" itemprop="headline">
                         <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="text-decoration-none">
                             <?php echo esc_html(get_the_title($post_id)); ?>
                         </a>
                     </h3>
+                    <div class="card-text" itemprop="description">
+                        <?php __smarty_magazine_posted_on($post_id); ?>
+                        <?php //the_excerpt($post_id); ?>
+                    </div>
                 <?php endif; ?>
             </div>
             
-            <?php if ($status) : ?>
-                <div class="card-footer bg-transparent border-0 p-0">
-                    <div class="d-grid gap-2">
-                        <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="btn btn-<?php echo esc_attr($button_class); ?> rounded-0">
-                            <?php _e('Read More', 'smarty_magazine'); ?>
-                        </a>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <div class="card-footer bg-transparent <?php echo $status ? 'border-' . esc_attr($border_class) : ''; ?> text-center">
+                <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="btn btn-<?php echo $status ? esc_attr($button_class) : 'primary'; ?> mt-3">
+                    <?php _e('Read More', 'smarty_magazine'); ?>
+                </a>
+            </div>
 
             <meta itemprop="mainEntityOfPage" content="<?php echo esc_url(get_permalink($post_id)); ?>">
             <?php if (has_post_thumbnail($post_id)) : ?>

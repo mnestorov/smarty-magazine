@@ -139,12 +139,13 @@ if (!function_exists('__smarty_magazine_enqueue_admin_scripts')) {
 		if ('widgets.php' === $hook || 'customize.php' === $hook) {
 			wp_enqueue_style('wp-color-picker');
 			wp_enqueue_script('wp-color-picker');
-			wp_enqueue_media();
             wp_localize_script('sm-admin-js', 'sm_ajax_data', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce'    => wp_create_nonce('sm_ajax_nonce'),
             ));
         }
+
+        wp_enqueue_media();
 	}
 	add_action('admin_enqueue_scripts', '__smarty_magazine_enqueue_admin_scripts');
 }
@@ -335,6 +336,7 @@ if (!function_exists('__smarty_magazine_handle_ajax')) {
 require get_template_directory() . '/includes/functions/functions-sm-dashboard.php';
 require get_template_directory() . '/includes/functions/functions-sm-plugins-recommended.php';
 require get_template_directory() . '/includes/functions/functions-sm-custom-header.php';
+require get_template_directory() . '/includes/functions/functions-sm-author.php';
 require get_template_directory() . '/includes/functions/functions-sm-template-helpers.php';
 require get_template_directory() . '/includes/functions/functions-sm-template-tags.php';
 require get_template_directory() . '/includes/functions/functions-sm-customizer-styles.php';
@@ -1762,62 +1764,64 @@ if (!function_exists('__smarty_magazine_fix_menu_classes')) {
     add_filter('nav_menu_css_class', '__smarty_magazine_fix_menu_classes', 10, 3);
 }
 
-/**
- * Move Google Tag Manager from Google Site Kit to the footer.
- *
- * @since 1.0.0
- */
-function __smarty_magazine_move_gtm_to_footer() {
-    // Check if Site Kit is active and GTM is enabled
-    if (!class_exists('Google\Site_Kit\Context') || !function_exists('googlesitekit_gtag_opt')) {
-        return;
+if (!function_exists('__smarty_magazine_move_gtm_to_footer')) {
+    /**
+     * Move Google Tag Manager from Google Site Kit to the footer.
+     *
+     * @since 1.0.0
+     */
+    function __smarty_magazine_move_gtm_to_footer() {
+        // Check if Site Kit is active and GTM is enabled
+        if (!class_exists('Google\Site_Kit\Context') || !function_exists('googlesitekit_gtag_opt')) {
+            return;
+        }
+
+        // Get the GTM container ID from Site Kit settings
+        $site_kit_context = new Google\Site_Kit\Context(WP_PLUGIN_DIR . '/google-site-kit');
+        $gtm_module = Google\Site_Kit\Modules\Tag_Manager::instance();
+        if ($gtm_module && $gtm_module->is_active()) {
+            $settings = $gtm_module->get_settings()->get();
+            $gtm_id = !empty($settings['accountID']) ? $settings['accountID'] : '';
+        }
+
+        if (empty($gtm_id)) {
+            return; // No GTM ID configured
+        }
+
+        // Remove default GTM script from head (Site Kit uses priority 10)
+        remove_action('wp_head', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_script'], 10);
+
+        // Add GTM script to footer
+        add_action('wp_footer', function() use ($gtm_id) {
+            ?>
+            <!-- Google Tag Manager (Moved to Footer by Smarty Magazine) -->
+            <script>
+                (function(w,d,s,l,i){
+                    w[l]=w[l]||[];
+                    w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                    var f=d.getElementsByTagName(s)[0],
+                        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+                    j.defer=true; // Use defer instead of async for better compatibility
+                    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                    f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','<?php echo esc_js($gtm_id); ?>');
+            </script>
+            <!-- End Google Tag Manager -->
+            <?php
+        }, 20);
+
+        // Optional: Move noscript to footer (Site Kit adds it via wp_body_open by default)
+        remove_action('wp_body_open', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_noscript']);
+        add_action('wp_footer', function() use ($gtm_id) {
+            if (wp_is_mobile() && false) return; // Skip noscript on mobile if desired
+            ?>
+            <!-- Google Tag Manager (noscript) -->
+            <noscript>
+                <iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+            </noscript>
+            <!-- End Google Tag Manager (noscript) -->
+            <?php
+        }, 30);
     }
-
-    // Get the GTM container ID from Site Kit settings
-    $site_kit_context = new Google\Site_Kit\Context(WP_PLUGIN_DIR . '/google-site-kit');
-    $gtm_module = Google\Site_Kit\Modules\Tag_Manager::instance();
-    if ($gtm_module && $gtm_module->is_active()) {
-        $settings = $gtm_module->get_settings()->get();
-        $gtm_id = !empty($settings['accountID']) ? $settings['accountID'] : '';
-    }
-
-    if (empty($gtm_id)) {
-        return; // No GTM ID configured
-    }
-
-    // Remove default GTM script from head (Site Kit uses priority 10)
-    remove_action('wp_head', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_script'], 10);
-
-    // Add GTM script to footer
-    add_action('wp_footer', function() use ($gtm_id) {
-        ?>
-        <!-- Google Tag Manager (Moved to Footer by Smarty Magazine) -->
-        <script>
-            (function(w,d,s,l,i){
-                w[l]=w[l]||[];
-                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-                var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-                j.defer=true; // Use defer instead of async for better compatibility
-                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-                f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','<?php echo esc_js($gtm_id); ?>');
-        </script>
-        <!-- End Google Tag Manager -->
-        <?php
-    }, 20);
-
-    // Optional: Move noscript to footer (Site Kit adds it via wp_body_open by default)
-    remove_action('wp_body_open', [Google\Site_Kit\Plugin::instance()->gtag(), 'gtag_noscript']);
-    add_action('wp_footer', function() use ($gtm_id) {
-        if (wp_is_mobile() && false) return; // Skip noscript on mobile if desired
-        ?>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-            <iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-        <?php
-    }, 30);
+    add_action('wp_enqueue_scripts', '__smarty_magazine_move_gtm_to_footer');
 }
-add_action('wp_enqueue_scripts', '__smarty_magazine_move_gtm_to_footer');

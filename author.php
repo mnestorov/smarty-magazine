@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying archive pages with first post highlighted and subsequent posts in two columns.
+ * The template for displaying author archives.
  *
  * @since 1.0.0
  * 
@@ -19,22 +19,12 @@ get_header(); ?>
                     <main id="main" class="site-main" role="main">
                         <?php if (have_posts()) : ?>
                             <header class="entry-header mb-5">
-                                <?php the_archive_title('<h1 class="page-title">', '</h1>'); ?>
-                                <?php if (get_the_archive_description()) : ?>
-                                    <div class="sm-taxonomy-description alert mt-3 p-3 shadow-lg rounded">
-                                        <?php the_archive_description(); ?>
-                                    </div>
-                                <?php endif; ?>
+                                <h1 class="page-title"><?php _e('Author Archive', 'smarty_magazine'); ?></h1>
                             </header>
 
-                            <?php get_sidebar('archive'); ?>
-                            
-                            <?php $count = 1; ?>
-
                             <div class="row">
-                                <div class="col-lg-9 col-md-9">
-                                    <!-- Start the Bootstrap grid with two columns -->
-                                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                                <div class="col-lg-8 col-md-8 order-2 order-md-1">
+                                    <div class="row row-cols-1 row-cols-md-2 g-3">
                                         <?php while (have_posts()) : the_post(); ?>
                                             <div class="col">
                                                 <article id="post-<?php the_ID(); ?>" <?php post_class("card h-100 border-0 shadow-lg"); ?> itemscope itemtype="https://schema.org/BlogPosting">
@@ -71,23 +61,23 @@ get_header(); ?>
                                                 </article>
                                             </div>
                                         <?php endwhile; ?>
-                                    </div> <!-- Close row-cols-md-2 -->
-                                    
-                                    <?php wp_reset_postdata(); ?>
-                                    
+                                    </div>
                                     <div class="clearfix"></div>
                                     <div class="sm-pagination-nav">
                                         <?php echo paginate_links(); ?>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-md-3">
-                                    <?php get_sidebar(); ?>
+                                <div class="col-lg-4 col-md-4 order-1 order-md-2">
+                                    <?php
+                                    // Display the Author Box
+                                    if (function_exists('__smarty_magazine_author_box')) {
+                                        __smarty_magazine_author_box();
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         <?php else : ?>
-                            <div class="alert alert-warning text-center p-5">
-                                <p class="lead"><?php _e('Sorry, no posts matched your criteria.', 'smarty_magazine'); ?></p>
-                            </div>
+                            <p><?php _e('Sorry, no posts matched your criteria.', 'smarty_magazine'); ?></p>
                         <?php endif; ?>
                     </main>
                 </div>

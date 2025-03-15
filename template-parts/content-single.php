@@ -24,7 +24,7 @@ $word_count = str_word_count(strip_tags(get_the_content()));
         <meta itemprop="wordCount" content="<?php echo esc_attr($word_count); ?>">
     </header>
 
-    <div class="entry-content">
+    <div class="entry-content mt-0">
         <?php if (has_post_thumbnail()) : ?>
             <figure class="sm-single-post-img post-thumbnail mb-4" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
                 <?php the_post_thumbnail('extra-large', array('class' => 'img-fluid')); ?>

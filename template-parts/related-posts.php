@@ -18,6 +18,11 @@ $__smarty_magazine_related = get_posts(
 		'post_type'             => array('post'), // Exclude 'news' post type
 	)
 );
+
+// Display the Author Box
+if (function_exists('__smarty_magazine_author_box')) {
+    __smarty_magazine_author_box();
+}
 ?>
 
 <div class="sm-news-layout-wrap sm-related-posts">

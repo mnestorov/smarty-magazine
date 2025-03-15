@@ -474,7 +474,7 @@ if (!function_exists('__smarty_magazine_register_dictionary_post_type')) {
             'can_export'           => true,
             'has_archive'          => true,
             'rewrite'              => false,
-            'exclude_from_search'  => false,
+            'exclude_from_search'  => true,
             'publicly_queryable'   => false,
             'capability_type'      => 'post',
             'show_in_rest'         => true,

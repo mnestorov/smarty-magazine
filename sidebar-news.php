@@ -10,6 +10,6 @@
 
 <?php if (!is_active_sidebar('sm-news-sidebar')) { return; } ?>
 
-<div id="secondary" class="widget-area sm-news-sidebar" role="complementary">
+<div id="secondary" class="widget-area sm-sidebar" role="complementary">
 	<?php dynamic_sidebar('sm-news-sidebar'); ?>
 </div>

@@ -8,6 +8,11 @@
  */
 
 $__smarty_magazine_related = __smarty_magazine_get_related_news(get_the_ID());
+
+// Display the Author Box
+if (function_exists('__smarty_magazine_author_box')) {
+    __smarty_magazine_author_box();
+}
 ?>
 
 <?php if (!empty($__smarty_magazine_related)) : ?>
